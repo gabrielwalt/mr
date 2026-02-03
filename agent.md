@@ -78,6 +78,32 @@
 - Background: `--background-color-black` (#191919)
 - Even darker variant for emphasis
 
+## Page Templates
+
+### Homepage Template
+- Add `Template: homepage` to page metadata
+- Adds `homepage` class to body element
+- Centers all default content (non-block content) automatically
+- Use for landing pages and main entry points
+
+**Metadata example:**
+```markdown
++---------------------+--------------------------------------------------+
+| **Metadata**                                                           |
++---------------------+--------------------------------------------------+
+| Title               | Page Title                                       |
++---------------------+--------------------------------------------------+
+| Template            | homepage                                         |
++---------------------+--------------------------------------------------+
+```
+
+**CSS behavior:**
+- Targets `.default-content-wrapper` (EDS wraps default content in this class)
+- Headings and paragraphs are centered
+- Images are centered with `margin: auto`
+
+**Note:** EDS JavaScript decoration wraps default content in `.default-content-wrapper`, so target that class specifically rather than trying to exclude block wrappers.
+
 ## Button Styling
 
 ### Default Buttons (Light Backgrounds)

@@ -465,6 +465,27 @@ main .section.black li {
   color: var(--text-color-inverse-secondary);
 }
 
+/* ===== TEMPLATE: HOMEPAGE ===== */
+/* Center default content (non-block content) on homepage */
+body.homepage main .default-content-wrapper {
+  text-align: center;
+}
+
+body.homepage main .default-content-wrapper p,
+body.homepage main .default-content-wrapper h1,
+body.homepage main .default-content-wrapper h2,
+body.homepage main .default-content-wrapper h3,
+body.homepage main .default-content-wrapper h4,
+body.homepage main .default-content-wrapper h5,
+body.homepage main .default-content-wrapper h6 {
+  text-align: center;
+}
+
+body.homepage main .default-content-wrapper img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* ===== UTILITY CLASSES ===== */
 
 /* Text alignment */
