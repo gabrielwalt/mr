@@ -94,66 +94,83 @@
 .carousel-hero .carousel-hero-slide .carousel-hero-slide-content {
   z-index: 1;
   position: relative;
-  max-width: 600px;
-  margin: var(--spacing-xl);
-  padding: var(--spacing-l);
+  max-width: 500px;
+  margin: var(--spacing-l);
+  padding: var(--spacing-m);
   color: var(--text-color-inverse);
   background-color: transparent;
 }
 
 @media (width >= 768px) {
   .carousel-hero .carousel-hero-slide .carousel-hero-slide-content {
+    margin: var(--spacing-xl) var(--spacing-xxl);
+    max-width: 45%;
+    padding: var(--spacing-l);
+  }
+}
+
+@media (width >= 1024px) {
+  .carousel-hero .carousel-hero-slide .carousel-hero-slide-content {
     margin: var(--spacing-xxl) var(--spacing-xxxl);
-    max-width: 50%;
+    max-width: 40%;
   }
 }
 
 /* Content Typography */
 .carousel-hero .carousel-hero-slide-content h2 {
-  font-size: 2rem;
-  font-weight: var(--heading-font-weight);
-  line-height: 1.1;
+  font-size: 1.75rem;
+  font-weight: 300;
+  line-height: 1.15;
   color: var(--text-color-inverse);
-  margin: 0 0 var(--spacing-m);
+  margin: 0 0 var(--spacing-s);
+  letter-spacing: -0.01em;
 }
 
 @media (width >= 768px) {
   .carousel-hero .carousel-hero-slide-content h2 {
-    font-size: var(--heading-font-size-xxl);
+    font-size: 2.5rem;
+  }
+}
+
+@media (width >= 1024px) {
+  .carousel-hero .carousel-hero-slide-content h2 {
+    font-size: 3rem;
   }
 }
 
 .carousel-hero .carousel-hero-slide-content p {
-  font-size: var(--body-font-size-m);
-  line-height: var(--body-line-height);
+  font-size: var(--body-font-size-s);
+  line-height: 1.5;
   color: var(--text-color-inverse-secondary);
-  margin: 0 0 var(--spacing-l);
+  margin: 0 0 var(--spacing-m);
+  max-width: 450px;
 }
 
 @media (width >= 768px) {
   .carousel-hero .carousel-hero-slide-content p {
-    font-size: var(--body-font-size-l);
+    font-size: var(--body-font-size-m);
   }
 }
 
-/* CTA Button in Hero */
+/* CTA Button in Hero - White on dark background */
 .carousel-hero .carousel-hero-slide-content a.button,
 .carousel-hero .carousel-hero-slide-content strong a {
   display: inline-block;
-  padding: var(--button-padding);
-  background-color: var(--button-primary-bg);
-  color: var(--button-primary-color);
+  padding: 10px 20px;
+  background-color: transparent;
+  color: var(--text-color-inverse);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: var(--button-border-radius);
-  font-size: var(--button-font-size);
-  font-weight: var(--button-font-weight);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
   text-decoration: none;
   transition: var(--button-transition);
 }
 
 .carousel-hero .carousel-hero-slide-content a.button:hover,
 .carousel-hero .carousel-hero-slide-content strong a:hover {
-  background-color: var(--button-primary-bg-hover);
-  transform: translateY(-1px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 /* Slide Indicators */

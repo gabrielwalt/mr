@@ -10,10 +10,16 @@
 
 /* Tab Title */
 .tabs-industry h2 {
-  font-size: var(--heading-font-size-l);
-  font-weight: var(--heading-font-weight);
+  font-size: 1.25rem;
+  font-weight: 400;
   color: var(--text-color);
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: var(--spacing-l);
+}
+
+@media (width >= 768px) {
+  .tabs-industry h2 {
+    font-size: 1.5rem;
+  }
 }
 
 /* Tab List Container */
@@ -47,17 +53,17 @@
   }
 }
 
-/* Tab Buttons - Pill Style */
+/* Tab Buttons - Subtle Style */
 .tabs-industry .tabs-industry-list button {
   flex: 0 0 max-content;
   margin: 0;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: var(--button-border-radius-large);
-  padding: var(--spacing-xs) var(--spacing-m);
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 6px 16px;
   background-color: var(--background-color);
-  color: var(--text-color);
-  font-weight: 500;
-  font-size: inherit;
+  color: var(--text-color-secondary);
+  font-weight: 400;
+  font-size: var(--body-font-size-s);
   line-height: 1.4;
   text-align: center;
   cursor: pointer;
@@ -70,14 +76,14 @@
 }
 
 .tabs-industry .tabs-industry-list button:hover {
-  background-color: var(--light-color);
-  border-color: rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  color: var(--text-color);
 }
 
-/* Selected Tab - Dark Background */
+/* Selected Tab - Black Background */
 .tabs-industry .tabs-industry-list button[aria-selected='true'] {
-  background-color: var(--button-primary-bg);
-  color: var(--button-primary-color);
+  background-color: rgba(0, 0, 0, 0.9);
+  color: white;
   border-color: transparent;
   cursor: default;
 }

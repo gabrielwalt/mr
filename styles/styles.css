@@ -75,10 +75,10 @@
   --button-font-weight: 500;
   --button-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
-  /* Button Primary */
-  --button-primary-bg: #cc0000;
-  --button-primary-color: #ffffff;
-  --button-primary-bg-hover: #990000;
+  /* Button Primary - Matching Motorola Solutions */
+  --button-primary-bg: rgba(0, 0, 0, 0.95);
+  --button-primary-color: rgba(255, 255, 255, 0.95);
+  --button-primary-bg-hover: #000000;
   --button-primary-border: 1px solid transparent;
 
   /* Button Secondary */
@@ -302,13 +302,13 @@ button.secondary:hover {
 /* Button on dark backgrounds */
 .section.dark a.button:any-link,
 .section.dark button {
-  background-color: #cc0000;
-  color: #ffffff;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .section.dark a.button:hover,
 .section.dark button:hover {
-  background-color: #990000;
+  background-color: var(--light-color);
 }
 
 .section.dark a.button.secondary,
