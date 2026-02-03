@@ -14,13 +14,24 @@ const placeholders = {
 };
 
 // Auto-rotation settings
-const AUTO_ROTATE_INTERVAL = 5000; // 5 seconds between slides
-const PAUSE_ON_INTERACTION = 10000; // Pause for 10 seconds after user interaction
+const AUTO_ROTATE_INTERVAL = 10000; // 10 seconds between slides
+const PAUSE_ON_INTERACTION = 15000; // Pause for 15 seconds after user interaction
+const SLIDE_TRANSITION_DELAY = 800; // Debounce delay to prevent erratic updates
+
+// Debounce slide updates to prevent rapid changes
+let slideUpdateTimeout = null;
 
 function updateActiveSlide(slide) {
   const block = slide.closest('.carousel-hero');
   const slideIndex = parseInt(slide.dataset.slideIndex, 10);
-  block.dataset.activeSlide = slideIndex;
+
+  // Debounce rapid slide updates
+  if (slideUpdateTimeout) {
+    clearTimeout(slideUpdateTimeout);
+  }
+
+  slideUpdateTimeout = setTimeout(() => {
+    block.dataset.activeSlide = slideIndex;
 
   const slides = block.querySelectorAll('.carousel-hero-slide');
 
@@ -35,14 +46,15 @@ function updateActiveSlide(slide) {
     });
   });
 
-  const indicators = block.querySelectorAll('.carousel-hero-slide-indicator');
-  indicators.forEach((indicator, idx) => {
-    if (idx !== slideIndex) {
-      indicator.querySelector('button').removeAttribute('disabled');
-    } else {
-      indicator.querySelector('button').setAttribute('disabled', 'true');
-    }
-  });
+    const indicators = block.querySelectorAll('.carousel-hero-slide-indicator');
+    indicators.forEach((indicator, idx) => {
+      if (idx !== slideIndex) {
+        indicator.querySelector('button').removeAttribute('disabled');
+      } else {
+        indicator.querySelector('button').setAttribute('disabled', 'true');
+      }
+    });
+  }, SLIDE_TRANSITION_DELAY);
 }
 
 export function showSlide(block, slideIndex = 0) {

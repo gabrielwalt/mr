@@ -68,8 +68,8 @@
   /* ===== BUTTONS ===== */
   --button-padding: 8px 16px;
   --button-padding-large: 12px 24px;
-  --button-border-radius: 21px;
-  --button-border-radius-large: 48px;
+  --button-border-radius: 9999px;
+  --button-border-radius-large: 9999px;
   --button-font-size: 12px;
   --button-font-size-large: 14px;
   --button-font-weight: 500;
@@ -316,6 +316,31 @@ button.secondary:hover {
   background-color: transparent;
   border-color: rgba(255, 255, 255, 0.4);
   color: var(--text-color-inverse);
+}
+
+/* Button Inverted - White button for dark backgrounds */
+a.button.inverted,
+button.inverted,
+.button-inverted {
+  display: inline-block;
+  padding: 12px 28px;
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #1a1a1a;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: var(--button-border-radius);
+  font-size: var(--body-font-size-s);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+a.button.inverted:hover,
+button.inverted:hover,
+.button-inverted:hover {
+  background-color: hsla(0, 0%, 74.1%, 0.9625);
+  border-color: hsla(0, 0%, 74.1%, 0.9625);
+  color: #000;
+  text-decoration: none;
 }
 
 /* ===== IMAGES ===== */
