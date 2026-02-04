@@ -56,15 +56,19 @@ export default function decorate(block) {
     // Parse content from content column
     if (contentCol) {
       const paragraphs = [...contentCol.querySelectorAll('p')];
+      const h3El = contentCol.querySelector('h3');
       const strongEl = contentCol.querySelector('strong');
       const linkEl = contentCol.querySelector('a');
 
-      // Get title from first strong text or first paragraph
+      // Get title from H3, first strong text, or first paragraph
       let title = '';
       let subtitle = '';
       let description = '';
 
-      if (strongEl && !strongEl.querySelector('a')) {
+      if (h3El) {
+        // Prefer H3 as title
+        title = h3El.textContent;
+      } else if (strongEl && !strongEl.querySelector('a')) {
         title = strongEl.textContent;
         // Remove the title element from further processing
         const titleParagraph = strongEl.closest('p');
@@ -98,7 +102,7 @@ export default function decorate(block) {
       const header = document.createElement('div');
       header.classList.add('accordion-header');
 
-      const titleEl = document.createElement('span');
+      const titleEl = document.createElement('h3');
       titleEl.classList.add('accordion-title');
       titleEl.textContent = title;
 
