@@ -415,6 +415,15 @@ main .section.highlight h6 {
   color: var(--text-color);
 }
 
+main .section.highlight p,
+main .section.highlight li {
+  color: rgba(0, 0, 0, 0.95);
+}
+
+main .section.highlight a:any-link {
+  color: #0056b3;
+}
+
 /* Dark Section */
 main .section.dark {
   background-color: var(--background-color-dark);

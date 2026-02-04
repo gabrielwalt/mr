@@ -71,31 +71,15 @@ main div.carousel-cards-wrapper:has(.carousel-cards.has-intro) {
 }
 
 .carousel-cards .carousel-cards-intro-description {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
   color: #6b6b6b;
   margin: 0 0 var(--spacing-m);
 }
 
-.carousel-cards .carousel-cards-intro-cta a,
-.carousel-cards .carousel-cards-intro-cta strong a {
-  display: inline-block;
-  padding: 12px 28px;
-  background-color: #fff;
-  color: #1a1a1a;
-  border: 2px solid #1a1a1a;
-  border-radius: var(--button-border-radius);
-  font-size: var(--body-font-size-s);
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-}
-
-.carousel-cards .carousel-cards-intro-cta a:hover,
-.carousel-cards .carousel-cards-intro-cta strong a:hover {
-  background-color: #1a1a1a;
-  border-color: #1a1a1a;
-  color: #fff;
+/* Intro CTA uses global button styles */
+.carousel-cards .carousel-cards-intro-cta {
+  margin-top: var(--spacing-s);
 }
 
 /* Carousel Track - Contains slides and navigation */
@@ -124,12 +108,14 @@ main div.carousel-cards-wrapper:has(.carousel-cards.has-intro) {
   overflow: auto clip;
   gap: 30px;
   padding: 30px var(--spacing-l);
+  scroll-padding-left: 30px;
 }
 
 /* When has intro, add left padding for shadow and extend right to edge */
 .carousel-cards.has-intro .carousel-cards-slides {
-  padding-left: 30px;
+  padding-left: 50px;
   padding-right: 40px;
+  scroll-padding-left: 50px;
 }
 
 .carousel-cards .carousel-cards-slides::-webkit-scrollbar {
@@ -164,7 +150,7 @@ main div.carousel-cards-wrapper:has(.carousel-cards.has-intro) {
   }
 
   .carousel-cards.has-intro .carousel-cards-slides {
-    padding-left: 30px;
+    padding-left: 50px;
     padding-right: 80px;
   }
 
@@ -179,7 +165,7 @@ main div.carousel-cards-wrapper:has(.carousel-cards.has-intro) {
   }
 
   .carousel-cards.has-intro .carousel-cards-slides {
-    padding-left: 30px;
+    padding-left: 50px;
     padding-right: 80px;
   }
 }
