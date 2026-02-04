@@ -601,11 +601,11 @@ main div.carousel-wrapper:has(.carousel.wide) {
   }
 }
 
-/* Wide card image - full bleed, square aspect ratio */
+/* Wide card image - full bleed, 920x560 aspect ratio */
 .carousel.wide .carousel-slide-image {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 920 / 560;
   overflow: hidden;
 }
 
