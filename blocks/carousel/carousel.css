@@ -524,19 +524,19 @@ main div.carousel-wrapper:has(.carousel.stories.has-intro) {
 /* Wide slides container */
 .carousel.wide .carousel-slides {
   gap: 30px;
-  padding: 30px var(--spacing-l);
-  scroll-padding-left: 30px;
+  padding: 30px calc(50vw - 300px);
+  scroll-padding-left: 0;
 }
 
 @media (width >= 768px) {
   .carousel.wide .carousel-slides {
-    padding: 30px var(--spacing-xxl);
+    padding: 30px calc(50vw - 300px);
   }
 }
 
 @media (width >= 1200px) {
   .carousel.wide .carousel-slides {
-    padding: 30px 80px;
+    padding: 30px calc(50vw - 300px);
   }
 }
 
@@ -551,6 +551,7 @@ main div.carousel-wrapper:has(.carousel.stories.has-intro) {
   box-shadow: 0 10px 30px 0 rgba(35, 35, 35, 0.15);
   border-radius: 0;
   overflow: hidden;
+  scroll-snap-align: center;
 }
 
 /* Mobile: responsive width */
@@ -595,6 +596,9 @@ main div.carousel-wrapper:has(.carousel.stories.has-intro) {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   padding: 16px 30px;
+  display: flex;
+  align-items: center;
+  gap: 50px;
 }
 
 /* Wide card description text */
@@ -604,8 +608,8 @@ main div.carousel-wrapper:has(.carousel.stories.has-intro) {
   font-weight: 400;
   line-height: 1.42;
   color: rgba(255, 255, 255, 0.95);
-  margin: 0 0 16px;
-  padding-left: 30px;
+  margin: 0;
+  padding-left: 0;
 }
 
 /* Wide card button - white background */
@@ -619,9 +623,11 @@ main div.carousel-wrapper:has(.carousel.stories.has-intro) {
   text-decoration: none;
   padding: 8px 20px;
   border: none;
-  border-radius: 0;
-  margin-left: 30px;
+  border-radius: 25px;
+  margin-left: 0;
   transition: background-color var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .carousel.wide .carousel-slide-cta:hover {

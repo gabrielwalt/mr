@@ -581,17 +581,23 @@ main .section.image-right .default-content-wrapper p {
 }
 
 /* Image - starts at center, extends 50vw to right edge */
-main .section.image-right .default-content-wrapper picture {
-  display: block;
-  position: relative;
+main .section.image-right .default-content-wrapper p:has(picture) {
   width: 50vw;
   margin-top: var(--spacing-l);
   /* Position left edge at viewport center, then extend 50vw to right */
-  left: calc(50vw - 50%);
+  margin-left: auto;
+  margin-right: calc(50% - 50vw);
+  max-width: unset;
+}
+
+main .section.image-right .default-content-wrapper picture {
+  display: block;
+  width: 100%;
 }
 
 main .section.image-right .default-content-wrapper picture img {
+  display: block;
   width: 100%;
   height: auto;
-  object-fit: contain;
+  object-fit: cover;
 }
