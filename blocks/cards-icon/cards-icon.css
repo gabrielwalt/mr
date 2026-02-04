@@ -39,11 +39,18 @@
   background-color: transparent;
   padding: var(--spacing-m);
   border-radius: 8px;
-  transition: background-color var(--transition-fast);
+  transition: box-shadow var(--transition-fast);
 }
 
 .cards-icon > ul > li:hover {
-  background-color: var(--light-color);
+  box-shadow: var(--shadow-card-elevated);
+}
+
+/* Card Link Wrapper - wraps entire card content */
+.cards-icon .cards-icon-card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 /* Icon Container */
@@ -73,7 +80,7 @@
 }
 
 .cards-icon .cards-icon-card-body a {
-  color: var(--link-color);
+  color: var(--text-color);
   text-decoration: none;
   font-size: var(--body-font-size-s);
   font-weight: 500;
@@ -81,8 +88,8 @@
 }
 
 .cards-icon .cards-icon-card-body a:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
+  color: var(--text-color);
+  text-decoration: none;
 }
 
 .cards-icon .cards-icon-card-body p {
@@ -97,7 +104,7 @@
 }
 
 .section.dark .cards-icon > ul > li:hover {
-  background-color: rgb(255 255 255 / 10%);
+  box-shadow: 0 10px 30px 0 rgb(255 255 255 / 15%);
 }
 
 .section.dark .cards-icon .cards-icon-card-body a {

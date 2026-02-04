@@ -10,7 +10,6 @@
  */
 
 /* ===== EDGE-TO-EDGE VARIANTS: Hero, Stories, Wide ===== */
-/* stylelint-disable no-descending-specificity -- variant wrapper selectors */
 main > div:has(.carousel.hero),
 main > div:has(.carousel.stories.has-intro),
 main > div:has(.carousel.wide),
@@ -24,7 +23,6 @@ main div.carousel-wrapper:has(.carousel.wide) {
   padding: 0;
   margin: 0;
 }
-/* stylelint-enable no-descending-specificity */
 
 /* ===== BASE CAROUSEL STYLES ===== */
 .carousel {
@@ -515,7 +513,6 @@ main div.carousel-wrapper:has(.carousel.wide) {
 }
 
 /* ===== WIDE VARIANT STYLES ===== */
-/* stylelint-disable no-descending-specificity -- variant overrides base styles */
 
 .carousel.wide {
   padding: 0 0 var(--spacing-xl);
@@ -536,10 +533,10 @@ main div.carousel-wrapper:has(.carousel.wide) {
   scroll-behavior: smooth;
 
   /* Calculate padding to center items: (100vw - item width) / 2 */
-  padding-left: calc((100vw - 920px) / 2);
-  padding-right: calc((100vw - 920px) / 2);
-  scroll-padding-left: calc((100vw - 920px) / 2);
-  scroll-padding-right: calc((100vw - 920px) / 2);
+  padding-left: calc((100vw - 560px) / 2);
+  padding-right: calc((100vw - 560px) / 2);
+  scroll-padding-left: calc((100vw - 560px) / 2);
+  scroll-padding-right: calc((100vw - 560px) / 2);
 }
 
 /* Mobile: smaller centered item */
@@ -565,9 +562,9 @@ main div.carousel-wrapper:has(.carousel.wide) {
 
 /* Wide Slide - Larger cards with square aspect ratio */
 .carousel.wide .carousel-slide {
-  flex: 0 0 920px;
+  flex: 0 0 560px;
   min-width: 280px;
-  max-width: 920px;
+  max-width: 560px;
   height: auto;
   position: relative;
   background: transparent;
@@ -684,9 +681,6 @@ main div.carousel-wrapper:has(.carousel.wide) {
 /* Cloned slides for infinite loop behave identically to real slides */
 
 /* ===== HERO VARIANT STYLES ===== */
-
-/* stylelint-enable no-descending-specificity */
-/* stylelint-disable no-descending-specificity -- hero variant overrides base styles */
 
 .carousel.hero {
   position: relative;
@@ -977,4 +971,3 @@ main div.carousel-wrapper:has(.carousel.wide) {
     border-width: 2px;
   }
 }
-/* stylelint-enable no-descending-specificity */

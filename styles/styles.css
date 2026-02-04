@@ -137,6 +137,10 @@
 }
 
 /* ===== BASE STYLES ===== */
+html {
+  overflow-x: hidden;
+}
+
 body {
   display: none;
   margin: 0;
@@ -147,6 +151,7 @@ body {
   line-height: var(--body-line-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body.appear {
@@ -387,11 +392,6 @@ main > div {
   margin: 40px 16px;
 }
 
-/* stylelint-disable-next-line no-descending-specificity -- font inheritance for all form elements */
-input, textarea, select, button {
-  font: inherit;
-}
-
 /* ===== SECTIONS ===== */
 main > .section {
   margin: 40px 0;
@@ -606,46 +606,4 @@ body.template-home main > .section:not(:has(.carousel.stories)) .default-content
 body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper img {
   margin-left: auto;
   margin-right: auto;
-}
-
-/* ===== UTILITY CLASSES ===== */
-
-/* Text alignment */
-.text-center {
-  text-align: center;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.text-right {
-  text-align: right;
-}
-
-/* Font sizes */
-.text-small {
-  font-size: var(--body-font-size-s);
-}
-
-.text-large {
-  font-size: var(--body-font-size-l);
-}
-
-/* Font weights */
-.font-bold {
-  font-weight: 700;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-/* Colors */
-.text-primary {
-  color: var(--color-brand-primary);
-}
-
-.text-secondary {
-  color: var(--text-color-secondary);
 }
