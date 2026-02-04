@@ -1,6 +1,6 @@
 /**
  * Carousel Cards Block
- * Auto-rotating carousel displaying customer story cards
+ * Manual-only carousel displaying customer story cards
  */
 
 const placeholders = {
@@ -12,45 +12,8 @@ const placeholders = {
   of: 'of',
 };
 
-const AUTO_ROTATE_INTERVAL = 10000;
-const PAUSE_ON_INTERACTION = 15000;
-const SLIDE_TRANSITION_DELAY = 800;
-
-let slideUpdateTimeout = null;
-
-function updateActiveSlide(slide) {
-  const block = slide.closest('.carousel-cards');
-  const slideIndex = parseInt(slide.dataset.slideIndex, 10);
-
-  if (slideUpdateTimeout) {
-    clearTimeout(slideUpdateTimeout);
-  }
-
-  slideUpdateTimeout = setTimeout(() => {
-    block.dataset.activeSlide = slideIndex;
-
-    const slides = block.querySelectorAll('.carousel-cards-slide');
-    slides.forEach((aSlide, idx) => {
-      aSlide.setAttribute('aria-hidden', idx !== slideIndex);
-      aSlide.querySelectorAll('a').forEach((link) => {
-        if (idx !== slideIndex) {
-          link.setAttribute('tabindex', '-1');
-        } else {
-          link.removeAttribute('tabindex');
-        }
-      });
-    });
-
-    const indicators = block.querySelectorAll('.carousel-cards-slide-indicator');
-    indicators.forEach((indicator, idx) => {
-      if (idx !== slideIndex) {
-        indicator.querySelector('button').removeAttribute('disabled');
-      } else {
-        indicator.querySelector('button').setAttribute('disabled', 'true');
-      }
-    });
-  }, SLIDE_TRANSITION_DELAY);
-}
+// Flag to track programmatic scrolling (prevents IntersectionObserver conflicts)
+let isProgrammaticScroll = false;
 
 export function showSlide(block, slideIndex = 0) {
   const slides = block.querySelectorAll('.carousel-cards-slide');
@@ -58,99 +21,96 @@ export function showSlide(block, slideIndex = 0) {
   if (slideIndex >= slides.length) realSlideIndex = 0;
   const activeSlide = slides[realSlideIndex];
 
+  // Set flag to prevent IntersectionObserver from interfering
+  isProgrammaticScroll = true;
+
+  // Update active slide index
+  block.dataset.activeSlide = realSlideIndex;
+
+  // Update indicators immediately
+  const indicators = block.querySelectorAll('.carousel-cards-slide-indicator');
+  indicators.forEach((indicator, idx) => {
+    const btn = indicator.querySelector('button');
+    if (idx !== realSlideIndex) {
+      btn.removeAttribute('disabled');
+    } else {
+      btn.setAttribute('disabled', 'true');
+    }
+  });
+
+  // Update aria-hidden for accessibility
+  slides.forEach((aSlide, idx) => {
+    aSlide.setAttribute('aria-hidden', idx !== realSlideIndex);
+    aSlide.querySelectorAll('a').forEach((link) => {
+      if (idx !== realSlideIndex) {
+        link.setAttribute('tabindex', '-1');
+      } else {
+        link.removeAttribute('tabindex');
+      }
+    });
+  });
+
+  // Scroll to the slide
   activeSlide.querySelectorAll('a').forEach((link) => link.removeAttribute('tabindex'));
   block.querySelector('.carousel-cards-slides').scrollTo({
     top: 0,
     left: activeSlide.offsetLeft,
     behavior: 'smooth',
   });
+
+  // Reset flag after scroll animation completes
+  setTimeout(() => {
+    isProgrammaticScroll = false;
+  }, 500);
 }
 
-function startAutoRotation(block) {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    return null;
-  }
+function updateIndicatorsFromScroll(block, slideIndex) {
+  // Only update if this wasn't triggered by programmatic scroll
+  if (isProgrammaticScroll) return;
 
+  block.dataset.activeSlide = slideIndex;
+
+  const indicators = block.querySelectorAll('.carousel-cards-slide-indicator');
+  indicators.forEach((indicator, idx) => {
+    const btn = indicator.querySelector('button');
+    if (idx !== slideIndex) {
+      btn.removeAttribute('disabled');
+    } else {
+      btn.setAttribute('disabled', 'true');
+    }
+  });
+
+  // Update aria-hidden
   const slides = block.querySelectorAll('.carousel-cards-slide');
-  if (slides.length < 2) return null;
-
-  const intervalId = setInterval(() => {
-    const currentSlide = parseInt(block.dataset.activeSlide || 0, 10);
-    showSlide(block, currentSlide + 1);
-  }, AUTO_ROTATE_INTERVAL);
-
-  block.dataset.autoRotateId = intervalId;
-  return intervalId;
-}
-
-function stopAutoRotation(block) {
-  const intervalId = block.dataset.autoRotateId;
-  if (intervalId) {
-    clearInterval(parseInt(intervalId, 10));
-    delete block.dataset.autoRotateId;
-  }
-}
-
-function pauseAutoRotation(block, duration = PAUSE_ON_INTERACTION) {
-  stopAutoRotation(block);
-
-  if (block.dataset.resumeTimeoutId) {
-    clearTimeout(parseInt(block.dataset.resumeTimeoutId, 10));
-  }
-
-  const timeoutId = setTimeout(() => {
-    startAutoRotation(block);
-    delete block.dataset.resumeTimeoutId;
-  }, duration);
-
-  block.dataset.resumeTimeoutId = timeoutId;
+  slides.forEach((aSlide, idx) => {
+    aSlide.setAttribute('aria-hidden', idx !== slideIndex);
+  });
 }
 
 function bindEvents(block) {
   const slideIndicators = block.querySelector('.carousel-cards-slide-indicators');
   if (!slideIndicators) return;
 
+  // Dot indicator clicks
   slideIndicators.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', (e) => {
       const slideIndicator = e.currentTarget.parentElement;
       showSlide(block, parseInt(slideIndicator.dataset.targetSlide, 10));
-      pauseAutoRotation(block);
     });
   });
 
+  // Previous/Next button clicks
   block.querySelector('.slide-prev').addEventListener('click', () => {
     showSlide(block, parseInt(block.dataset.activeSlide, 10) - 1);
-    pauseAutoRotation(block);
   });
   block.querySelector('.slide-next').addEventListener('click', () => {
     showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
-    pauseAutoRotation(block);
   });
 
-  block.addEventListener('mouseenter', () => {
-    stopAutoRotation(block);
-  });
-
-  block.addEventListener('mouseleave', () => {
-    if (!block.dataset.resumeTimeoutId) {
-      startAutoRotation(block);
-    }
-  });
-
-  block.addEventListener('focusin', () => {
-    stopAutoRotation(block);
-  });
-
-  block.addEventListener('focusout', (e) => {
-    if (!block.contains(e.relatedTarget) && !block.dataset.resumeTimeoutId) {
-      startAutoRotation(block);
-    }
-  });
-
+  // Touch swipe support
   let touchStartX = 0;
   block.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
-    stopAutoRotation(block);
   }, { passive: true });
 
   block.addEventListener('touchend', (e) => {
@@ -163,33 +123,22 @@ function bindEvents(block) {
       } else {
         showSlide(block, parseInt(block.dataset.activeSlide, 10) - 1);
       }
-      pauseAutoRotation(block);
-    } else {
-      startAutoRotation(block);
     }
   }, { passive: true });
 
+  // IntersectionObserver for manual scroll detection (when user drags/scrolls directly)
   const slideObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) updateActiveSlide(entry.target);
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        const slideIndex = parseInt(entry.target.dataset.slideIndex, 10);
+        updateIndicatorsFromScroll(block, slideIndex);
+      }
     });
   }, { threshold: 0.5 });
 
   block.querySelectorAll('.carousel-cards-slide').forEach((slide) => {
     slideObserver.observe(slide);
   });
-
-  const carouselObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        startAutoRotation(block);
-      } else {
-        stopAutoRotation(block);
-      }
-    });
-  }, { threshold: 0.3 });
-
-  carouselObserver.observe(block);
 }
 
 function createSlide(row, slideIndex, carouselId) {
@@ -360,22 +309,33 @@ export default async function decorate(block) {
   block.prepend(slidesWrapper);
 
   let slideIndicators;
+  let navigationWrapper;
   if (!isSingleSlide) {
+    // Create navigation wrapper (arrows + dots inline)
+    navigationWrapper = document.createElement('div');
+    navigationWrapper.classList.add('carousel-cards-navigation-wrapper');
+
+    // Previous button
+    const prevButton = document.createElement('button');
+    prevButton.type = 'button';
+    prevButton.classList.add('slide-prev');
+    prevButton.setAttribute('aria-label', placeholders.previousSlide);
+    navigationWrapper.append(prevButton);
+
+    // Slide indicators nav
     const slideIndicatorsNav = document.createElement('nav');
     slideIndicatorsNav.setAttribute('aria-label', placeholders.carouselSlideControls);
     slideIndicators = document.createElement('ol');
     slideIndicators.classList.add('carousel-cards-slide-indicators');
     slideIndicatorsNav.append(slideIndicators);
-    block.append(slideIndicatorsNav);
+    navigationWrapper.append(slideIndicatorsNav);
 
-    const slideNavButtons = document.createElement('div');
-    slideNavButtons.classList.add('carousel-cards-navigation-buttons');
-    slideNavButtons.innerHTML = `
-      <button type="button" class="slide-prev" aria-label="${placeholders.previousSlide}"></button>
-      <button type="button" class="slide-next" aria-label="${placeholders.nextSlide}"></button>
-    `;
-
-    container.append(slideNavButtons);
+    // Next button
+    const nextButton = document.createElement('button');
+    nextButton.type = 'button';
+    nextButton.classList.add('slide-next');
+    nextButton.setAttribute('aria-label', placeholders.nextSlide);
+    navigationWrapper.append(nextButton);
   }
 
   // Remove title rows (filtered out earlier)
@@ -400,7 +360,18 @@ export default async function decorate(block) {
   container.append(slidesWrapper);
   block.prepend(container);
 
+  // Add navigation wrapper after slides
+  if (navigationWrapper) {
+    block.append(navigationWrapper);
+  }
+
+  // Set first indicator as active on load
   if (!isSingleSlide) {
+    block.dataset.activeSlide = 0;
+    const firstIndicator = block.querySelector('.carousel-cards-slide-indicator button');
+    if (firstIndicator) {
+      firstIndicator.setAttribute('disabled', 'true');
+    }
     bindEvents(block);
   }
 }
