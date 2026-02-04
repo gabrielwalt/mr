@@ -97,7 +97,7 @@
 }
 
 .section.dark .cards-icon > ul > li:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255 255 255 / 10%);
 }
 
 .section.dark .cards-icon .cards-icon-card-body a {
@@ -113,6 +113,7 @@
 }
 
 /* Link List Style (Alternative) */
+/* stylelint-disable no-descending-specificity -- variant overrides base styles */
 .cards-icon.link-style > ul {
   display: flex;
   flex-wrap: wrap;
@@ -122,7 +123,7 @@
 
 .cards-icon.link-style > ul > li {
   padding: var(--spacing-xs) var(--spacing-m);
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid rgb(0 0 0 / 20%);
   border-radius: var(--button-border-radius-large);
 }
 
@@ -137,3 +138,4 @@
 .cards-icon.link-style .cards-icon-card-body a {
   font-size: var(--body-font-size-m);
 }
+/* stylelint-enable no-descending-specificity */

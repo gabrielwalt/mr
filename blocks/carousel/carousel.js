@@ -26,7 +26,7 @@ const PAUSE_ON_INTERACTION = 15000; // Pause for 15 seconds after user interacti
 const SLIDE_TRANSITION_DELAY = 800; // Debounce delay for hero variant
 let slideUpdateTimeout = null;
 
-export function showSlide(block, slideIndex = 0) {
+function showSlide(block, slideIndex = 0) {
   const isWideVariant = block.classList.contains('wide');
   const slides = block.querySelectorAll('.carousel-slide:not(.clone)');
   const allSlides = block.querySelectorAll('.carousel-slide');
@@ -294,7 +294,7 @@ function setupWideCarouselInfiniteLoop(block, slidesWrapper) {
       const cloneFirst = slidesWrapper.querySelector('.carousel-slide.clone:first-child');
       const cloneLast = slidesWrapper.querySelector('.carousel-slide.clone:last-child');
 
-      const scrollLeft = slidesWrapper.scrollLeft;
+      const { scrollLeft } = slidesWrapper;
       const containerWidth = slidesWrapper.offsetWidth;
       const scrollCenter = scrollLeft + containerWidth / 2;
 
@@ -962,7 +962,7 @@ export default async function decorate(block) {
 
       // Start at index 1 (real first slide)
       block.dataset.activeSlide = 1;
-      
+
       // Update indicators to match the offset
       // Note: indicators are 0-based for the real slides.
       // We need to map indicator i -> slide i+1

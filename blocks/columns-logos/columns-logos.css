@@ -51,14 +51,17 @@
 }
 
 /* Continuous scroll animation */
+/* stylelint-disable rule-empty-line-before -- keyframe rules don't need empty lines */
 @keyframes marquee-scroll {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
 }
+/* stylelint-enable rule-empty-line-before */
 
 /* Dark Section Variant */
 .section.dark .columns-logos {
