@@ -9,32 +9,22 @@
  * - .carousel - Simple card carousel (default)
  */
 
-/* ===== HERO VARIANT: Edge-to-edge wrapper ===== */
+/* ===== EDGE-TO-EDGE VARIANTS: Hero, Stories, Wide ===== */
+/* stylelint-disable no-descending-specificity -- variant wrapper selectors */
 main > div:has(.carousel.hero),
-main > .section:has(.carousel.hero),
-main div.carousel-wrapper:has(.carousel.hero) {
-  max-width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-/* ===== STORIES VARIANT: Edge-to-edge wrapper ===== */
 main > div:has(.carousel.stories.has-intro),
-main > .section:has(.carousel.stories.has-intro),
-main div.carousel-wrapper:has(.carousel.stories.has-intro) {
-  max-width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-/* ===== WIDE VARIANT: Edge-to-edge wrapper ===== */
 main > div:has(.carousel.wide),
+main > .section:has(.carousel.hero),
+main > .section:has(.carousel.stories.has-intro),
 main > .section:has(.carousel.wide),
+main div.carousel-wrapper:has(.carousel.hero),
+main div.carousel-wrapper:has(.carousel.stories.has-intro),
 main div.carousel-wrapper:has(.carousel.wide) {
   max-width: 100%;
   padding: 0;
   margin: 0;
 }
+/* stylelint-enable no-descending-specificity */
 
 /* ===== BASE CAROUSEL STYLES ===== */
 .carousel {
@@ -81,7 +71,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 }
 
 .carousel .carousel-intro-heading {
-  font-family: Roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 28px;
   font-weight: 400;
   line-height: 1.2;
@@ -98,7 +88,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 .carousel .carousel-intro-description {
   font-size: 18px;
   line-height: 1.6;
-  color: #6b6b6b;
+  color: var(--color-text-muted);
   margin: 0 0 var(--spacing-m);
 }
 
@@ -158,9 +148,9 @@ main div.carousel-wrapper:has(.carousel.wide) {
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--color-surface-white);
   border-radius: 0;
-  box-shadow: 0 10px 20px 0 rgb(35 35 35 / 8%);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
   min-width: 280px;
 }
@@ -231,12 +221,12 @@ main div.carousel-wrapper:has(.carousel.wide) {
 
 /* Card Title - Bold */
 .carousel .carousel-title {
-  font-family: Roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 18px;
   font-weight: 700;
   line-height: 1.3;
   color: var(--text-color);
-  margin: 0 0 12px;
+  margin: 0 0 var(--spacing-s);
 }
 
 @media (width >= 768px) {
@@ -249,7 +239,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 .carousel .carousel-description {
   font-size: 15px;
   line-height: 1.5;
-  color: #6b6b6b;
+  color: var(--color-text-muted);
   margin: 0;
   flex: 1;
   display: -webkit-box;
@@ -262,8 +252,8 @@ main div.carousel-wrapper:has(.carousel.wide) {
 .carousel .carousel-divider {
   width: calc(100% + 48px);
   height: 1px;
-  background-color: #e0e0e0;
-  margin: 16px -24px;
+  background-color: var(--color-border-light);
+  margin: var(--spacing-m) -24px;
   border: none;
 }
 
@@ -308,7 +298,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
   justify-content: center;
   width: 26px;
   height: 26px;
-  border: 1px solid #1a1a1a;
+  border: 1px solid var(--color-border-dark);
   border-radius: 50%;
   text-decoration: none;
   position: relative;
@@ -326,7 +316,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
   height: 0;
   border-style: solid;
   border-width: 4px 0 4px 7px;
-  border-color: transparent transparent transparent #1a1a1a;
+  border-color: transparent transparent transparent var(--color-border-dark);
   margin-left: 2px;
   transition: border-color var(--transition-fast);
 }
@@ -355,7 +345,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
   justify-content: center;
   width: 26px;
   height: 26px;
-  border: 1px solid #1a1a1a;
+  border: 1px solid var(--color-border-dark);
   border-radius: 50%;
   text-decoration: none;
   position: relative;
@@ -375,9 +365,9 @@ main div.carousel-wrapper:has(.carousel.wide) {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  border: 1.5px solid #1a1a1a;
+  border: 1.5px solid var(--color-border-dark);
   background:
-    linear-gradient(-45deg, transparent 3px, #fff 3px);
+    linear-gradient(-45deg, transparent 3px, var(--color-surface-white) 3px);
   transition: border-color var(--transition-fast);
 }
 
@@ -389,9 +379,9 @@ main div.carousel-wrapper:has(.carousel.wide) {
   right: 7px;
   width: 4px;
   height: 4px;
-  border-top: 1.5px solid #1a1a1a;
-  border-right: 1.5px solid #1a1a1a;
-  background: #fff;
+  border-top: 1.5px solid var(--color-border-dark);
+  border-right: 1.5px solid var(--color-border-dark);
+  background: var(--color-surface-white);
   transition: border-color var(--transition-fast);
 }
 
@@ -445,14 +435,14 @@ main div.carousel-wrapper:has(.carousel.wide) {
   padding: 0;
   border: none;
   border-radius: 50%;
-  background-color: #d0d0d0;
+  background-color: var(--color-indicator-inactive);
   transition: background-color var(--transition-fast);
   cursor: pointer;
 }
 
 .carousel .carousel-slide-indicator button:hover,
 .carousel .carousel-slide-indicator button:focus-visible {
-  background-color: #a0a0a0;
+  background-color: var(--color-indicator-hover);
 }
 
 .carousel .carousel-slide-indicator button:disabled {
@@ -489,7 +479,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 .carousel .slide-prev::after {
   display: block;
   content: '';
-  border: 2px solid #1a1a1a;
+  border: 2px solid var(--color-border-dark);
   border-bottom: 0;
   border-left: 0;
   height: 24px;
@@ -504,7 +494,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 .carousel .slide-next::after {
   display: block;
   content: '';
-  border: 2px solid #1a1a1a;
+  border: 2px solid var(--color-border-dark);
   border-bottom: 0;
   border-left: 0;
   height: 24px;
@@ -524,11 +514,8 @@ main div.carousel-wrapper:has(.carousel.wide) {
   }
 }
 
-/* ============================================= */
-
 /* ===== WIDE VARIANT STYLES ===== */
-
-/* ============================================= */
+/* stylelint-disable no-descending-specificity -- variant overrides base styles */
 
 .carousel.wide {
   padding: 0 0 var(--spacing-xl);
@@ -584,7 +571,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
   height: auto;
   position: relative;
   background: transparent;
-  box-shadow: 0 10px 30px 0 rgb(35 35 35 / 15%);
+  box-shadow: var(--shadow-card-elevated);
   border-radius: 0;
   overflow: hidden;
   scroll-snap-align: center;
@@ -648,7 +635,8 @@ main div.carousel-wrapper:has(.carousel.wide) {
 
 .carousel.wide .carousel-slide-footer-wrapper {
   background: rgb(0 0 0 / 40%);
-  backdrop-filter: blur(15px);
+  /* stylelint-disable-next-line property-no-vendor-prefix -- Safari support */
+  -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
   padding: 16px 30px;
   display: flex;
@@ -658,20 +646,20 @@ main div.carousel-wrapper:has(.carousel.wide) {
 
 /* Wide card description text */
 .carousel.wide .carousel-slide-description {
-  font-family: Roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 19px;
   font-weight: 400;
   line-height: 27px;
   color: rgb(255 255 255 / 95%);
-  margin: 0 0 16px;
+  margin: 0 0 var(--spacing-m);
 }
 
 /* Wide card button - white pill button */
 .carousel.wide .carousel-slide-cta {
   display: inline-block;
-  background-color: #fff;
-  color: #000;
-  font-family: Roboto, sans-serif;
+  background-color: var(--color-surface-white);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -684,7 +672,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 }
 
 .carousel.wide .carousel-slide-cta:hover {
-  background-color: #e0e0e0;
+  background-color: var(--color-border-light);
   text-decoration: none;
 }
 
@@ -693,16 +681,12 @@ main div.carousel-wrapper:has(.carousel.wide) {
   display: none;
 }
 
-/* Cloned slides for infinite loop effect */
-.carousel.wide .carousel-slide.clone {
-  /* Clones should behave identically to real slides */
-}
-
-/* ============================================= */
+/* Cloned slides for infinite loop behave identically to real slides */
 
 /* ===== HERO VARIANT STYLES ===== */
 
-/* ============================================= */
+/* stylelint-enable no-descending-specificity */
+/* stylelint-disable no-descending-specificity -- hero variant overrides base styles */
 
 .carousel.hero {
   position: relative;
@@ -824,7 +808,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 
 /* Hero Content Typography */
 .carousel.hero .carousel-slide-content h2 {
-  font-family: Roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 2rem;
   font-weight: 400;
   line-height: 1.15;
@@ -846,7 +830,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 }
 
 .carousel.hero .carousel-slide-content p {
-  font-family: Roboto, sans-serif;
+  font-family: var(--body-font-family);
   font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
@@ -867,7 +851,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
   display: inline-block;
   padding: 12px 28px;
   background-color: rgb(255 255 255 / 95%);
-  color: #1a1a1a;
+  color: var(--color-border-dark);
   border: 2px solid rgb(255 255 255 / 95%);
   border-radius: var(--button-border-radius);
   font-size: var(--body-font-size-s);
@@ -878,8 +862,8 @@ main div.carousel-wrapper:has(.carousel.wide) {
 
 .carousel.hero .carousel-slide-content a.button:hover,
 .carousel.hero .carousel-slide-content strong a:hover {
-  background-color: hsl(0deg 0% 74.1% / 96.3%);
-  border-color: hsl(0deg 0% 74.1% / 96.3%);
+  background-color: hsl(0deg 0% 74.1% / 96.25%);
+  border-color: hsl(0deg 0% 74.1% / 96.25%);
   color: #000;
   text-decoration: none;
 }
@@ -918,7 +902,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
 }
 
 .carousel.hero .carousel-slide-indicator button:disabled {
-  background-color: #00a3e0;
+  background-color: var(--color-hero-indicator-active);
 }
 
 /* Hero Navigation Buttons - Positioned on sides */
@@ -993,3 +977,4 @@ main div.carousel-wrapper:has(.carousel.wide) {
     border-width: 2px;
   }
 }
+/* stylelint-enable no-descending-specificity */

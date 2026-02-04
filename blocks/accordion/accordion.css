@@ -23,11 +23,7 @@
 
 /* Individual Accordion Item */
 .accordion .accordion-item {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.accordion .accordion-item:last-child {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgb(0 0 0 / 10%);
 }
 
 /* Hide last item border only when expanded */
@@ -135,10 +131,9 @@
   }
 }
 
-/* ===========================================
-   HOMEPAGE-PORTFOLIO SECTION VARIANT
-   Two-column layout with dynamic image switching
-   =========================================== */
+/* ===== HOMEPAGE-PORTFOLIO SECTION VARIANT ===== */
+
+/* Two-column layout with dynamic image switching */
 
 /* Reduced padding for portfolio section */
 .section.homepage-portfolio .accordion {

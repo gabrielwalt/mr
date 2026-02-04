@@ -63,7 +63,7 @@
 }
 
 .cards-portfolio .cards-portfolio-card-title {
-  font-size: 18px;
+  font-size: var(--body-font-size-l);
   font-weight: 500;
   color: var(--text-color);
   margin: 0;
@@ -72,7 +72,7 @@
 
 /* "Learn more" styled as link but not interactive (card is clickable) */
 .cards-portfolio .cards-portfolio-card-link {
-  font-size: 18px;
+  font-size: var(--body-font-size-l);
   color: var(--link-color);
   font-weight: 500;
 }

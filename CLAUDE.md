@@ -18,11 +18,15 @@ Defined in `/styles/styles.css` - reference these variable names, don't hardcode
 
 | Category | Variables |
 |----------|-----------|
-| **Text** | `--text-color`, `--text-color-secondary`, `--text-color-inverse` |
-| **Brand** | `--color-brand-primary` (#005EB8), `--link-color` |
-| **Backgrounds** | `--background-color`, `--background-color-light`, `--background-color-dark`, `--background-color-black` |
+| **Text** | `--text-color`, `--text-color-secondary`, `--text-color-inverse`, `--color-text-muted` |
+| **Brand** | `--color-brand-primary` (#005EB8), `--link-color`, `--color-hero-indicator-active` |
+| **Backgrounds** | `--background-color`, `--background-color-light`, `--background-color-dark`, `--background-color-black`, `--color-surface-white` |
+| **Borders** | `--color-border-light`, `--color-border-dark` |
+| **Indicators** | `--color-indicator-inactive`, `--color-indicator-hover` |
 | **Spacing** | `--spacing-xxs` through `--spacing-xxxl` (4px to 64px scale) |
-| **Typography** | `--body-font-family`, `--heading-font-family` (Roboto), `--heading-font-weight` (400) |
+| **Typography** | `--body-font-family`, `--heading-font-family` (Roboto), `--heading-font-weight` (400), `--body-font-size-*` |
+| **Shadows** | `--shadow-card`, `--shadow-card-elevated` |
+| **Transitions** | `--transition-fast`, `--transition-base`, `--transition-slow` |
 
 ---
 
@@ -131,6 +135,76 @@ This works at all viewport sizes by calculating the offset from the centered con
 **Images** (`/content/images/`): news-assist-suites.jpg, news-manet-radio.jpg, news-avigilon-alerts.png, news-the-realreal.png, news-android-911.jpg
 
 **Icons** (`/icons/`): icon-about.svg, icon-newsroom.svg, icon-investors.svg, icon-careers.svg, icon-shop.svg
+
+---
+
+## CSS Style Guide
+
+### Color Syntax
+Always use CSS Color Level 4 syntax:
+```css
+/* ✓ Correct */
+color: rgb(0 0 0 / 95%);
+background: rgb(255 255 255 / 50%);
+
+/* ✗ Avoid */
+color: rgba(0, 0, 0, 0.95);
+background: rgba(255, 255, 255, 0.5);
+```
+
+### CSS Variables Usage
+1. **Always use tokens** for: colors, spacing, typography, shadows, transitions
+2. **Define new tokens** only if a value is used 2+ times across different files
+3. **Keep hardcoded** intentional design dimensions (specific widths like 330px, 920px, icon sizes)
+
+### Comment Format
+Use consistent section headers:
+```css
+/* ===== SECTION NAME ===== */
+```
+
+### Block CSS Scoping
+- Scope all styles to the block class: `.my-block .child-element`
+- Avoid external context selectors unless necessary (e.g., `.section.dark .my-block`)
+- Use `:has()` on wrapper for edge-to-edge blocks: `main > div:has(.my-block)`
+
+### Font Family
+Always use the variable, never hardcode:
+```css
+/* ✓ Correct */
+font-family: var(--body-font-family);
+
+/* ✗ Avoid */
+font-family: Roboto, sans-serif;
+```
+
+---
+
+## JavaScript Style Guide
+
+### Block Module Pattern
+Export only the default decorate function:
+```javascript
+// ✓ Correct
+export default function decorate(block) { ... }
+
+// ✗ Avoid - unless function is imported elsewhere
+export function showSlide() { ... }
+```
+
+### DOM Manipulation
+1. Use `document.createElement()` for structural elements
+2. `innerHTML = ''` is acceptable for clearing containers
+3. `innerHTML` with template literals is acceptable for:
+   - Fully controlled static content (no user input)
+   - Simple markup that would be verbose with createElement
+4. Always scope queries to `block`: `block.querySelector('.child')`
+
+### Accessibility
+Always include ARIA attributes on interactive elements:
+- `aria-label` on buttons without visible text
+- `aria-hidden` on decorative elements
+- `aria-expanded` on toggleable sections
 
 ---
 
