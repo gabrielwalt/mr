@@ -36,7 +36,7 @@ function buildPrimaryTools(nav) {
       const text = link ? link.textContent.trim() : li.textContent.trim();
 
       if (text === 'Search') {
-        // Build search form
+        // Build search form (desktop)
         const form = document.createElement('form');
         form.className = 'search-form';
         form.action = '/search';
@@ -60,6 +60,18 @@ function buildPrimaryTools(nav) {
         form.appendChild(input);
         form.appendChild(button);
         itemLi.appendChild(form);
+
+        // Build search trigger (mobile) - opens modal
+        const searchTrigger = document.createElement('button');
+        searchTrigger.className = 'search-trigger';
+        searchTrigger.type = 'button';
+        searchTrigger.setAttribute('aria-label', 'Open search');
+
+        const triggerIcon = document.createElement('img');
+        triggerIcon.src = `/icons/${iconMap[text]}`;
+        triggerIcon.alt = text;
+        searchTrigger.appendChild(triggerIcon);
+        itemLi.appendChild(searchTrigger);
       } else if (link) {
         // Build icon + text link
         const a = document.createElement('a');
@@ -87,6 +99,81 @@ function buildPrimaryTools(nav) {
   toolsDiv.remove();
 
   return primaryTools;
+}
+
+/**
+ * Builds the search modal for mobile
+ */
+function buildSearchModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'search-modal-overlay';
+
+  const modal = document.createElement('div');
+  modal.className = 'search-modal';
+
+  // Modal header with title and close button
+  const header = document.createElement('div');
+  header.className = 'search-modal-header';
+
+  const title = document.createElement('h3');
+  title.textContent = 'Search';
+  header.appendChild(title);
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'search-modal-close';
+  closeBtn.type = 'button';
+  closeBtn.setAttribute('aria-label', 'Close search');
+  header.appendChild(closeBtn);
+
+  modal.appendChild(header);
+
+  // Search form
+  const form = document.createElement('form');
+  form.className = 'search-modal-form';
+  form.action = '/search';
+  form.method = 'get';
+
+  const input = document.createElement('input');
+  input.type = 'search';
+  input.name = 'q';
+  input.placeholder = 'Search';
+  input.setAttribute('aria-label', 'Search');
+
+  const button = document.createElement('button');
+  button.type = 'submit';
+  button.setAttribute('aria-label', 'Submit search');
+
+  const icon = document.createElement('img');
+  icon.src = '/icons/header-search.svg';
+  icon.alt = 'Search';
+  button.appendChild(icon);
+
+  form.appendChild(input);
+  form.appendChild(button);
+  modal.appendChild(form);
+
+  overlay.appendChild(modal);
+
+  // Close on overlay click (but not on modal click)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('open');
+    }
+  });
+
+  // Close on close button click
+  closeBtn.addEventListener('click', () => {
+    overlay.classList.remove('open');
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+      overlay.classList.remove('open');
+    }
+  });
+
+  return overlay;
 }
 
 /**
@@ -146,6 +233,7 @@ function buildNavSectionsAndTools(nav) {
  * Builds the brand logo from author content
  * The author provides just a text link (e.g., "Motorola Solutions" linking to "/")
  * This function replaces it with the actual logo image
+ * Uses different logos for mobile (small) and desktop (full)
  * @param {HTMLElement} brandDiv The brand div containing the text link
  */
 function buildBrandLogo(brandDiv) {
@@ -154,15 +242,25 @@ function buildBrandLogo(brandDiv) {
 
   const altText = link.textContent.trim() || 'Motorola Solutions';
 
-  // Replace link content with logo image
+  // Replace link content with logo images
   link.textContent = '';
 
-  const logoImg = document.createElement('img');
-  logoImg.src = '/icons/logo.svg';
-  logoImg.alt = altText;
-  logoImg.loading = 'lazy';
+  // Desktop logo (full)
+  const logoDesktop = document.createElement('img');
+  logoDesktop.src = '/icons/logo.svg';
+  logoDesktop.alt = altText;
+  logoDesktop.loading = 'lazy';
+  logoDesktop.className = 'logo-desktop';
 
-  link.appendChild(logoImg);
+  // Mobile logo (small)
+  const logoMobile = document.createElement('img');
+  logoMobile.src = '/icons/logo-small.svg';
+  logoMobile.alt = altText;
+  logoMobile.loading = 'lazy';
+  logoMobile.className = 'logo-mobile';
+
+  link.appendChild(logoDesktop);
+  link.appendChild(logoMobile);
   link.setAttribute('aria-label', altText);
 }
 
@@ -704,6 +802,277 @@ function buildAboutMegaMenu(nav, container) {
 }
 
 /**
+ * Builds the mobile Contact Sales button for the top nav bar
+ * @param {HTMLElement} nav The nav element
+ * @returns {HTMLElement|null} The contact mobile element or null
+ */
+function buildMobileContactButton(nav) {
+  // Find the Sections div to get the Contact sales link
+  const sectionsDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Sections');
+  if (!sectionsDiv) return null;
+
+  // Look for the Contact sales link - could be in a p > a or decorated as button
+  let contactLink = sectionsDiv.querySelector('p > a');
+  if (!contactLink) {
+    // Try finding any anchor that contains "contact" in its text
+    const allLinks = sectionsDiv.querySelectorAll('a');
+    contactLink = Array.from(allLinks).find((a) => a.textContent.toLowerCase().includes('contact'));
+  }
+  if (!contactLink) return null;
+
+  const contactMobile = document.createElement('div');
+  contactMobile.className = 'nav-contact-mobile';
+
+  const a = document.createElement('a');
+  a.href = contactLink.href;
+  a.textContent = contactLink.textContent;
+  contactMobile.appendChild(a);
+
+  return contactMobile;
+}
+
+/**
+ * Builds the mobile flyout menu with sliding panels
+ * @param {HTMLElement} nav The nav element containing menu data
+ * @returns {HTMLElement} The mobile menu overlay element
+ */
+function buildMobileMenu(nav) {
+  const overlay = document.createElement('div');
+  overlay.className = 'mobile-menu-overlay';
+
+  // Menu header with back, title, and close
+  const header = document.createElement('div');
+  header.className = 'mobile-menu-header';
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'mobile-menu-back';
+  backBtn.setAttribute('aria-label', 'Go back');
+
+  const title = document.createElement('h2');
+  title.className = 'mobile-menu-title';
+  title.textContent = 'Menu';
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'mobile-menu-close';
+  closeBtn.setAttribute('aria-label', 'Close menu');
+
+  header.appendChild(backBtn);
+  header.appendChild(title);
+  header.appendChild(closeBtn);
+  overlay.appendChild(header);
+
+  // Panels container
+  const panelsContainer = document.createElement('div');
+  panelsContainer.className = 'mobile-menu-panels';
+
+  // Panel stack for navigation history
+  const panelStack = [];
+
+  // Helper to create a menu panel
+  function createPanel(id, items) {
+    const panel = document.createElement('div');
+    panel.className = 'mobile-menu-panel';
+    panel.dataset.panelId = id;
+
+    const list = document.createElement('ul');
+    list.className = 'mobile-menu-list';
+
+    items.forEach((item) => {
+      // Skip text-only items (no link and no submenu)
+      if (!item.link && !item.submenu) return;
+
+      const li = document.createElement('li');
+      li.className = 'mobile-menu-item';
+
+      if (item.submenu && item.submenu.length > 0) {
+        // Has submenu - create button
+        const btn = document.createElement('button');
+        btn.textContent = item.text;
+        btn.addEventListener('click', () => {
+          // Create and show submenu panel
+          const subPanelId = `${id}-${item.text.toLowerCase().replace(/\s+/g, '-')}`;
+          let subPanel = panelsContainer.querySelector(`[data-panel-id="${subPanelId}"]`);
+
+          if (!subPanel) {
+            subPanel = createPanel(subPanelId, item.submenu);
+            panelsContainer.appendChild(subPanel);
+          }
+
+          // Animate transition
+          const currentPanel = panelsContainer.querySelector('.mobile-menu-panel.active');
+          if (currentPanel) {
+            currentPanel.classList.add('exiting');
+            currentPanel.classList.remove('active');
+          }
+
+          panelStack.push({ id, title: title.textContent });
+          title.textContent = item.text;
+          backBtn.classList.add('visible');
+
+          requestAnimationFrame(() => {
+            subPanel.classList.add('active');
+          });
+        });
+        li.appendChild(btn);
+      } else if (item.link) {
+        // Just a link
+        const a = document.createElement('a');
+        a.href = item.link;
+        a.textContent = item.text;
+        li.appendChild(a);
+      }
+
+      list.appendChild(li);
+    });
+
+    panel.appendChild(list);
+    return panel;
+  }
+
+  // Build main menu items from nav content
+  const mainMenuItems = [];
+
+  // Get menu sections (Products, Industries, About us)
+  const menuSections = ['Products', 'Industries', 'About us'];
+  menuSections.forEach((sectionName) => {
+    const sectionDiv = Array.from(nav.querySelectorAll(':scope > div'))
+      .find((div) => div.querySelector('h2')?.textContent.trim() === sectionName);
+
+    if (sectionDiv) {
+      const submenuItems = [];
+      const ul = sectionDiv.querySelector('ul');
+
+      if (ul) {
+        ul.querySelectorAll(':scope > li').forEach((li) => {
+          const link = li.querySelector('a');
+          const nestedUl = li.querySelector('ul');
+
+          // Get text content excluding nested elements
+          const clone = li.cloneNode(true);
+          const nested = clone.querySelectorAll('ul, a');
+          nested.forEach((el) => el.remove());
+          const text = clone.textContent.trim();
+
+          if (nestedUl) {
+            // Has nested submenu
+            const nestedItems = [];
+            nestedUl.querySelectorAll(':scope > li').forEach((nestedLi) => {
+              const nestedLink = nestedLi.querySelector('a');
+              const deepNestedUl = nestedLi.querySelector('ul');
+
+              const nestedClone = nestedLi.cloneNode(true);
+              const nestedNested = nestedClone.querySelectorAll('ul, a');
+              nestedNested.forEach((el) => el.remove());
+              const nestedText = nestedClone.textContent.trim();
+
+              if (deepNestedUl) {
+                // Has even deeper nesting
+                const deepItems = [];
+                deepNestedUl.querySelectorAll(':scope > li').forEach((deepLi) => {
+                  const deepLink = deepLi.querySelector('a');
+                  if (deepLink) {
+                    deepItems.push({ text: deepLink.textContent.trim(), link: deepLink.href });
+                  }
+                });
+                if (nestedLink) {
+                  nestedItems.push({ text: nestedLink.textContent.trim(), link: nestedLink.href });
+                } else if (deepItems.length > 0) {
+                  nestedItems.push({ text: nestedText, submenu: deepItems });
+                }
+              } else if (nestedLink) {
+                nestedItems.push({ text: nestedLink.textContent.trim(), link: nestedLink.href });
+              }
+            });
+
+            if (link) {
+              submenuItems.push({ text: link.textContent.trim(), link: link.href });
+            }
+            if (nestedItems.length > 0) {
+              submenuItems.push({ text: text || link?.textContent.trim(), submenu: nestedItems });
+            }
+          } else if (link) {
+            submenuItems.push({ text: link.textContent.trim(), link: link.href });
+          }
+        });
+      }
+
+      mainMenuItems.push({
+        text: sectionName,
+        submenu: submenuItems.length > 0 ? submenuItems : null,
+      });
+    }
+  });
+
+  // Also add Support link from Tools section
+  const toolsDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Tools');
+  if (toolsDiv) {
+    const toolsList = toolsDiv.querySelector('ul');
+    if (toolsList) {
+      toolsList.querySelectorAll(':scope > li').forEach((li) => {
+        const link = li.querySelector('a');
+        if (link && link.textContent.trim() === 'Support') {
+          mainMenuItems.push({ text: 'Support', link: link.href });
+        }
+      });
+    }
+  }
+
+  // Create main panel
+  const mainPanel = createPanel('main', mainMenuItems);
+  mainPanel.classList.add('active');
+  panelsContainer.appendChild(mainPanel);
+
+  overlay.appendChild(panelsContainer);
+
+  // Back button handler
+  backBtn.addEventListener('click', () => {
+    if (panelStack.length === 0) return;
+
+    const prev = panelStack.pop();
+    title.textContent = prev.title;
+
+    if (panelStack.length === 0) {
+      backBtn.classList.remove('visible');
+    }
+
+    const currentPanel = panelsContainer.querySelector('.mobile-menu-panel.active');
+    const prevPanel = panelsContainer.querySelector(`[data-panel-id="${prev.id}"]`);
+
+    if (currentPanel) {
+      currentPanel.classList.remove('active');
+    }
+
+    if (prevPanel) {
+      prevPanel.classList.remove('exiting');
+      prevPanel.classList.add('active');
+    }
+  });
+
+  // Close button handler - will be wired up in decorate
+  overlay.closeMenu = () => {
+    overlay.classList.remove('open');
+    document.body.style.overflowY = '';
+
+    // Reset to main panel after transition
+    setTimeout(() => {
+      panelsContainer.querySelectorAll('.mobile-menu-panel').forEach((p) => {
+        p.classList.remove('active', 'exiting');
+      });
+      mainPanel.classList.add('active');
+      panelStack.length = 0;
+      title.textContent = 'Menu';
+      backBtn.classList.remove('visible');
+    }, 300);
+  };
+
+  closeBtn.addEventListener('click', overlay.closeMenu);
+
+  return overlay;
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -735,6 +1104,12 @@ export default async function decorate(block) {
     });
   }
 
+  // Build mobile Contact Sales button (before removing Sections div)
+  const contactMobile = buildMobileContactButton(nav);
+
+  // Build mobile menu (before removing menu divs)
+  const mobileMenu = buildMobileMenu(nav);
+
   // Build primary tools (Search, Support, Cart, Sign In)
   const primaryTools = buildPrimaryTools(nav);
 
@@ -742,8 +1117,12 @@ export default async function decorate(block) {
   const { navSections, navTools } = buildNavSectionsAndTools(nav);
 
   // Insert the built elements into nav in correct order
+  if (contactMobile) {
+    nav.insertBefore(contactMobile, brandDiv.nextSibling);
+  }
   if (primaryTools) {
-    nav.insertBefore(primaryTools, brandDiv.nextSibling);
+    const insertAfter = contactMobile ? contactMobile.nextSibling : brandDiv.nextSibling;
+    nav.insertBefore(primaryTools, insertAfter);
   }
   if (navSections) {
     nav.appendChild(navSections);
@@ -810,13 +1189,32 @@ export default async function decorate(block) {
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
       <span class="nav-hamburger-icon"></span>
     </button>`;
-  hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
+
+  // Mobile menu toggle
+  const toggleMobileMenu = () => {
+    if (!isDesktop.matches) {
+      const isOpen = mobileMenu.classList.contains('open');
+      if (isOpen) {
+        mobileMenu.closeMenu();
+        nav.setAttribute('aria-expanded', 'false');
+      } else {
+        mobileMenu.classList.add('open');
+        document.body.style.overflowY = 'hidden';
+        nav.setAttribute('aria-expanded', 'true');
+      }
+    }
+  };
+
+  hamburger.addEventListener('click', toggleMobileMenu);
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
-  // prevent mobile nav behavior on window resize
-  toggleMenu(nav, navSections, isDesktop.matches);
+
+  // Close mobile menu on desktop resize
   isDesktop.addEventListener('change', () => {
-    toggleMenu(nav, navSections, isDesktop.matches);
+    if (isDesktop.matches && mobileMenu.classList.contains('open')) {
+      mobileMenu.closeMenu();
+      nav.setAttribute('aria-expanded', 'false');
+    }
     closeMegaMenu();
   });
 
@@ -824,5 +1222,6 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   navWrapper.append(megaMenu);
+  navWrapper.append(mobileMenu);
   block.append(navWrapper);
 }

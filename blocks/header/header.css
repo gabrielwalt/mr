@@ -45,6 +45,29 @@ header nav .nav-brand img {
   height: 24px;
 }
 
+/* Logo visibility - desktop shows full, mobile shows small at 768px breakpoint */
+header nav .nav-brand img.logo-mobile {
+  display: none;
+}
+
+header nav .nav-brand img.logo-desktop {
+  display: block;
+}
+
+/* Small logo only below 768px viewport */
+@media (width < 768px) {
+  header nav .nav-brand img.logo-desktop {
+    display: none;
+  }
+
+  header nav .nav-brand img.logo-mobile {
+    display: block;
+    width: 56px;
+    height: 48px;
+    object-fit: contain;
+  }
+}
+
 header nav .nav-brand a {
   display: flex;
   align-items: center;
@@ -52,6 +75,11 @@ header nav .nav-brand a {
 
 header nav .nav-brand a:hover {
   color: currentcolor;
+}
+
+/* Hide mobile contact button on desktop */
+header nav .nav-contact-mobile {
+  display: none;
 }
 
 /* ===== PRIMARY TOOLS (Search, Support, Cart, Sign In) ===== */
@@ -107,21 +135,21 @@ header .nav-primary-tools .search-form {
   align-items: stretch;
   background-color: #fff;
   border: 1px solid #e6e7e8;
-  border-radius: 20px;
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 4px 8px 0 rgb(35 35 35 / 8%);
-  height: 36px;
+  height: 30px;
   margin-right: 12px;
 }
 
 header .nav-primary-tools .search-form input[type="search"] {
   border: none;
   background: transparent;
-  padding: 0 12px;
+  padding: 0 16px;
   font-size: 12px;
   font-family: var(--body-font-family);
   color: var(--text-color);
-  width: 170px;
+  width: 248px;
   outline: none;
   height: 100%;
 }
@@ -140,7 +168,7 @@ header .nav-primary-tools .search-form button {
   justify-content: center;
   background-color: rgb(0 0 0 / 90%);
   border: none;
-  border-radius: 18px;
+  border-radius: 15px;
   width: 52px;
   margin: 0;
   cursor: pointer;
@@ -327,41 +355,78 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   header nav {
     display: grid;
     grid-template:
-      'hamburger brand primary-tools' 64px
-      'sections sections sections' 0
-      'tools tools tools' 0 / auto 1fr auto;
+      'brand contact-mobile primary-tools hamburger' 64px / auto auto 1fr auto;
     align-items: center;
     gap: 0;
     background-color: #fff;
   }
 
-  header nav .nav-hamburger {
-    grid-area: hamburger;
+  /* Mobile brand - left aligned */
+  header nav .nav-brand {
+    grid-area: brand;
+    justify-self: start;
     padding-left: 16px;
   }
 
-  header nav .nav-brand {
-    grid-area: brand;
-    justify-self: center;
+  /* Logo visibility handled by 768px breakpoint above */
+
+  /* Contact Sales button in top row - mobile only */
+  header nav .nav-contact-mobile {
+    grid-area: contact-mobile;
+    display: flex;
+    align-items: center;
+    padding-left: 12px;
   }
 
-  header nav .nav-brand img {
-    width: 180px;
-    height: auto;
+  header nav .nav-contact-mobile a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 16px;
+    background-color: rgb(0 0 0 / 95%);
+    color: var(--text-color-inverse);
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
   }
 
+  /* Primary tools - icons only, larger size */
   header nav .nav-primary-tools {
     grid-area: primary-tools;
-    padding-right: 16px;
+    justify-self: end;
+    padding-right: 8px;
   }
 
   header nav .nav-primary-tools ul {
-    gap: 12px;
+    gap: 20px;
   }
 
-  /* Hide search box and text on mobile - show only icons */
+  /* Hide search form on mobile - show search trigger instead */
   header nav .nav-primary-tools .search-form {
     display: none;
+  }
+
+  /* Search trigger icon - visible on mobile */
+  header nav .nav-primary-tools .search-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  header nav .nav-primary-tools .search-trigger img {
+    width: 24px;
+    height: 24px;
+    opacity: 0.8;
+    transition: opacity var(--transition-fast);
+  }
+
+  header nav .nav-primary-tools .search-trigger:hover img {
+    opacity: 0.6;
   }
 
   header nav .nav-primary-tools a {
@@ -370,70 +435,355 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 
   header nav .nav-primary-tools a img {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
   }
 
-  header nav .nav-sections {
-    grid-area: sections;
-    display: none;
-    visibility: hidden;
-  }
-
-  header nav .nav-tools {
-    grid-area: tools;
-    display: none;
-    visibility: hidden;
-  }
-
-  /* Expanded mobile menu */
-  header nav[aria-expanded='true'] {
-    grid-template:
-      'hamburger brand primary-tools' 64px
-      'sections sections sections' 1fr
-      'tools tools tools' auto / auto 1fr auto;
-    min-height: 100dvh;
-    background-color: #fff;
-  }
-
-  header nav[aria-expanded='true'] .nav-sections {
-    display: block;
-    visibility: visible;
-    padding: 16px;
-    border-top: 1px solid rgb(0 0 0 / 10%);
-    overflow-y: auto;
-  }
-
-  header nav[aria-expanded='true'] .nav-sections ul {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-  }
-
-  header nav[aria-expanded='true'] .nav-sections li {
-    width: 100%;
-    padding: 16px 0;
-    border-bottom: 1px solid rgb(0 0 0 / 10%);
-    font-size: 16px;
-  }
-
-  header nav[aria-expanded='true'] .nav-tools {
-    display: block;
-    visibility: visible;
-    padding: 16px;
-    background-color: rgb(242 242 242);
-  }
-
-  header nav[aria-expanded='true'] .nav-tools a {
+  /* ===== SEARCH MODAL ===== */
+  header .search-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgb(0 0 0 / 50%);
+    z-index: 200;
     display: flex;
-    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  header .search-modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  header .search-modal {
+    background-color: #fff;
+    border-radius: 16px;
+    width: calc(100% - 32px);
+    max-width: 400px;
+    padding: 16px;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 20%);
+    transform: translateY(-20px);
+    transition: transform 0.2s ease;
+  }
+
+  header .search-modal-overlay.open .search-modal {
+    transform: translateY(0);
+  }
+
+  header .search-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  header .search-modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  header .search-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+  }
+
+  header .search-modal-close::before,
+  header .search-modal-close::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    background-color: rgb(0 0 0 / 70%);
+    border-radius: 1px;
+  }
+
+  header .search-modal-close::before {
+    transform: rotate(45deg);
+  }
+
+  header .search-modal-close::after {
+    transform: rotate(-45deg);
+  }
+
+  header .search-modal-close:hover::before,
+  header .search-modal-close:hover::after {
+    background-color: rgb(0 0 0 / 100%);
+  }
+
+  header .search-modal-form {
+    display: flex;
+    align-items: stretch;
+    background-color: #fff;
+    border: 1px solid #e6e7e8;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px 0 rgb(35 35 35 / 8%);
+    height: 44px;
+  }
+
+  header .search-modal-form input[type="search"] {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 0 16px;
+    font-size: 16px;
+    font-family: var(--body-font-family);
+    color: var(--text-color);
+    outline: none;
+    height: 100%;
+  }
+
+  header .search-modal-form input[type="search"]::placeholder {
+    color: rgb(0 0 0 / 50%);
+  }
+
+  header .search-modal-form button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(0 0 0 / 90%);
+    border: none;
+    border-radius: 15px;
+    width: 52px;
+    margin: 0;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+  }
+
+  header .search-modal-form button:hover {
+    background-color: rgb(0 0 0 / 70%);
+  }
+
+  header .search-modal-form button img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+  }
+
+  /* Hamburger on the right */
+  header nav .nav-hamburger {
+    grid-area: hamburger;
+    padding-right: 16px;
+    padding-left: 8px;
+  }
+
+  /* Hide nav sections and tools in top bar (they're in the flyout) */
+  header nav .nav-sections,
+  header nav .nav-tools {
+    display: none;
+    visibility: hidden;
+  }
+
+  /* ===== MOBILE FLYOUT MENU ===== */
+  header .mobile-menu-overlay {
+    position: fixed;
+    inset: 64px 0 0;
+    background-color: #fff;
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header .mobile-menu-overlay.open {
+    transform: translateX(0);
+  }
+
+  /* Mobile menu header */
+  header .mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    padding: 0 16px;
+    border-bottom: 1px solid rgb(0 0 0 / 10%);
+    flex-shrink: 0;
+  }
+
+  header .mobile-menu-back {
+    width: 40px;
     height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  header .mobile-menu-back.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  header .mobile-menu-back::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--text-color);
+    border-width: 0 0 2px 2px;
+    transform: rotate(45deg);
+  }
+
+  header .mobile-menu-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-color);
     text-align: center;
+    flex: 1;
+    margin: 0;
+  }
+
+  header .mobile-menu-close {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+  }
+
+  header .mobile-menu-close::before,
+  header .mobile-menu-close::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-color);
+    right: 0;
+  }
+
+  header .mobile-menu-close::before {
+    transform: rotate(45deg);
+  }
+
+  header .mobile-menu-close::after {
+    transform: rotate(-45deg);
+  }
+
+  /* Mobile menu panels container */
+  header .mobile-menu-panels {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Individual panels */
+  header .mobile-menu-panel {
+    position: absolute;
+    inset: 0;
+    background-color: #fff;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+    visibility: hidden;
+  }
+
+  header .mobile-menu-panel.active {
+    transform: translateX(0);
+    visibility: visible;
+    z-index: 2;
+  }
+
+  header .mobile-menu-panel.exiting {
+    transform: translateX(-30%);
+    visibility: visible;
+    z-index: 1;
+  }
+
+  /* Menu items list */
+  header .mobile-menu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  header .mobile-menu-item {
+    border-bottom: 1px solid rgb(0 0 0 / 10%);
+  }
+
+  header .mobile-menu-item a,
+  header .mobile-menu-item button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 18px 16px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-color);
+    text-decoration: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  header .mobile-menu-item a:hover,
+  header .mobile-menu-item button:hover {
+    background-color: rgb(0 0 0 / 3%);
+  }
+
+  /* Chevron for items with sub-menus */
+  header .mobile-menu-item button::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border: 2px solid var(--text-color-secondary);
+    border-width: 0 2px 2px 0;
+    transform: rotate(-45deg);
+    flex-shrink: 0;
+  }
+
+  /* Hide chevrons from nav-sections items on mobile (using flyout instead) */
+  header nav .nav-sections .default-content-wrapper > ul > li::after {
+    display: none;
   }
 }
 
 /* ===== DESKTOP LAYOUT ===== */
 @media (width >= 900px) {
+  /* Hide mobile-only elements on desktop */
+  header .mobile-menu-overlay {
+    display: none;
+  }
+
+  header nav .nav-contact-mobile {
+    display: none;
+  }
+
+  header nav .nav-primary-tools .search-trigger {
+    display: none;
+  }
+
+  header .search-modal-overlay {
+    display: none;
+  }
+
   /* Full-width row backgrounds using pseudo-elements on nav-wrapper */
   header .nav-wrapper {
     background: linear-gradient(to bottom, #fff 64px, rgb(242 242 242) 64px);
