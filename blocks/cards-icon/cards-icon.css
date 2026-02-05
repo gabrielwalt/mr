@@ -41,13 +41,31 @@
   padding: var(--spacing-m);
   border-radius: 8px;
   transition: box-shadow var(--transition-fast);
-  flex: 1 1 120px;
-  min-width: 120px;
+  flex: 0 1 120px;
+  min-width: 100px;
   max-width: 160px;
   height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Medium: 3 items per row, so 3+2 distribution for 5 items */
+@media (width < 700px) {
+  .cards-icon > ul > li {
+    flex: 0 1 calc(33.333% - 16px);
+    min-width: calc(33.333% - 16px);
+    max-width: calc(33.333% - 16px);
+  }
+}
+
+/* Narrow: 2 items per row, so 2+2+1 distribution for 5 items */
+@media (width < 450px) {
+  .cards-icon > ul > li {
+    flex: 0 1 calc(50% - 12px);
+    min-width: calc(50% - 12px);
+    max-width: calc(50% - 12px);
+  }
 }
 
 .cards-icon > ul > li:hover {

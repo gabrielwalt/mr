@@ -272,6 +272,17 @@ footer .footer .footer > .section:last-child a:any-link:hover {
     border-bottom: none;
     padding-top: 0;
     padding-bottom: 0;
+    margin-bottom: 24px;
+  }
+
+  /* Remove gap between accordion items on mobile */
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul {
+    gap: 0;
+  }
+
+  /* Add HR between legal blurb and copyright on mobile */
+  footer .footer .footer > .section:last-child {
+    border-top: 1px solid rgb(255 255 255 / 15%);
   }
 
   /* Column headers act as accordion triggers */

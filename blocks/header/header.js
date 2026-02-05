@@ -67,8 +67,9 @@ function buildPrimaryTools(nav) {
         searchTrigger.type = 'button';
         searchTrigger.setAttribute('aria-label', 'Open search');
 
+        // Use smaller icon for mobile
         const triggerIcon = document.createElement('img');
-        triggerIcon.src = `/icons/${iconMap[text]}`;
+        triggerIcon.src = '/icons/header-search-small.svg';
         triggerIcon.alt = text;
         searchTrigger.appendChild(triggerIcon);
         itemLi.appendChild(searchTrigger);

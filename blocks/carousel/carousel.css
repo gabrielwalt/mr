@@ -556,6 +556,14 @@ main div.carousel-wrapper:has(.carousel.wide) {
   }
 }
 
+/* Small mobile: hide navigation chevrons, keep only dots */
+@media (width < 600px) {
+  .carousel.wide .slide-prev,
+  .carousel.wide .slide-next {
+    display: none;
+  }
+}
+
 /* Tablet: medium centered item */
 @media (width >= 768px) and (width < 1200px) {
   .carousel.wide .carousel-slides {
@@ -615,6 +623,13 @@ main div.carousel-wrapper:has(.carousel.wide) {
   overflow: hidden;
 }
 
+/* Small mobile: taller aspect ratio (twice as high as wide) */
+@media (width < 600px) {
+  .carousel.wide .carousel-slide-image {
+    aspect-ratio: 1 / 2;
+  }
+}
+
 .carousel.wide .carousel-slide-image picture {
   display: block;
   width: 100%;
@@ -645,6 +660,16 @@ main div.carousel-wrapper:has(.carousel.wide) {
   display: flex;
   align-items: center;
   gap: 50px;
+}
+
+/* Small mobile: stack CTA above text */
+@media (width < 600px) {
+  .carousel.wide .carousel-slide-footer-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+  }
 }
 
 /* Wide card description text */
@@ -937,6 +962,13 @@ main div.carousel-wrapper:has(.carousel.wide) {
   justify-content: space-between;
   z-index: 1;
   pointer-events: none;
+}
+
+/* Hide navigation buttons on small screens - they overlap text */
+@media (width < 600px) {
+  .carousel.hero .carousel-navigation-buttons {
+    display: none;
+  }
 }
 
 .carousel.hero .carousel-navigation-buttons button {
