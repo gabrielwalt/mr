@@ -263,9 +263,25 @@ footer .footer .footer > .section:last-child a:any-link:hover {
 
 /* ===== MOBILE ACCORDION FOR LINK COLUMNS ===== */
 @media (width < 900px) {
+  /* Remove border lines above and below accordion section */
+  footer .footer .footer > .section:first-child {
+    border-bottom: none;
+  }
+
+  footer .footer .footer > .section:nth-child(2) {
+    border-bottom: none;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
   /* Column headers act as accordion triggers */
   footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li {
     border-bottom: 1px solid rgb(255 255 255 / 15%);
+  }
+
+  /* Add top border to the first accordion item */
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li:first-child {
+    border-top: 1px solid rgb(255 255 255 / 15%);
   }
 
   footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > p {
@@ -273,8 +289,10 @@ footer .footer .footer > .section:last-child a:any-link:hover {
     align-items: center;
     justify-content: space-between;
     cursor: pointer;
-    padding: 16px 0;
+    min-height: 45px;
+    padding: 0;
     margin: 0;
+    box-sizing: border-box;
   }
 
   /* Chevron indicator */

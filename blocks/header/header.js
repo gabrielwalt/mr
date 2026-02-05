@@ -102,29 +102,29 @@ function buildPrimaryTools(nav) {
 }
 
 /**
- * Builds the search modal for mobile
+ * Builds the search modal for mobile - full dark overlay with floating search bar
  */
 function buildSearchModal() {
   const overlay = document.createElement('div');
   overlay.className = 'search-modal-overlay';
 
-  const modal = document.createElement('div');
-  modal.className = 'search-modal';
-
-  // Modal header with title and close button
-  const header = document.createElement('div');
-  header.className = 'search-modal-header';
-
-  const title = document.createElement('h3');
-  title.textContent = 'Search';
-  header.appendChild(title);
-
+  // Close button - at overlay level (top right corner)
   const closeBtn = document.createElement('button');
   closeBtn.className = 'search-modal-close';
   closeBtn.type = 'button';
   closeBtn.setAttribute('aria-label', 'Close search');
-  header.appendChild(closeBtn);
+  overlay.appendChild(closeBtn);
 
+  // Modal container for search form
+  const modal = document.createElement('div');
+  modal.className = 'search-modal';
+
+  // Hidden header (kept for accessibility)
+  const header = document.createElement('div');
+  header.className = 'search-modal-header';
+  const title = document.createElement('h3');
+  title.textContent = 'Search';
+  header.appendChild(title);
   modal.appendChild(header);
 
   // Search form
@@ -154,7 +154,7 @@ function buildSearchModal() {
 
   overlay.appendChild(modal);
 
-  // Close on overlay click (but not on modal click)
+  // Close on overlay click (but not on modal/form click)
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) {
       overlay.classList.remove('open');
@@ -870,10 +870,26 @@ function buildMobileMenu(nav) {
   const panelStack = [];
 
   // Helper to create a menu panel
-  function createPanel(id, items) {
+  function createPanel(id, items, sectionHeader = null, largeHeader = null) {
     const panel = document.createElement('div');
     panel.className = 'mobile-menu-panel';
     panel.dataset.panelId = id;
+
+    // Add section header if provided (grey label at top)
+    if (sectionHeader) {
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'mobile-menu-section-header';
+      headerDiv.textContent = sectionHeader;
+      panel.appendChild(headerDiv);
+    }
+
+    // Add large header if provided (like "Safety & Security Ecosystem")
+    if (largeHeader) {
+      const largeHeaderDiv = document.createElement('div');
+      largeHeaderDiv.className = 'mobile-menu-section-header large';
+      largeHeaderDiv.textContent = largeHeader;
+      panel.appendChild(largeHeaderDiv);
+    }
 
     const list = document.createElement('ul');
     list.className = 'mobile-menu-list';
@@ -895,7 +911,8 @@ function buildMobileMenu(nav) {
           let subPanel = panelsContainer.querySelector(`[data-panel-id="${subPanelId}"]`);
 
           if (!subPanel) {
-            subPanel = createPanel(subPanelId, item.submenu);
+            // Section header is the item we're navigating into
+            subPanel = createPanel(subPanelId, item.submenu, item.text);
             panelsContainer.appendChild(subPanel);
           }
 
@@ -930,79 +947,130 @@ function buildMobileMenu(nav) {
     return panel;
   }
 
+  // Helper to find h3 section by title
+  function findH3Section(titleText) {
+    return Array.from(nav.querySelectorAll(':scope > div'))
+      .find((div) => div.querySelector('h3')?.textContent.trim() === titleText);
+  }
+
+  // Helper to parse nested list structure into menu items
+  function parseListToMenuItems(ul) {
+    const items = [];
+    if (!ul) return items;
+
+    ul.querySelectorAll(':scope > li').forEach((li) => {
+      // Link might be direct child or wrapped in p.button-container by AEM decoration
+      const link = li.querySelector(':scope > a') || li.querySelector(':scope > p > a');
+      const nestedUl = li.querySelector(':scope > ul');
+
+      // Get text content excluding nested elements
+      const clone = li.cloneNode(true);
+      const nested = clone.querySelectorAll('ul, a');
+      nested.forEach((el) => el.remove());
+      const text = clone.textContent.trim();
+
+      if (nestedUl) {
+        // Has nested list - parse recursively
+        const nestedItems = parseListToMenuItems(nestedUl);
+
+        if (link) {
+          // Item has both a link and nested items
+          // Create a submenu with the main link as the first item, followed by nested items
+          const combinedItems = [
+            { text: link.textContent.trim(), link: link.href },
+            ...nestedItems,
+          ];
+          items.push({ text: link.textContent.trim(), submenu: combinedItems });
+        } else if (text && nestedItems.length > 0) {
+          // Text-only header with submenu
+          items.push({ text, submenu: nestedItems });
+        }
+      } else if (link) {
+        items.push({ text: link.textContent.trim(), link: link.href });
+      }
+    });
+
+    return items;
+  }
+
   // Build main menu items from nav content
   const mainMenuItems = [];
 
-  // Get menu sections (Products, Industries, About us)
-  const menuSections = ['Products', 'Industries', 'About us'];
-  menuSections.forEach((sectionName) => {
-    const sectionDiv = Array.from(nav.querySelectorAll(':scope > div'))
-      .find((div) => div.querySelector('h2')?.textContent.trim() === sectionName);
+  // === PRODUCTS SECTION ===
+  // Products has detailed content in h3 sections
+  const productsItems = [];
 
-    if (sectionDiv) {
-      const submenuItems = [];
-      const ul = sectionDiv.querySelector('ul');
-
-      if (ul) {
-        ul.querySelectorAll(':scope > li').forEach((li) => {
-          const link = li.querySelector('a');
-          const nestedUl = li.querySelector('ul');
-
-          // Get text content excluding nested elements
-          const clone = li.cloneNode(true);
-          const nested = clone.querySelectorAll('ul, a');
-          nested.forEach((el) => el.remove());
-          const text = clone.textContent.trim();
-
-          if (nestedUl) {
-            // Has nested submenu
-            const nestedItems = [];
-            nestedUl.querySelectorAll(':scope > li').forEach((nestedLi) => {
-              const nestedLink = nestedLi.querySelector('a');
-              const deepNestedUl = nestedLi.querySelector('ul');
-
-              const nestedClone = nestedLi.cloneNode(true);
-              const nestedNested = nestedClone.querySelectorAll('ul, a');
-              nestedNested.forEach((el) => el.remove());
-              const nestedText = nestedClone.textContent.trim();
-
-              if (deepNestedUl) {
-                // Has even deeper nesting
-                const deepItems = [];
-                deepNestedUl.querySelectorAll(':scope > li').forEach((deepLi) => {
-                  const deepLink = deepLi.querySelector('a');
-                  if (deepLink) {
-                    deepItems.push({ text: deepLink.textContent.trim(), link: deepLink.href });
-                  }
-                });
-                if (nestedLink) {
-                  nestedItems.push({ text: nestedLink.textContent.trim(), link: nestedLink.href });
-                } else if (deepItems.length > 0) {
-                  nestedItems.push({ text: nestedText, submenu: deepItems });
-                }
-              } else if (nestedLink) {
-                nestedItems.push({ text: nestedLink.textContent.trim(), link: nestedLink.href });
-              }
-            });
-
-            if (link) {
-              submenuItems.push({ text: link.textContent.trim(), link: link.href });
-            }
-            if (nestedItems.length > 0) {
-              submenuItems.push({ text: text || link?.textContent.trim(), submenu: nestedItems });
-            }
-          } else if (link) {
-            submenuItems.push({ text: link.textContent.trim(), link: link.href });
-          }
-        });
-      }
-
-      mainMenuItems.push({
-        text: sectionName,
-        submenu: submenuItems.length > 0 ? submenuItems : null,
-      });
+  // Safety & Security Ecosystem submenu (from Technologies and Use cases h3 sections)
+  const techSection = findH3Section('Technologies');
+  const useCasesSection = findH3Section('Use cases');
+  if (techSection || useCasesSection) {
+    const ecosystemItems = [];
+    if (techSection) {
+      const techUl = techSection.querySelector('ul');
+      ecosystemItems.push({ text: 'Technologies', submenu: parseListToMenuItems(techUl) });
     }
-  });
+    if (useCasesSection) {
+      const useCasesUl = useCasesSection.querySelector('ul');
+      ecosystemItems.push({ text: 'Use cases', submenu: parseListToMenuItems(useCasesUl) });
+    }
+    if (ecosystemItems.length > 0) {
+      productsItems.push({ text: 'Safety & Security Ecosystem', submenu: ecosystemItems });
+    }
+  }
+
+  // Radio submenu (from Radio h3 section)
+  const radioSection = findH3Section('Radio');
+  if (radioSection) {
+    const radioUl = radioSection.querySelector('ul');
+    productsItems.push({ text: 'Radio', submenu: parseListToMenuItems(radioUl) });
+  }
+
+  // Software submenu (from Software h3 section)
+  const softwareSection = findH3Section('Software');
+  if (softwareSection) {
+    const softwareUl = softwareSection.querySelector('ul');
+    productsItems.push({ text: 'Software', submenu: parseListToMenuItems(softwareUl) });
+  }
+
+  // Video security submenu (from Video security h3 section)
+  const videoSection = findH3Section('Video security');
+  if (videoSection) {
+    const videoUl = videoSection.querySelector('ul');
+    productsItems.push({ text: 'Video security', submenu: parseListToMenuItems(videoUl) });
+  }
+
+  // Services submenu (from Services h3 section)
+  const servicesSection = findH3Section('Services');
+  if (servicesSection) {
+    const servicesUl = servicesSection.querySelector('ul');
+    productsItems.push({ text: 'Services', submenu: parseListToMenuItems(servicesUl) });
+  }
+
+  if (productsItems.length > 0) {
+    mainMenuItems.push({ text: 'Products', submenu: productsItems });
+  }
+
+  // === INDUSTRIES SECTION ===
+  const industriesDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Industries');
+  if (industriesDiv) {
+    const industriesUl = industriesDiv.querySelector('ul');
+    const industriesItems = parseListToMenuItems(industriesUl);
+    if (industriesItems.length > 0) {
+      mainMenuItems.push({ text: 'Industries', submenu: industriesItems });
+    }
+  }
+
+  // === ABOUT US SECTION ===
+  const aboutDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'About us');
+  if (aboutDiv) {
+    const aboutUl = aboutDiv.querySelector('ul');
+    const aboutItems = parseListToMenuItems(aboutUl);
+    if (aboutItems.length > 0) {
+      mainMenuItems.push({ text: 'About us', submenu: aboutItems });
+    }
+  }
 
   // Also add Support link from Tools section
   const toolsDiv = Array.from(nav.querySelectorAll(':scope > div'))
