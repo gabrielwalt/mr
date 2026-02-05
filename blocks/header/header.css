@@ -9,10 +9,10 @@ header nav > div:not(.nav-hamburger, .nav-brand, .nav-primary-tools, .nav-sectio
 header .nav-wrapper {
   width: 100%;
   z-index: 100;
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
-  box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+  box-shadow: 0 5px 10px 0 rgb(35 35 35 / 15%);
 }
 
 header nav {
@@ -439,6 +439,11 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 
 /* ===== DESKTOP LAYOUT ===== */
 @media (width >= 900px) {
+  /* Full-width row backgrounds using pseudo-elements on nav-wrapper */
+  header .nav-wrapper {
+    background: linear-gradient(to bottom, #fff 64px, rgb(242 242 242) 64px);
+  }
+
   header nav {
     display: grid;
     grid-template:
@@ -455,44 +460,32 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 
   header nav .nav-brand {
     grid-area: brand;
-    background-color: #fff;
     height: 64px;
     display: flex;
     align-items: center;
-    margin-left: -32px;
-    padding-left: 32px;
   }
 
   header nav .nav-primary-tools {
     grid-area: primary-tools;
-    background-color: #fff;
     height: 64px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-right: -32px;
-    padding-right: 32px;
   }
 
   header nav .nav-sections {
     grid-area: sections;
-    background-color: rgb(242 242 242);
     height: 64px;
     display: flex;
     align-items: center;
-    margin-left: -32px;
-    padding-left: 32px;
   }
 
   header nav .nav-tools {
     grid-area: tools;
-    background-color: rgb(242 242 242);
     height: 64px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    margin-right: -32px;
-    padding-right: 32px;
   }
 
 }

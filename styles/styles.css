@@ -160,7 +160,7 @@ body.appear {
 
 /* ===== HEADER ===== */
 header {
-  height: var(--nav-height);
+  /* Height is determined by content - no fixed height needed with sticky positioning */
 }
 
 header .header,

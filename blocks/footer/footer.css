@@ -55,8 +55,8 @@ footer .footer .footer > .section:first-child {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
-  padding: 32px 24px;
+  gap: 16px;
+  padding: 24px;
   border-bottom: 1px solid rgb(255 255 255 / 15%);
 }
 
@@ -64,8 +64,13 @@ footer .footer .footer > .section:first-child .default-content-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   width: 100%;
+}
+
+/* Group Follow us label with social icons */
+footer .footer .footer > .section:first-child .default-content-wrapper p:not(:first-child) {
+  margin-bottom: -8px;
 }
 
 footer .footer .footer > .section:first-child p {
@@ -82,8 +87,8 @@ footer .footer .footer > .section:first-child img {
 footer .footer .footer > .section:first-child p:not(:first-child) {
   font-size: 12px;
   color: rgb(255 255 255 / 60%);
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 /* Social icons list */
@@ -104,12 +109,12 @@ footer .footer .footer > .section:first-child ul img {
   width: 24px;
   height: 24px;
   filter: brightness(0) invert(1);
-  opacity: 0.6;
+  opacity: 1;
   transition: opacity var(--transition-fast);
 }
 
 footer .footer .footer > .section:first-child a:hover img {
-  opacity: 1;
+  opacity: 0.7;
 }
 
 footer .footer .footer > .section:first-child a:hover {
@@ -118,7 +123,7 @@ footer .footer .footer > .section:first-child a:hover {
 
 /* ===== ROW 2: Link Columns (second section) ===== */
 footer .footer .footer > .section:nth-child(2) {
-  padding: 32px 24px;
+  padding: 24px;
   border-bottom: 1px solid rgb(255 255 255 / 15%);
 }
 
@@ -142,6 +147,16 @@ footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul >
   letter-spacing: 1px;
   color: rgb(255 255 255);
   margin: 0;
+}
+
+/* Column title links should also be white */
+footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > a {
+  color: rgb(255 255 255);
+  font-weight: 500;
+}
+
+footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > a:hover {
+  color: rgb(255 255 255 / 80%);
 }
 
 /* Nested links within each column */
@@ -172,15 +187,16 @@ footer .footer .footer > .section:nth-child(2) a:hover {
 
 /* ===== ROW 3: Trademark Text (third section) ===== */
 footer .footer .footer > .section:nth-child(3) {
-  padding: 24px;
+  padding: 16px 24px;
   text-align: center;
+  border-bottom: 1px solid rgb(255 255 255 / 15%);
 }
 
 footer .footer .footer > .section:nth-child(3) p {
   font-size: 11px;
   color: rgb(255 255 255 / 60%);
   line-height: 1.6;
-  max-width: 900px;
+  max-width: none;
   margin: 0 auto;
 }
 
@@ -188,11 +204,11 @@ footer .footer .footer > .section:nth-child(3) p {
 
 /* NO horizontal rule above - just spacing */
 footer .footer .footer > .section:last-child {
-  padding: 24px;
+  padding: 16px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 footer .footer .footer > .section:last-child .default-content-wrapper {
@@ -240,7 +256,7 @@ footer .footer .footer > .section:last-child a:any-link:hover {
     padding: 24px 32px;
   }
 
-  /* Row 1: Logo left, social icons right */
+  /* Row 1: Logo left, Follow us + social icons right */
   footer .footer .footer > .section:first-child {
     flex-direction: row;
     justify-content: space-between;
@@ -249,8 +265,23 @@ footer .footer .footer > .section:last-child a:any-link:hover {
 
   footer .footer .footer > .section:first-child .default-content-wrapper {
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    gap: 16px;
+  }
+
+  /* Logo stays left, takes available space */
+  footer .footer .footer > .section:first-child .default-content-wrapper > p:first-child {
+    flex: 1 1 auto;
+  }
+
+  /* Follow us label positioned right, next to icons */
+  footer .footer .footer > .section:first-child .default-content-wrapper > p:not(:first-child) {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+  }
+
+  footer .footer .footer > .section:first-child .default-content-wrapper > ul {
+    flex: 0 0 auto;
   }
 
   /* Link columns - responsive grid on desktop */
@@ -259,13 +290,13 @@ footer .footer .footer > .section:last-child a:any-link:hover {
     gap: 32px;
   }
 
-  /* Trademark left-aligned on desktop */
+  /* Trademark centered on desktop */
   footer .footer .footer > .section:nth-child(3) {
-    text-align: left;
+    text-align: center;
   }
 
   footer .footer .footer > .section:nth-child(3) p {
-    margin: 0;
+    margin: 0 auto;
     max-width: none;
   }
 
