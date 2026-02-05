@@ -642,7 +642,11 @@ function buildAboutMegaMenu(nav, container) {
       const column = document.createElement('div');
       column.className = 'mega-menu-about-column';
 
-      const title = li.childNodes[0].textContent.trim();
+      // Extract title - clone li, remove nested ul, get remaining text
+      const clone = li.cloneNode(true);
+      const nestedUl = clone.querySelector('ul');
+      if (nestedUl) nestedUl.remove();
+      const title = clone.textContent.trim();
       const isSocialColumn = title.toLowerCase().includes('social');
 
       if (isSocialColumn) {
