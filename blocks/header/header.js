@@ -6,6 +6,166 @@ const isDesktop = window.matchMedia('(min-width: 900px)');
 
 let activeProductsPanel = null;
 
+/**
+ * Builds the primary tools section (Search, Support, Cart, Sign In)
+ */
+function buildPrimaryTools(nav) {
+  // Find the Tools div by h2 heading
+  const toolsDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Tools');
+  if (!toolsDiv) return null;
+
+  const primaryTools = document.createElement('div');
+  primaryTools.className = 'nav-primary-tools';
+
+  const ul = document.createElement('ul');
+
+  // Icon mapping for tools
+  const iconMap = {
+    Search: 'header-search.svg',
+    Support: 'header-support.svg',
+    Cart: 'header-cart.svg',
+    'Sign In': 'header-user.svg',
+  };
+
+  const toolsList = toolsDiv.querySelector('ul');
+  if (toolsList) {
+    toolsList.querySelectorAll(':scope > li').forEach((li) => {
+      const itemLi = document.createElement('li');
+      const link = li.querySelector('a');
+      const text = link ? link.textContent.trim() : li.textContent.trim();
+
+      if (text === 'Search') {
+        // Build search form
+        const form = document.createElement('form');
+        form.className = 'search-form';
+        form.action = '/search';
+        form.method = 'get';
+
+        const input = document.createElement('input');
+        input.type = 'search';
+        input.name = 'q';
+        input.placeholder = text;
+        input.setAttribute('aria-label', text);
+
+        const button = document.createElement('button');
+        button.type = 'submit';
+        button.setAttribute('aria-label', text);
+
+        const icon = document.createElement('img');
+        icon.src = `/icons/${iconMap[text]}`;
+        icon.alt = text;
+        button.appendChild(icon);
+
+        form.appendChild(input);
+        form.appendChild(button);
+        itemLi.appendChild(form);
+      } else if (link) {
+        // Build icon + text link
+        const a = document.createElement('a');
+        a.href = link.href;
+
+        const icon = document.createElement('img');
+        icon.src = `/icons/${iconMap[text]}`;
+        icon.alt = text;
+        a.appendChild(icon);
+
+        const span = document.createElement('span');
+        span.textContent = text;
+        a.appendChild(span);
+
+        itemLi.appendChild(a);
+      }
+
+      ul.appendChild(itemLi);
+    });
+  }
+
+  primaryTools.appendChild(ul);
+
+  // Remove the original Tools div from nav
+  toolsDiv.remove();
+
+  return primaryTools;
+}
+
+/**
+ * Builds the nav sections (Products, Industries, About us) and tools (Contact sales)
+ */
+function buildNavSectionsAndTools(nav) {
+  // Find the Sections div by h2 heading
+  const sectionsDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Sections');
+  if (!sectionsDiv) return { navSections: null, navTools: null };
+
+  // Build nav-sections
+  const navSections = document.createElement('div');
+  navSections.className = 'nav-sections';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'default-content-wrapper';
+
+  const ul = document.createElement('ul');
+
+  const sectionsList = sectionsDiv.querySelector('ul');
+  if (sectionsList) {
+    sectionsList.querySelectorAll(':scope > li').forEach((li) => {
+      const newLi = document.createElement('li');
+      newLi.textContent = li.textContent.trim();
+      newLi.setAttribute('aria-expanded', 'false');
+      ul.appendChild(newLi);
+    });
+  }
+
+  wrapper.appendChild(ul);
+  navSections.appendChild(wrapper);
+
+  // Build nav-tools from the Contact sales link
+  const navTools = document.createElement('div');
+  navTools.className = 'nav-tools';
+
+  const contactLink = sectionsDiv.querySelector('p > a');
+  if (contactLink) {
+    const toolsUl = document.createElement('ul');
+    const toolsLi = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = contactLink.href;
+    a.textContent = contactLink.textContent;
+    toolsLi.appendChild(a);
+    toolsUl.appendChild(toolsLi);
+    navTools.appendChild(toolsUl);
+  }
+
+  // Remove the original Sections div from nav
+  sectionsDiv.remove();
+
+  return { navSections, navTools };
+}
+
+/**
+ * Builds the brand logo from author content
+ * The author provides just a text link (e.g., "Motorola Solutions" linking to "/")
+ * This function replaces it with the actual logo image
+ * @param {HTMLElement} brandDiv The brand div containing the text link
+ */
+function buildBrandLogo(brandDiv) {
+  const link = brandDiv.querySelector('a');
+  if (!link) return;
+
+  const altText = link.textContent.trim() || 'Motorola Solutions';
+
+  // Replace link content with logo image
+  link.textContent = '';
+
+  const logoImg = document.createElement('img');
+  logoImg.src = '/icons/logo.svg';
+  logoImg.alt = altText;
+  logoImg.loading = 'lazy';
+
+  link.appendChild(logoImg);
+  link.setAttribute('aria-label', altText);
+}
+
 function closeMegaMenu() {
   const megaMenu = document.querySelector('.mega-menu');
   if (megaMenu) {
@@ -150,49 +310,50 @@ function buildProductsMegaMenu(nav, container) {
 
     const items = ul.querySelectorAll(':scope > li');
 
-    // Check if this is a Technologies/Use cases style panel (first item is intro)
+    // Check if this is a Technologies/Use cases style panel
     if (title === 'Technologies' || title === 'Use cases') {
       panel.classList.add('ecosystem-panel');
 
-      // First item is intro
-      const introItem = items[0];
-      if (introItem) {
-        const intro = document.createElement('div');
-        intro.className = 'mega-menu-panel-intro';
+      // Build intro from paragraphs before the ul
+      // Note: Fragment loader may wrap content, so look in wrapper or direct children
+      const intro = document.createElement('div');
+      intro.className = 'mega-menu-panel-intro';
 
-        const strong = introItem.querySelector('strong');
-        if (strong) {
+      // Find paragraphs - check in default-content-wrapper or direct children
+      const wrapper = div.querySelector('.default-content-wrapper') || div;
+      const paragraphs = wrapper.querySelectorAll('p');
+      paragraphs.forEach((p) => {
+        const strong = p.querySelector('strong');
+        const link = p.querySelector('a');
+
+        if (strong && !link) {
+          // Title paragraph
           const h4 = document.createElement('h4');
           h4.textContent = strong.textContent;
           intro.appendChild(h4);
+        } else if (link && !strong) {
+          // Link paragraph
+          const a = document.createElement('a');
+          a.href = link.href;
+          a.textContent = link.textContent;
+          intro.appendChild(a);
+        } else if (!strong && !link && p.textContent.trim()) {
+          // Description paragraph (non-empty text only)
+          const desc = document.createElement('p');
+          desc.textContent = p.textContent;
+          intro.appendChild(desc);
         }
+      });
 
-        // Get the text after strong
-        const textContent = introItem.textContent.replace(strong?.textContent || '', '').trim();
-        const linkEl = introItem.querySelector('a');
-        const text = linkEl ? textContent.replace(linkEl.textContent, '').trim() : textContent;
-
-        if (text) {
-          const p = document.createElement('p');
-          p.textContent = text;
-          intro.appendChild(p);
-        }
-
-        if (linkEl) {
-          const link = document.createElement('a');
-          link.href = linkEl.href;
-          link.textContent = linkEl.textContent;
-          intro.appendChild(link);
-        }
-
+      if (intro.children.length > 0) {
         panel.appendChild(intro);
       }
 
-      // Grid for remaining items
+      // Grid for all list items (no longer skipping the first one)
       const grid = document.createElement('div');
       grid.className = 'mega-menu-panel-grid';
 
-      Array.from(items).slice(1).forEach((item, index) => {
+      Array.from(items).forEach((item, index) => {
         const gridItem = document.createElement('div');
         gridItem.className = 'mega-menu-panel-grid-item';
 
@@ -332,39 +493,44 @@ function buildIndustriesMegaMenu(nav, container) {
   const featured = document.createElement('div');
   featured.className = 'mega-menu-industries-featured';
 
+  // Process featured items from paragraphs before the ul
+  // Note: Fragment loader may wrap content, so look in wrapper or direct children
+  const wrapper = industriesDiv.querySelector('.default-content-wrapper') || industriesDiv;
+  const paragraphs = wrapper.querySelectorAll('p');
+  let currentFeaturedItem = null;
+
+  paragraphs.forEach((p) => {
+    const strong = p.querySelector('strong');
+    const linkInStrong = strong?.querySelector('a');
+
+    if (strong && linkInStrong) {
+      // This is a featured item title (e.g., "Customer success stories")
+      currentFeaturedItem = document.createElement('div');
+      currentFeaturedItem.className = 'mega-menu-industries-featured-item';
+
+      const strongEl = document.createElement('strong');
+      const a = document.createElement('a');
+      a.href = linkInStrong.href;
+      a.textContent = linkInStrong.textContent;
+      strongEl.appendChild(a);
+      currentFeaturedItem.appendChild(strongEl);
+
+      featured.appendChild(currentFeaturedItem);
+    } else if (!strong && currentFeaturedItem && p.textContent.trim()) {
+      // This is a description for the current featured item
+      const span = document.createElement('span');
+      span.textContent = p.textContent.trim();
+      currentFeaturedItem.appendChild(span);
+      currentFeaturedItem = null; // Reset for next pair
+    }
+  });
+
+  // Process industry links from the ul
   const ul = industriesDiv.querySelector('ul');
   if (ul) {
     ul.querySelectorAll(':scope > li').forEach((li) => {
       const link = li.querySelector('a');
-      const strong = li.querySelector('strong');
-
-      if (strong) {
-        // Featured item with description
-        const item = document.createElement('div');
-        item.className = 'mega-menu-industries-featured-item';
-
-        const strongEl = document.createElement('strong');
-        const linkInStrong = strong.querySelector('a');
-        if (linkInStrong) {
-          const a = document.createElement('a');
-          a.href = linkInStrong.href;
-          a.textContent = linkInStrong.textContent;
-          strongEl.appendChild(a);
-        } else {
-          strongEl.textContent = strong.textContent;
-        }
-        item.appendChild(strongEl);
-
-        const description = li.textContent.replace(strong.textContent, '').trim();
-        if (description) {
-          const span = document.createElement('span');
-          span.textContent = description;
-          item.appendChild(span);
-        }
-
-        featured.appendChild(item);
-      } else if (link) {
-        // Simple link
+      if (link) {
         const a = document.createElement('a');
         a.href = link.href;
         a.textContent = link.textContent;
@@ -443,12 +609,30 @@ export default async function decorate(block) {
   nav.id = 'nav';
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  // Two-row header: brand + primary-tools (row 1), sections + tools (row 2)
-  const classes = ['brand', 'primary-tools', 'sections', 'tools'];
-  classes.forEach((c, i) => {
-    const section = nav.children[i];
-    if (section) section.classList.add(`nav-${c}`);
-  });
+  // Identify the brand div (first div with text link)
+  const brandDiv = nav.querySelector(':scope > div');
+  if (brandDiv) {
+    brandDiv.classList.add('nav-brand');
+    // Replace text link with logo image
+    buildBrandLogo(brandDiv);
+  }
+
+  // Build primary tools (Search, Support, Cart, Sign In)
+  const primaryTools = buildPrimaryTools(nav);
+
+  // Build nav sections and tools
+  const { navSections, navTools } = buildNavSectionsAndTools(nav);
+
+  // Insert the built elements into nav in correct order
+  if (primaryTools) {
+    nav.insertBefore(primaryTools, brandDiv.nextSibling);
+  }
+  if (navSections) {
+    nav.appendChild(navSections);
+  }
+  if (navTools) {
+    nav.appendChild(navTools);
+  }
 
   const navBrand = nav.querySelector('.nav-brand');
   const brandLink = navBrand?.querySelector('.button');
@@ -466,7 +650,6 @@ export default async function decorate(block) {
   buildAboutMegaMenu(nav, megaMenu);
 
   // Wire up nav section clicks to mega menu
-  const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     const menuMap = {
       Products: 'products',
