@@ -1166,7 +1166,7 @@ header .mega-menu-column li {
 
 header .mega-menu-column li a {
   font-size: 14px;
-  color: var(--text-color-secondary);
+  color: rgb(0 0 0 / 95%);
   transition: color var(--transition-fast);
 }
 
