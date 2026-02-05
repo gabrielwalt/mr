@@ -128,7 +128,35 @@
   /* --breakpoint-xxl: 1200px; Large desktop - footer 7 columns, content max-width */
 }
 
-/* Responsive adjustments */
+/* ===== RESPONSIVE TYPOGRAPHY ===== */
+
+/* Mobile-first: smaller sizes for small screens */
+@media (width < 600px) {
+  :root {
+    --heading-font-size-xxl: 32px;
+    --heading-font-size-xl: 28px;
+    --heading-font-size-l: 24px;
+    --heading-font-size-m: 20px;
+    --heading-font-size-s: 18px;
+    --heading-font-size-xs: 14px;
+    --body-font-size-xl: 18px;
+    --body-font-size-l: 16px;
+  }
+}
+
+/* Tablet: medium sizes */
+@media (width >= 600px) and (width < 900px) {
+  :root {
+    --heading-font-size-xxl: 40px;
+    --heading-font-size-xl: 34px;
+    --heading-font-size-l: 28px;
+    --heading-font-size-m: 22px;
+    --heading-font-size-s: 18px;
+    --heading-font-size-xs: 15px;
+  }
+}
+
+/* Desktop: full sizes */
 @media (width >= 900px) {
   :root {
     --body-font-size-m: 16px;
@@ -416,13 +444,21 @@ main > .section {
 main > .section > div {
   max-width: var(--content-max-width);
   margin: auto;
-  padding: 0 var(--spacing-l);
+  padding: 0 var(--spacing-m);
 }
 
 main > .section:first-of-type {
   margin-top: 0;
 }
 
+/* Tablet: medium padding */
+@media (width >= 600px) {
+  main > .section > div {
+    padding: 0 var(--spacing-l);
+  }
+}
+
+/* Desktop: larger padding */
 @media (width >= 900px) {
   main > .section > div {
     padding: 0 var(--spacing-xl);
