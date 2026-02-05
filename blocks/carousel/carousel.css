@@ -623,10 +623,10 @@ main div.carousel-wrapper:has(.carousel.wide) {
   overflow: hidden;
 }
 
-/* Small mobile: taller aspect ratio (twice as high as wide) */
+/* Small mobile: square aspect ratio */
 @media (width < 600px) {
   .carousel.wide .carousel-slide-image {
-    aspect-ratio: 1 / 2;
+    aspect-ratio: 1;
   }
 }
 
@@ -662,11 +662,12 @@ main div.carousel-wrapper:has(.carousel.wide) {
   gap: 50px;
 }
 
-/* Small mobile: stack CTA above text */
+/* Small mobile: stack CTA above text, centered */
 @media (width < 600px) {
   .carousel.wide .carousel-slide-footer-wrapper {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: 12px;
     padding: 16px 20px;
   }

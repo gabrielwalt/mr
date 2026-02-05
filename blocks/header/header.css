@@ -85,8 +85,8 @@ header nav .nav-brand a:hover {
   color: currentcolor;
 }
 
-/* Hide mobile contact button on desktop */
-header nav .nav-contact-mobile {
+/* Hide mobile contact button on desktop - it's in nav-tools there */
+header nav .nav-primary-tools .contact-sales-mobile {
   display: none;
 }
 
@@ -363,7 +363,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   header nav {
     display: grid;
     grid-template:
-      'brand contact-mobile primary-tools hamburger' 64px / auto auto 1fr auto;
+      'brand primary-tools hamburger' 64px / auto 1fr auto;
     align-items: center;
     gap: 0;
     background-color: #fff;
@@ -378,15 +378,24 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 
   /* Logo visibility handled by 768px breakpoint above */
 
-  /* Contact Sales button in top row - mobile only */
-  header nav .nav-contact-mobile {
-    grid-area: contact-mobile;
-    display: flex;
-    align-items: center;
-    padding-left: 12px;
+  /* Primary tools - icons and Contact sales button */
+  header nav .nav-primary-tools {
+    grid-area: primary-tools;
+    justify-self: end;
+    padding-right: 8px;
   }
 
-  header nav .nav-contact-mobile a {
+  header nav .nav-primary-tools ul {
+    gap: 16px;
+  }
+
+  /* Contact Sales button in primary tools - positioned first via CSS order */
+  header nav .nav-primary-tools .contact-sales-mobile {
+    display: flex;
+    order: -1;
+  }
+
+  header nav .nav-primary-tools .contact-sales-mobile a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -401,15 +410,14 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     white-space: nowrap;
   }
 
-  /* Primary tools - icons only, larger size */
-  header nav .nav-primary-tools {
-    grid-area: primary-tools;
-    justify-self: end;
-    padding-right: 8px;
+  header nav .nav-primary-tools .contact-sales-mobile a:hover {
+    background-color: rgb(0 0 0 / 80%);
+    color: var(--text-color-inverse);
   }
 
-  header nav .nav-primary-tools ul {
-    gap: 20px;
+  /* Hide Support icon on mobile - it's in the hamburger menu */
+  header nav .nav-primary-tools .support-link {
+    display: none;
   }
 
   /* Hide search form on mobile - show search trigger instead */
@@ -753,8 +761,24 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     line-height: 1.2;
   }
 
+  /* Inline section title within menu list - styled like mega-menu h3 */
+  header .mobile-menu-section-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--text-color-secondary);
+    padding: 30px 16px 8px;
+    line-height: 1.2;
+  }
+
+  /* Menu separator - horizontal line */
+  header .mobile-menu-separator {
+    height: 1px;
+    background-color: rgb(0 0 0 / 10%);
+    margin: 8px 16px;
+  }
+
   header .mobile-menu-item {
-    border-bottom: 1px solid rgb(0 0 0 / 10%);
+    /* No borders between items */
   }
 
   header .mobile-menu-item a,
@@ -812,10 +836,6 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
 @media (width >= 900px) {
   /* Hide mobile-only elements on desktop */
   header .mobile-menu-overlay {
-    display: none;
-  }
-
-  header nav .nav-contact-mobile {
     display: none;
   }
 

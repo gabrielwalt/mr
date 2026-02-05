@@ -88,6 +88,11 @@ function buildPrimaryTools(nav) {
         a.appendChild(span);
 
         itemLi.appendChild(a);
+
+        // Add class to Support for mobile hiding
+        if (text === 'Support') {
+          itemLi.className = 'support-link';
+        }
       }
 
       ul.appendChild(itemLi);
@@ -95,6 +100,27 @@ function buildPrimaryTools(nav) {
   }
 
   primaryTools.appendChild(ul);
+
+  // Add Contact sales button to primary tools (for mobile positioning)
+  // This will be positioned before search icon on mobile via CSS order
+  const sectionsDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Sections');
+  if (sectionsDiv) {
+    let contactLink = sectionsDiv.querySelector('p > a');
+    if (!contactLink) {
+      const allLinks = sectionsDiv.querySelectorAll('a');
+      contactLink = Array.from(allLinks).find((a) => a.textContent.toLowerCase().includes('contact'));
+    }
+    if (contactLink) {
+      const contactLi = document.createElement('li');
+      contactLi.className = 'contact-sales-mobile';
+      const a = document.createElement('a');
+      a.href = contactLink.href;
+      a.textContent = contactLink.textContent;
+      contactLi.appendChild(a);
+      ul.insertBefore(contactLi, ul.firstChild);
+    }
+  }
 
   // Remove the original Tools div from nav
   toolsDiv.remove();
@@ -803,37 +829,6 @@ function buildAboutMegaMenu(nav, container) {
 }
 
 /**
- * Builds the mobile Contact Sales button for the top nav bar
- * @param {HTMLElement} nav The nav element
- * @returns {HTMLElement|null} The contact mobile element or null
- */
-function buildMobileContactButton(nav) {
-  // Find the Sections div to get the Contact sales link
-  const sectionsDiv = Array.from(nav.querySelectorAll(':scope > div'))
-    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Sections');
-  if (!sectionsDiv) return null;
-
-  // Look for the Contact sales link - could be in a p > a or decorated as button
-  let contactLink = sectionsDiv.querySelector('p > a');
-  if (!contactLink) {
-    // Try finding any anchor that contains "contact" in its text
-    const allLinks = sectionsDiv.querySelectorAll('a');
-    contactLink = Array.from(allLinks).find((a) => a.textContent.toLowerCase().includes('contact'));
-  }
-  if (!contactLink) return null;
-
-  const contactMobile = document.createElement('div');
-  contactMobile.className = 'nav-contact-mobile';
-
-  const a = document.createElement('a');
-  a.href = contactLink.href;
-  a.textContent = contactLink.textContent;
-  contactMobile.appendChild(a);
-
-  return contactMobile;
-}
-
-/**
  * Builds the mobile flyout menu with sliding panels
  * @param {HTMLElement} nav The nav element containing menu data
  * @returns {HTMLElement} The mobile menu overlay element
@@ -896,6 +891,23 @@ function buildMobileMenu(nav) {
     list.className = 'mobile-menu-list';
 
     items.forEach((item) => {
+      // Handle separator items (horizontal line)
+      if (item.type === 'separator') {
+        const separator = document.createElement('div');
+        separator.className = 'mobile-menu-separator';
+        list.appendChild(separator);
+        return;
+      }
+
+      // Handle section title items (non-clickable headers)
+      if (item.type === 'title') {
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'mobile-menu-section-title';
+        titleDiv.textContent = item.text;
+        list.appendChild(titleDiv);
+        return;
+      }
+
       // Skip text-only items (no link and no submenu)
       if (!item.link && !item.submenu) return;
 
@@ -960,8 +972,10 @@ function buildMobileMenu(nav) {
     if (!ul) return items;
 
     ul.querySelectorAll(':scope > li').forEach((li) => {
-      // Link might be direct child or wrapped in p.button-container by AEM decoration
-      const link = li.querySelector(':scope > a') || li.querySelector(':scope > p > a');
+      // Link might be direct child, wrapped in p.button-container, or wrapped in strong
+      const link = li.querySelector(':scope > a')
+        || li.querySelector(':scope > p > a')
+        || li.querySelector(':scope > strong > a');
       const nestedUl = li.querySelector(':scope > ul');
 
       // Get text content excluding nested elements
@@ -1001,47 +1015,53 @@ function buildMobileMenu(nav) {
   // Products has detailed content in h3 sections
   const productsItems = [];
 
-  // Safety & Security Ecosystem submenu (from Technologies and Use cases h3 sections)
+  // Safety & Security Ecosystem section title with Technologies and Use cases below
   const techSection = findH3Section('Technologies');
   const useCasesSection = findH3Section('Use cases');
   if (techSection || useCasesSection) {
-    const ecosystemItems = [];
+    // Add "Safety & Security Ecosystem" as a section title (not clickable)
+    productsItems.push({ text: 'Safety & Security Ecosystem', type: 'title' });
+
     if (techSection) {
       const techUl = techSection.querySelector('ul');
-      ecosystemItems.push({ text: 'Technologies', submenu: parseListToMenuItems(techUl) });
+      productsItems.push({ text: 'Technologies', submenu: parseListToMenuItems(techUl) });
     }
     if (useCasesSection) {
       const useCasesUl = useCasesSection.querySelector('ul');
-      ecosystemItems.push({ text: 'Use cases', submenu: parseListToMenuItems(useCasesUl) });
-    }
-    if (ecosystemItems.length > 0) {
-      productsItems.push({ text: 'Safety & Security Ecosystem', submenu: ecosystemItems });
+      productsItems.push({ text: 'Use cases', submenu: parseListToMenuItems(useCasesUl) });
     }
   }
 
-  // Radio submenu (from Radio h3 section)
+  // Products section title before Radio, Software, etc.
   const radioSection = findH3Section('Radio');
+  const softwareSection = findH3Section('Software');
+  const videoSection = findH3Section('Video security');
+  const servicesSection = findH3Section('Services');
+
+  if (radioSection || softwareSection || videoSection || servicesSection) {
+    // Add "Products" as a section title
+    productsItems.push({ text: 'Products', type: 'title' });
+  }
+
+  // Radio submenu (from Radio h3 section)
   if (radioSection) {
     const radioUl = radioSection.querySelector('ul');
     productsItems.push({ text: 'Radio', submenu: parseListToMenuItems(radioUl) });
   }
 
   // Software submenu (from Software h3 section)
-  const softwareSection = findH3Section('Software');
   if (softwareSection) {
     const softwareUl = softwareSection.querySelector('ul');
     productsItems.push({ text: 'Software', submenu: parseListToMenuItems(softwareUl) });
   }
 
   // Video security submenu (from Video security h3 section)
-  const videoSection = findH3Section('Video security');
   if (videoSection) {
     const videoUl = videoSection.querySelector('ul');
     productsItems.push({ text: 'Video security', submenu: parseListToMenuItems(videoUl) });
   }
 
   // Services submenu (from Services h3 section)
-  const servicesSection = findH3Section('Services');
   if (servicesSection) {
     const servicesUl = servicesSection.querySelector('ul');
     productsItems.push({ text: 'Services', submenu: parseListToMenuItems(servicesUl) });
@@ -1073,18 +1093,33 @@ function buildMobileMenu(nav) {
     }
   }
 
-  // Also add Support link from Tools section
-  const toolsDiv = Array.from(nav.querySelectorAll(':scope > div'))
-    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Tools');
-  if (toolsDiv) {
-    const toolsList = toolsDiv.querySelector('ul');
-    if (toolsList) {
-      toolsList.querySelectorAll(':scope > li').forEach((li) => {
-        const link = li.querySelector('a');
-        if (link && link.textContent.trim() === 'Support') {
-          mainMenuItems.push({ text: 'Support', link: link.href });
+  // === SUPPORT SECTION ===
+  // Add separator before Support
+  mainMenuItems.push({ type: 'separator' });
+
+  // Get Support submenu from the Support h2 section
+  const supportDiv = Array.from(nav.querySelectorAll(':scope > div'))
+    .find((div) => div.querySelector('h2')?.textContent.trim() === 'Support');
+  if (supportDiv) {
+    const supportUl = supportDiv.querySelector('ul');
+    const supportItems = parseListToMenuItems(supportUl);
+    if (supportItems.length > 0) {
+      mainMenuItems.push({ text: 'Support', submenu: supportItems });
+    } else {
+      // Fallback to just a link from Tools section
+      const toolsDiv = Array.from(nav.querySelectorAll(':scope > div'))
+        .find((div) => div.querySelector('h2')?.textContent.trim() === 'Tools');
+      if (toolsDiv) {
+        const toolsList = toolsDiv.querySelector('ul');
+        if (toolsList) {
+          toolsList.querySelectorAll(':scope > li').forEach((li) => {
+            const link = li.querySelector('a');
+            if (link && link.textContent.trim() === 'Support') {
+              mainMenuItems.push({ text: 'Support', link: link.href });
+            }
+          });
         }
-      });
+      }
     }
   }
 
@@ -1173,13 +1208,10 @@ export default async function decorate(block) {
     });
   }
 
-  // Build mobile Contact Sales button (before removing Sections div)
-  const contactMobile = buildMobileContactButton(nav);
-
   // Build mobile menu (before removing menu divs)
   const mobileMenu = buildMobileMenu(nav);
 
-  // Build primary tools (Search, Support, Cart, Sign In)
+  // Build primary tools (Search, Support, Cart, Sign In, and Contact sales for mobile)
   const primaryTools = buildPrimaryTools(nav);
 
   // Build search modal and wire up trigger
@@ -1202,12 +1234,8 @@ export default async function decorate(block) {
   const { navSections, navTools } = buildNavSectionsAndTools(nav);
 
   // Insert the built elements into nav in correct order
-  if (contactMobile) {
-    nav.insertBefore(contactMobile, brandDiv.nextSibling);
-  }
   if (primaryTools) {
-    const insertAfter = contactMobile ? contactMobile.nextSibling : brandDiv.nextSibling;
-    nav.insertBefore(primaryTools, insertAfter);
+    nav.insertBefore(primaryTools, brandDiv.nextSibling);
   }
   if (navSections) {
     nav.appendChild(navSections);
