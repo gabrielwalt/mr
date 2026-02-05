@@ -19,6 +19,120 @@ Migrating Motorola Solutions homepage (https://www.motorolasolutions.com/en_us.h
 - **Blocks**: `/blocks/` (carousel, accordion, cards-portfolio, cards-icon, columns-logos, header, footer, fragment)
 - **Icons**: `/icons/` (custom SVG icons)
 - **Images**: `/content/images/` (local assets)
+- **Navigation**: `/content/nav.html`, `/content/nav.plain.html` (fragment files)
+- **Footer**: `/content/footer.html`, `/content/footer.plain.html` (fragment files)
+
+---
+
+## Navigation Content Structure
+
+The nav content (`nav.plain.html`) uses semantic h2 headings to organize content that the header.js parses:
+
+```html
+<!-- 1. Brand (first div, becomes nav-brand) -->
+<div>
+  <p><a href="/">Motorola Solutions</a></p>  <!-- Text link - JS adds logo image -->
+</div>
+
+<!-- 2. Tools (h2 "Tools" - becomes nav-primary-tools) -->
+<div>
+  <h2>Tools</h2>
+  <ul>
+    <li>Search</li>  <!-- Text only - JS builds search form -->
+    <li><a href="...">Support</a></li>  <!-- JS adds icon -->
+    <li><a href="...">Cart</a></li>
+    <li><a href="...">Sign In</a></li>
+  </ul>
+</div>
+
+<!-- 3. Sections (h2 "Sections" - becomes nav-sections + nav-tools) -->
+<div>
+  <h2>Sections</h2>
+  <ul>
+    <li>Products</li>  <!-- Text only - triggers mega menu -->
+    <li>Industries</li>
+    <li>About us</li>
+  </ul>
+  <p><a href="...">Contact sales</a></p>  <!-- Becomes nav-tools button -->
+</div>
+
+<!-- 4+ Mega menu content (h2 titles: Support, Products, Industries, About us) -->
+<div>
+  <h2>Products</h2>
+  <!-- Nested lists for mega menu panels -->
+</div>
+```
+
+**Key Principle**: Authors only need to maintain translatable text. Icons and form markup are added programmatically by JavaScript.
+
+---
+
+## Fragment Files
+
+Fragment files (`nav.html`, `footer.html`) are loaded by blocks, not rendered as standalone pages.
+
+**⚠️ CRITICAL**: Fragment files must NOT have `<header></header>` or `<footer></footer>` tags in their HTML structure. These tags cause AEM to try loading header/footer blocks on the fragment page itself, creating recursive loading issues.
+
+**Correct fragment structure**:
+```html
+<!DOCTYPE html>
+<html>
+<head>...</head>
+<body>
+<main>
+  <!-- Fragment content here -->
+</main>
+</body>
+</html>
+```
+
+**Wrong** (causes duplicate header/recursion):
+```html
+<body>
+<header></header>  <!-- ✗ Don't include -->
+<main>...</main>
+<footer></footer>  <!-- ✗ Don't include -->
+</body>
+```
+
+---
+
+## Footer Content Structure
+
+The footer content (`footer.plain.html`) uses author-friendly text that JavaScript transforms:
+
+```html
+<!-- 1. Social section (first div) -->
+<div>
+  <p>Follow us:</p>  <!-- Label for authors - removed by JS -->
+  <ul>
+    <li><a href="...">LinkedIn</a></li>  <!-- Text replaced with icon by JS -->
+    <li><a href="...">Facebook</a></li>
+    <li><a href="...">X</a></li>
+    <li><a href="...">Instagram</a></li>
+    <li><a href="...">YouTube</a></li>
+  </ul>
+</div>
+
+<!-- 2. Link columns, trademark, copyright sections follow -->
+```
+
+**JavaScript Architecture** (`footer.js`):
+- `buildLogo()` - Creates logo link element pointing to `/icons/logo-inverted.svg`
+- `buildSocialIcons(socialDiv)` - Maps platform names to icon files
+
+**Social Icon Mapping**:
+```javascript
+const socialIconMap = {
+  LinkedIn: 'social-linkedin.svg',
+  Facebook: 'social-facebook.svg',
+  X: 'social-x.svg',
+  Instagram: 'social-instagram.svg',
+  YouTube: 'social-youtube.svg',
+};
+```
+
+**Key Principle**: Authors only write text links (e.g., "LinkedIn"), and JavaScript replaces them with the corresponding icons. The "Follow us:" label is removed after processing.
 
 ---
 
@@ -141,20 +255,20 @@ This works at all viewport sizes by calculating the offset from the centered con
 
 Two-row fixed header with different backgrounds per row.
 
-**Structure** (nav.html divs in order):
+**Visual Structure** (rendered output):
 1. `nav-brand` - Logo (uses `/icons/logo.svg`, NOT inverted)
-2. `nav-primary-tools` - Search, Support dropdown, Cart, Sign in icons
-3. `nav-sections` - Products, Industries, About us (with dropdown arrows)
+2. `nav-primary-tools` - Search form, Support, Cart, Sign In (icons added programmatically)
+3. `nav-sections` - Products, Industries, About us (with dropdown chevrons)
 4. `nav-tools` - Contact sales button
 
 **Row 1 (White, 64px)**: Brand + Primary tools
 - Background: `#fff`
 - Icons from `/icons/header-*.svg` (search, support, cart, user)
-- Support has dropdown arrow (`:nth-child(2)::after`)
+- Search bar: oblong button (52px wide, border-radius: 18px), 12px margin-right
 
 **Row 2 (Light Grey, 64px)**: Sections + Tools
 - Background: `rgb(242 242 242)`
-- Nav items have `.nav-drop` class if they have submenus
+- Nav items have chevrons that flip on expand
 - Contact sales: black pill button (`rgb(0 0 0 / 95%)`)
 
 **CSS Grid Layout** (desktop):
@@ -166,7 +280,25 @@ grid-template:
 
 **Mobile**: Hamburger menu, primary-tools visible, sections/tools hidden until expanded.
 
-**Mega-menu content**: Additional divs with `<h2>` titles (Support, Products, Industries, About us) are hidden by default. JS will wire these up for dropdown content in future iteration.
+**JavaScript Architecture** (`header.js`):
+- `buildBrandLogo(brandDiv)` - Replaces text link with logo image (`/icons/logo.svg`)
+- `buildPrimaryTools(nav)` - Finds "Tools" div by h2, creates search form and icon links programmatically
+- `buildNavSectionsAndTools(nav)` - Finds "Sections" div by h2, creates nav-sections and nav-tools
+- `buildProductsMegaMenu(nav, container)` - Builds Products mega menu from "Products" h2 div
+- `buildIndustriesMegaMenu(nav, container)` - Builds Industries mega menu
+- `buildAboutMegaMenu(nav, container)` - Builds About us mega menu
+
+**Icon Mapping** (in `buildPrimaryTools`):
+```javascript
+const iconMap = {
+  Search: 'header-search.svg',
+  Support: 'header-support.svg',
+  Cart: 'header-cart.svg',
+  'Sign In': 'header-user.svg',
+};
+```
+
+**Mega-menu**: Divs with `<h2>` titles (Support, Products, Industries, About us) contain mega menu content. JS parses these and builds interactive panels.
 
 ### footer (Four-Row Layout)
 
@@ -319,3 +451,6 @@ Always include ARIA attributes on interactive elements:
 5. Follow existing patterns in the codebase
 6. Update this file when learning new project-specific patterns
 7. Use `box-sizing: border-box` when setting width/height on padded elements
+8. **Fragment files** (nav.html, footer.html) must NOT have `<header>` or `<footer>` tags
+9. **Nav content** uses h2 headings ("Tools", "Sections") that JS parses - icons are added programmatically
+10. When modifying header.js, ensure `buildPrimaryTools` and `buildNavSectionsAndTools` functions exist
