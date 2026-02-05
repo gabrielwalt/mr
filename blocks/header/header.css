@@ -618,7 +618,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 56px;
+    height: 48px;
     padding: 0 16px;
     border-bottom: 1px solid rgb(0 0 0 / 10%);
     flex-shrink: 0;
@@ -627,7 +627,9 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   header .mobile-menu-back {
     display: flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
     background: none;
     border: none;
     cursor: pointer;
@@ -635,9 +637,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
-    color: var(--link-color);
-    font-size: 14px;
-    font-weight: 400;
+    position: relative;
   }
 
   header .mobile-menu-back.visible {
@@ -645,15 +645,19 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     pointer-events: auto;
   }
 
+  /* Left chevron - same color as close button */
   header .mobile-menu-back::before {
-    content: '←';
-    font-size: 16px;
-    color: var(--link-color);
+    content: '';
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--text-color);
+    border-width: 0 0 2px 2px;
+    transform: rotate(45deg);
+    margin-left: 4px;
   }
 
   header .mobile-menu-back::after {
-    content: 'Back';
-    color: var(--link-color);
+    display: none;
   }
 
   header .mobile-menu-title {
@@ -734,16 +738,14 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     padding: 0;
   }
 
-  /* Section header in mobile menu */
+  /* Section header in mobile menu - hidden since title shows at top */
   header .mobile-menu-section-header {
-    padding: 20px 16px 8px;
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--text-color-secondary);
+    display: none;
   }
 
-  /* Large section header (like "Safety & Security Ecosystem") */
+  /* Large section header (like "Safety & Security Ecosystem") - visible */
   header .mobile-menu-section-header.large {
+    display: block;
     font-size: 24px;
     font-weight: 300;
     color: var(--text-color);
@@ -763,9 +765,11 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     width: 100%;
     min-height: 48px;
     padding: 0 16px;
+    margin: 0;
     box-sizing: border-box;
     background: none;
     border: none;
+    border-radius: 0;
     font-size: 15px;
     font-weight: 400;
     color: var(--text-color);
@@ -1010,8 +1014,9 @@ header .mega-menu-panel.ecosystem-panel.active {
 }
 
 header .mega-menu-panel-intro {
-  width: 350px;
-  flex-shrink: 0;
+  flex: 0 0 25%;
+  min-width: 220px;
+  max-width: 350px;
 }
 
 header .mega-menu-panel-intro h4 {
