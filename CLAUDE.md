@@ -181,13 +181,14 @@ Standard breakpoints used across the project:
 |------------|-------|-------|
 | **sm** | 600px | Small mobile / very small tablet - cards start growing |
 | **md** | 768px | Tablet - carousel, accordion adjustments |
-| **lg** | 900px | Desktop - header two-row layout, main nav switch |
+| **lg** | 900px | Tablet breakpoint - iPad-style slide-out menu |
 | **xl** | 1024px | Large tablet / small desktop refinements |
-| **xxl** | 1200px | Large desktop - footer 7 columns, content max-width |
+| **xxl** | 1200px | Desktop - two-row header, mega menus, footer 7 columns |
 
-**Key layout changes:**
-- **< 900px**: Mobile header (hamburger menu, icons only in primary tools)
-- **≥ 900px**: Desktop header (two-row layout, search bar visible, mega menus)
+**Key layout changes (Header has THREE distinct breakpoints):**
+- **< 900px**: Mobile header (full-width hamburger menu, icons only)
+- **900px - 1199px**: Tablet header (iPad-style slide-out menu at 520px width, goes to top of screen)
+- **≥ 1200px**: Desktop header (two-row layout, search bar visible, mega menus, Support dropdown)
 - **≥ 1200px**: Footer columns expand to 7-column grid
 
 **Media query syntax** (use modern CSS syntax):
@@ -288,6 +289,11 @@ Used together in `homepage-portfolio` section. Accordion controls which cards-po
 
 **cards-portfolio image constraints**: Max 250x250px, centered with `margin: 0 auto`
 
+**Accordion responsive behavior** (homepage-portfolio section):
+- **Desktop (≥900px)**: Two-column layout - accordion left, image right (50%/50%)
+- **Mobile (<900px)**: Stacked layout with `flex-direction: column-reverse` (image on top)
+- **Accordion image constraint on mobile**: `max-width: 500px` and `margin: 0 auto` to prevent oversized images
+
 ### cards-icon
 
 Icon cards using custom SVGs from `/icons/`. Dark background (#1a1a1a), cyan strokes (#00b8e6).
@@ -318,9 +324,9 @@ main .section.image-full-width .default-content-wrapper p:has(picture) {
 
 This works at all viewport sizes by calculating the offset from the centered container.
 
-### header (Two-Row Layout)
+### header (Two-Row Layout with Three Responsive Modes)
 
-Two-row fixed header with different backgrounds per row.
+Two-row fixed header with different backgrounds per row. **THREE distinct responsive breakpoints**.
 
 **Visual Structure** (rendered output):
 1. `nav-brand` - Logo (uses `/icons/logo.svg`, NOT inverted)
@@ -338,22 +344,79 @@ Two-row fixed header with different backgrounds per row.
 - Nav items have chevrons that flip on expand
 - Contact sales: black pill button (`rgb(0 0 0 / 95%)`)
 
-**CSS Grid Layout** (desktop):
+**CSS Grid Layout** (desktop ≥1200px):
 ```css
 grid-template:
   'brand primary-tools' 64px
   'sections tools' 64px / 1fr auto;
 ```
 
-**Mobile**: Hamburger menu, primary-tools visible, sections/tools hidden until expanded.
+#### Header Responsive Modes
+
+**Mobile (<900px)**:
+- Single row with hamburger menu
+- Full-width slide-out menu from right
+- Menu starts at 64px from top (below nav bar)
+- No backdrop overlay
+
+**Tablet (900px - 1199px)** - iPad-style slide-out:
+- Single row: Brand + Contact sales + icons + hamburger
+- Slide-out menu: **520px width**, slides from right
+- Menu goes to **top of screen** (inset: 0), NOT below nav bar
+- Semi-transparent **backdrop overlay** (`rgb(0 0 0 / 50%)`)
+- Shadow on panel: `-8px 0 24px rgb(0 0 0 / 20%)`
+- Full logo.svg (NOT logo-small.svg)
+- Support hidden from top bar (in hamburger menu)
+- Search icon triggers modal overlay
+
+**Desktop (≥1200px)**:
+- Two-row layout with mega menus
+- Support dropdown with triangular arrow
+- Full search bar visible
+- No hamburger menu
+
+#### Support Dropdown (Desktop Only)
+
+Dropdown menu triggered by Support button in nav-primary-tools.
+
+**Styling:**
+- Triangular arrow pointing up (CSS `::before` pseudo-element)
+- Left-aligned links (NOT centered)
+- Separator lines between groups (HR from content "-" items)
+- Shadow: `0 4px 20px rgb(0 0 0 / 15%)`
+- Border-radius: 6px
+- Min-width: 380px
+
+**CSS for triangular arrow:**
+```css
+header .support-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #fff;
+  filter: drop-shadow(0 -2px 2px rgb(0 0 0 / 8%));
+}
+```
 
 **JavaScript Architecture** (`header.js`):
 - `buildBrandLogo(brandDiv)` - Replaces text link with logo image (`/icons/logo.svg`)
 - `buildPrimaryTools(nav)` - Finds "Tools" div by h2, creates search form and icon links programmatically
 - `buildNavSectionsAndTools(nav)` - Finds "Sections" div by h2, creates nav-sections and nav-tools
+- `buildMobileMenu(nav)` - Builds slide-out menu with backdrop, returns `{ overlay, backdrop }`
+- `buildSearchModal()` - Modal overlay for tablet search
 - `buildProductsMegaMenu(nav, container)` - Builds Products mega menu from "Products" h2 div
 - `buildIndustriesMegaMenu(nav, container)` - Builds Industries mega menu
 - `buildAboutMegaMenu(nav, container)` - Builds About us mega menu
+
+**Media Query Constants** (in header.js):
+```javascript
+const isDesktop = window.matchMedia('(min-width: 1200px)');
+const isTablet = window.matchMedia('(min-width: 900px) and (max-width: 1199px)');
+```
 
 **Icon Mapping** (in `buildPrimaryTools`):
 ```javascript
@@ -521,3 +584,57 @@ Always include ARIA attributes on interactive elements:
 8. **Fragment files** (nav.html, footer.html) must NOT have `<header>` or `<footer>` tags
 9. **Nav content** uses h2 headings ("Tools", "Sections") that JS parses - icons are added programmatically
 10. When modifying header.js, ensure `buildPrimaryTools` and `buildNavSectionsAndTools` functions exist
+11. **Header has THREE breakpoints** - Mobile (<900px), Tablet (900-1199px), Desktop (≥1200px) - don't confuse them
+12. **Tablet menu goes to TOP of screen** (`inset: 0`) - NOT below the nav bar like mobile
+13. **Support dropdown is desktop-only** (≥1200px) - on tablet/mobile, Support is in the hamburger menu
+14. **Accordion images on mobile** need `max-width: 500px` constraint when stacked above accordion
+
+---
+
+## CSS Patterns to Maintain
+
+### Slide-out Menu Positioning
+```css
+/* Mobile: starts below nav bar */
+@media (width < 900px) {
+  .mobile-menu-overlay {
+    inset: 64px 0 0;  /* Top offset = nav height */
+  }
+}
+
+/* Tablet: goes to top of screen */
+@media (width >= 900px) and (width < 1200px) {
+  .mobile-menu-overlay {
+    inset: 0 0 0 auto;  /* Full height, anchored right */
+    width: 520px;
+  }
+  .mobile-menu-backdrop {
+    inset: 0;  /* Full screen backdrop */
+  }
+}
+```
+
+### Dropdown with Triangular Arrow
+```css
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #fff;
+  filter: drop-shadow(0 -2px 2px rgb(0 0 0 / 8%));
+}
+```
+
+### Constrain and Center Images on Mobile
+```css
+@media (width < 900px) {
+  .image-container {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+```
