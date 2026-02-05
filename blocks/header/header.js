@@ -4,7 +4,7 @@ import { loadFragment } from '../fragment/fragment.js';
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
-let activeProductsPanel = null;
+let activeProductsPanel = 'technologies';
 
 /**
  * Builds the primary tools section (Search, Support, Cart, Sign In)
@@ -254,7 +254,11 @@ function buildProductsMegaMenu(nav, container) {
   const productsList = productsDiv.querySelector('ul');
   if (productsList) {
     productsList.querySelectorAll(':scope > li').forEach((li) => {
-      const categoryTitle = li.childNodes[0].textContent.trim();
+      // Extract category title - get direct text content excluding nested elements
+      const clone = li.cloneNode(true);
+      const subElements = clone.querySelectorAll('ul, a');
+      subElements.forEach((el) => el.remove());
+      const categoryTitle = clone.textContent.trim();
       const subUl = li.querySelector('ul');
 
       const categoryH3 = document.createElement('h3');
@@ -263,7 +267,7 @@ function buildProductsMegaMenu(nav, container) {
 
       if (subUl) {
         const navUl = document.createElement('ul');
-        subUl.querySelectorAll(':scope > li').forEach((subLi, index) => {
+        subUl.querySelectorAll(':scope > li').forEach((subLi) => {
           const navItem = document.createElement('li');
           const itemText = subLi.textContent.trim();
           const itemLink = subLi.querySelector('a');
@@ -278,9 +282,9 @@ function buildProductsMegaMenu(nav, container) {
             // It's a category trigger
             navItem.textContent = itemText;
             navItem.dataset.panel = itemText.toLowerCase().replace(/\s+/g, '-');
-            if (index === 0 && categoryTitle === 'Safety & Security Ecosystem') {
+            // Set Technologies as the default active panel
+            if (navItem.dataset.panel === 'technologies') {
               navItem.classList.add('active');
-              activeProductsPanel = navItem.dataset.panel;
             }
           }
           navUl.appendChild(navItem);

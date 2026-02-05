@@ -530,13 +530,15 @@ header .mega-menu-products-nav {
   width: 300px;
   flex-shrink: 0;
   border-right: 1px solid rgb(0 0 0 / 10%);
-  padding-right: 32px;
+  padding-right: 0;
+  margin-left: -32px;
+  padding-left: 32px;
 }
 
 header .mega-menu-products-nav h3 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-color);
+  font-size: 19px;
+  font-weight: 400;
+  color: var(--text-color-secondary);
   margin: 0 0 8px;
 }
 
@@ -548,7 +550,7 @@ header .mega-menu-products-nav ul {
 
 header .mega-menu-products-nav li {
   padding: 10px 0 10px 12px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--text-color);
   cursor: pointer;
@@ -557,6 +559,8 @@ header .mega-menu-products-nav li {
   align-items: center;
   justify-content: space-between;
   transition: color var(--transition-fast), border-color var(--transition-fast);
+  margin-left: -32px;
+  padding-left: 44px;
 }
 
 header .mega-menu-products-nav li[data-panel]::after {
@@ -582,6 +586,7 @@ header .mega-menu-products-nav li.active {
   color: var(--text-color);
   border-left-color: var(--link-color);
   background-color: rgb(0 0 0 / 3%);
+  padding-left: 41px;
 }
 
 header .mega-menu-products-nav li.active::after {
@@ -590,7 +595,7 @@ header .mega-menu-products-nav li.active::after {
 
 header .mega-menu-products-nav li a {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 12px;
   color: var(--text-color);
 }
 
@@ -625,7 +630,7 @@ header .mega-menu-panel-intro {
 }
 
 header .mega-menu-panel-intro h4 {
-  font-size: 28px;
+  font-size: 23px;
   font-weight: 400;
   margin: 0 0 16px;
   color: var(--text-color);
@@ -667,24 +672,26 @@ header .mega-menu-panel[data-panel="technologies"] .mega-menu-panel-grid {
 }
 
 header .mega-menu-panel-grid-item {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  display: block;
 }
 
 header .mega-menu-panel-grid-item img {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  margin-top: 2px;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+header .mega-menu-panel-grid-item-text {
+  display: inline;
 }
 
 header .mega-menu-panel-grid-item-text strong {
-  display: block;
+  display: inline;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-color);
-  margin-bottom: 6px;
 }
 
 header .mega-menu-panel-grid-item-text strong a {
@@ -697,10 +704,11 @@ header .mega-menu-panel-grid-item-text strong a:hover {
 }
 
 header .mega-menu-panel-grid-item-text span {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-color-secondary);
   line-height: 1.5;
   display: block;
+  margin-top: 6px;
 }
 
 /* Radio / Software / Video security / Services - multi-column layout */
