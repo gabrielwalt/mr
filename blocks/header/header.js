@@ -2,7 +2,8 @@ import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 // media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+const isDesktop = window.matchMedia('(min-width: 1200px)');
+const isTablet = window.matchMedia('(min-width: 900px) and (max-width: 1199px)');
 
 let activeProductsPanel = 'technologies';
 
@@ -74,24 +75,120 @@ function buildPrimaryTools(nav) {
         searchTrigger.appendChild(triggerIcon);
         itemLi.appendChild(searchTrigger);
       } else if (link) {
-        // Build icon + text link
-        const a = document.createElement('a');
-        a.href = link.href;
-
-        const icon = document.createElement('img');
-        icon.src = `/icons/${iconMap[text]}`;
-        icon.alt = text;
-        a.appendChild(icon);
-
-        const span = document.createElement('span');
-        span.textContent = text;
-        a.appendChild(span);
-
-        itemLi.appendChild(a);
-
-        // Add class to Support for mobile hiding
         if (text === 'Support') {
+          // Build Support with dropdown for desktop
           itemLi.className = 'support-link';
+
+          // Button trigger (looks like a link)
+          const trigger = document.createElement('button');
+          trigger.className = 'support-trigger';
+          trigger.type = 'button';
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.setAttribute('aria-label', 'Support menu');
+
+          const icon = document.createElement('img');
+          icon.src = `/icons/${iconMap[text]}`;
+          icon.alt = text;
+          trigger.appendChild(icon);
+
+          const span = document.createElement('span');
+          span.textContent = text;
+          trigger.appendChild(span);
+
+          itemLi.appendChild(trigger);
+
+          // Build dropdown from Support h2 section
+          const supportDiv = Array.from(nav.querySelectorAll(':scope > div'))
+            .find((div) => div.querySelector('h2')?.textContent.trim() === 'Support');
+
+          if (supportDiv) {
+            const dropdown = document.createElement('div');
+            dropdown.className = 'support-dropdown';
+
+            const dropdownUl = document.createElement('ul');
+            const supportUl = supportDiv.querySelector('ul');
+
+            // Icon mapping for support dropdown items
+            const supportIconMap = {
+              'Chat with us': 'support-chat.svg',
+              'Request Contact': 'support-email.svg',
+            };
+
+            if (supportUl) {
+              supportUl.querySelectorAll(':scope > li').forEach((supportLi) => {
+                const itemText = supportLi.textContent.trim();
+
+                // Handle separator
+                if (itemText === '-') {
+                  const separator = document.createElement('li');
+                  separator.className = 'support-dropdown-separator';
+                  dropdownUl.appendChild(separator);
+                  return;
+                }
+
+                const itemLink = supportLi.querySelector('a');
+                if (itemLink) {
+                  const dropdownLi = document.createElement('li');
+                  const a = document.createElement('a');
+                  a.href = itemLink.href;
+
+                  // Add icon if mapped
+                  const iconFile = supportIconMap[itemLink.textContent.trim()];
+                  if (iconFile) {
+                    const itemIcon = document.createElement('img');
+                    itemIcon.src = `/icons/${iconFile}`;
+                    itemIcon.alt = '';
+                    itemIcon.className = 'support-dropdown-icon';
+                    a.appendChild(itemIcon);
+                  }
+
+                  const textSpan = document.createElement('span');
+                  textSpan.textContent = itemLink.textContent;
+                  a.appendChild(textSpan);
+
+                  dropdownLi.appendChild(a);
+                  dropdownUl.appendChild(dropdownLi);
+                }
+              });
+            }
+
+            dropdown.appendChild(dropdownUl);
+            itemLi.appendChild(dropdown);
+
+            // Toggle dropdown on click
+            trigger.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+              trigger.setAttribute('aria-expanded', !isExpanded);
+              dropdown.classList.toggle('open');
+            });
+
+            // Close on click outside
+            document.addEventListener('click', () => {
+              trigger.setAttribute('aria-expanded', 'false');
+              dropdown.classList.remove('open');
+            });
+
+            // Prevent dropdown clicks from closing
+            dropdown.addEventListener('click', (e) => {
+              e.stopPropagation();
+            });
+          }
+        } else {
+          // Build icon + text link (Cart, Sign In)
+          const a = document.createElement('a');
+          a.href = link.href;
+
+          const icon = document.createElement('img');
+          icon.src = `/icons/${iconMap[text]}`;
+          icon.alt = text;
+          a.appendChild(icon);
+
+          const span = document.createElement('span');
+          span.textContent = text;
+          a.appendChild(span);
+
+          itemLi.appendChild(a);
         }
       }
 
@@ -831,9 +928,13 @@ function buildAboutMegaMenu(nav, container) {
 /**
  * Builds the mobile flyout menu with sliding panels
  * @param {HTMLElement} nav The nav element containing menu data
- * @returns {HTMLElement} The mobile menu overlay element
+ * @returns {Object} Object containing overlay and backdrop elements
  */
 function buildMobileMenu(nav) {
+  // Backdrop for tablet view (dims background behind menu)
+  const backdrop = document.createElement('div');
+  backdrop.className = 'mobile-menu-backdrop';
+
   const overlay = document.createElement('div');
   overlay.className = 'mobile-menu-overlay';
 
@@ -967,11 +1068,18 @@ function buildMobileMenu(nav) {
   }
 
   // Helper to parse nested list structure into menu items
-  function parseListToMenuItems(ul) {
+  function parseListToMenuItems(ul, includeSeparators = false) {
     const items = [];
     if (!ul) return items;
 
     ul.querySelectorAll(':scope > li').forEach((li) => {
+      // Check for separator marker (just "-")
+      const text = li.textContent.trim();
+      if (text === '-' && includeSeparators) {
+        items.push({ type: 'separator' });
+        return;
+      }
+
       // Link might be direct child, wrapped in p.button-container, or wrapped in strong
       const link = li.querySelector(':scope > a')
         || li.querySelector(':scope > p > a')
@@ -982,11 +1090,11 @@ function buildMobileMenu(nav) {
       const clone = li.cloneNode(true);
       const nested = clone.querySelectorAll('ul, a');
       nested.forEach((el) => el.remove());
-      const text = clone.textContent.trim();
+      const cleanText = clone.textContent.trim();
 
       if (nestedUl) {
         // Has nested list - parse recursively
-        const nestedItems = parseListToMenuItems(nestedUl);
+        const nestedItems = parseListToMenuItems(nestedUl, includeSeparators);
 
         if (link) {
           // Item has both a link and nested items
@@ -996,9 +1104,9 @@ function buildMobileMenu(nav) {
             ...nestedItems,
           ];
           items.push({ text: link.textContent.trim(), submenu: combinedItems });
-        } else if (text && nestedItems.length > 0) {
+        } else if (cleanText && nestedItems.length > 0) {
           // Text-only header with submenu
-          items.push({ text, submenu: nestedItems });
+          items.push({ text: cleanText, submenu: nestedItems });
         }
       } else if (link) {
         items.push({ text: link.textContent.trim(), link: link.href });
@@ -1102,7 +1210,8 @@ function buildMobileMenu(nav) {
     .find((div) => div.querySelector('h2')?.textContent.trim() === 'Support');
   if (supportDiv) {
     const supportUl = supportDiv.querySelector('ul');
-    const supportItems = parseListToMenuItems(supportUl);
+    // Include separators for Support menu (marked with "-" in nav content)
+    const supportItems = parseListToMenuItems(supportUl, true);
     if (supportItems.length > 0) {
       mainMenuItems.push({ text: 'Support', submenu: supportItems });
     } else {
@@ -1157,6 +1266,7 @@ function buildMobileMenu(nav) {
   // Close button handler - will be wired up in decorate
   overlay.closeMenu = () => {
     overlay.classList.remove('open');
+    backdrop.classList.remove('open');
     document.body.style.overflowY = '';
 
     // Reset to main panel after transition
@@ -1171,9 +1281,19 @@ function buildMobileMenu(nav) {
     }, 300);
   };
 
+  // Open menu handler
+  overlay.openMenu = () => {
+    overlay.classList.add('open');
+    backdrop.classList.add('open');
+    document.body.style.overflowY = 'hidden';
+  };
+
   closeBtn.addEventListener('click', overlay.closeMenu);
 
-  return overlay;
+  // Close on backdrop click (tablet only)
+  backdrop.addEventListener('click', overlay.closeMenu);
+
+  return { overlay, backdrop };
 }
 
 /**
@@ -1209,7 +1329,7 @@ export default async function decorate(block) {
   }
 
   // Build mobile menu (before removing menu divs)
-  const mobileMenu = buildMobileMenu(nav);
+  const { overlay: mobileMenu, backdrop: mobileMenuBackdrop } = buildMobileMenu(nav);
 
   // Build primary tools (Search, Support, Cart, Sign In, and Contact sales for mobile)
   const primaryTools = buildPrimaryTools(nav);
@@ -1303,7 +1423,7 @@ export default async function decorate(block) {
       <span class="nav-hamburger-icon"></span>
     </button>`;
 
-  // Mobile menu toggle
+  // Mobile menu toggle (works on mobile and tablet)
   const toggleMobileMenu = () => {
     if (!isDesktop.matches) {
       const isOpen = mobileMenu.classList.contains('open');
@@ -1311,8 +1431,7 @@ export default async function decorate(block) {
         mobileMenu.closeMenu();
         nav.setAttribute('aria-expanded', 'false');
       } else {
-        mobileMenu.classList.add('open');
-        document.body.style.overflowY = 'hidden';
+        mobileMenu.openMenu();
         nav.setAttribute('aria-expanded', 'true');
       }
     }
@@ -1331,10 +1450,16 @@ export default async function decorate(block) {
     closeMegaMenu();
   });
 
+  // Handle tablet to mobile transition - menu stays open but backdrop needs update
+  isTablet.addEventListener('change', () => {
+    // Just trigger CSS recalculation, no need for special handling
+  });
+
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   navWrapper.append(megaMenu);
+  navWrapper.append(mobileMenuBackdrop);
   navWrapper.append(mobileMenu);
   navWrapper.append(searchModal);
   block.append(navWrapper);
