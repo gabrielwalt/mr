@@ -1113,6 +1113,22 @@ export default async function decorate(block) {
   // Build primary tools (Search, Support, Cart, Sign In)
   const primaryTools = buildPrimaryTools(nav);
 
+  // Build search modal and wire up trigger
+  const searchModal = buildSearchModal();
+  if (primaryTools) {
+    const searchTrigger = primaryTools.querySelector('.search-trigger');
+    if (searchTrigger) {
+      searchTrigger.addEventListener('click', () => {
+        searchModal.classList.add('open');
+        // Focus the input after modal opens
+        setTimeout(() => {
+          const input = searchModal.querySelector('input[type="search"]');
+          if (input) input.focus();
+        }, 200);
+      });
+    }
+  }
+
   // Build nav sections and tools
   const { navSections, navTools } = buildNavSectionsAndTools(nav);
 
@@ -1223,5 +1239,6 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   navWrapper.append(megaMenu);
   navWrapper.append(mobileMenu);
+  navWrapper.append(searchModal);
   block.append(navWrapper);
 }

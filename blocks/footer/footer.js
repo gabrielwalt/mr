@@ -31,6 +31,35 @@ function buildLogo() {
 }
 
 /**
+ * Sets up accordion behavior for footer link columns on mobile
+ * @param {HTMLElement} linksSection The section containing the link columns
+ */
+function setupMobileAccordion(linksSection) {
+  const columns = linksSection.querySelectorAll(
+    ':scope > .default-content-wrapper > ul > li',
+  );
+
+  columns.forEach((column) => {
+    const titleP = column.querySelector(':scope > p');
+    const nestedList = column.querySelector(':scope > ul');
+
+    if (titleP && nestedList) {
+      titleP.addEventListener('click', () => {
+        // Close other accordions
+        columns.forEach((otherColumn) => {
+          if (otherColumn !== column && otherColumn.classList.contains('expanded')) {
+            otherColumn.classList.remove('expanded');
+          }
+        });
+
+        // Toggle this accordion
+        column.classList.toggle('expanded');
+      });
+    }
+  });
+}
+
+/**
  * Builds the social icons section from author content
  * The author provides "Follow us:" label + list of platform names with links
  * This function replaces text links with icon links
@@ -111,6 +140,12 @@ export default async function decorate(block) {
       buttonContainer.className = '';
     }
   });
+
+  // Setup mobile accordion for link columns (second section)
+  const linksSection = footer.querySelector(':scope > div:nth-child(2)');
+  if (linksSection) {
+    setupMobileAccordion(linksSection);
+  }
 
   block.append(footer);
 }

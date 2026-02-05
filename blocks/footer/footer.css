@@ -261,6 +261,53 @@ footer .footer .footer > .section:last-child a:any-link:hover {
   color: #fff;
 }
 
+/* ===== MOBILE ACCORDION FOR LINK COLUMNS ===== */
+@media (width < 900px) {
+  /* Column headers act as accordion triggers */
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li {
+    border-bottom: 1px solid rgb(255 255 255 / 15%);
+  }
+
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 16px 0;
+    margin: 0;
+  }
+
+  /* Chevron indicator */
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > p::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border: 2px solid rgb(255 255 255 / 60%);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  /* Expanded state - chevron points up */
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li.expanded > p::after {
+    transform: rotate(-135deg);
+  }
+
+  /* Hide nested links by default */
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > ul {
+    display: none;
+    padding-bottom: 16px;
+  }
+
+  /* Show nested links when expanded */
+  footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li.expanded > ul {
+    display: block;
+  }
+}
+
 /* ===== DESKTOP STYLES ===== */
 @media (width >= 900px) {
   footer .footer .footer > .section {
