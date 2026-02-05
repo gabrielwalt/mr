@@ -9,6 +9,132 @@ Migrating Motorola Solutions homepage (https://www.motorolasolutions.com/en_us.h
 1. **NEVER create screenshots outside `/tmp` folder** - All screenshots MUST be saved to `/tmp/` directory. Never save screenshots to project root or any workspace folder.
 2. **Always read files before editing** - Never modify code without reading it first.
 3. **Use `box-sizing: border-box`** - When setting explicit width/height on elements with padding.
+4. **REUSE existing blocks** - Always use existing blocks and variants before creating new ones. See "Block Reuse Guidelines" section.
+5. **Keep CLAUDE.md up-to-date** - Update this file when creating/modifying/deleting blocks, variants, or patterns. See "Maintaining This Documentation" section.
+
+---
+
+## Block Reuse Guidelines
+
+**IMPORTANT**: When importing new pages or content, ALWAYS prioritize reusing existing blocks and their variants.
+
+### Before Creating a New Block
+
+1. **Check the Block Reference table** - Review all existing blocks and their variants
+2. **Analyze if existing blocks can work** - Consider:
+   - Can an existing block handle this content with its current structure?
+   - Can an existing variant be used with minor CSS adjustments?
+   - Can a new variant of an existing block solve the need?
+3. **Only create new blocks when**:
+   - No existing block can reasonably accommodate the content pattern
+   - The content structure is fundamentally different from all existing blocks
+   - Creating a variant would require more than 50% new code
+
+### Decision Tree for Content Mapping
+
+```
+New content section identified
+    ↓
+Does it match an existing block's purpose?
+    ├─ YES → Use that block
+    │         ↓
+    │     Does styling match an existing variant?
+    │         ├─ YES → Use existing variant
+    │         └─ NO → Can styling be achieved with section styles (dark, highlight)?
+    │                   ├─ YES → Use base block + section style
+    │                   └─ NO → Create new VARIANT (not new block)
+    │
+    └─ NO → Is it similar to any existing block?
+              ├─ YES → Create new VARIANT of that block
+              └─ NO → Create new BLOCK (document it immediately!)
+```
+
+### Variant Naming Convention
+
+When creating new variants, use descriptive kebab-case names:
+- `carousel hero` - Hero-style carousel
+- `carousel stories` - Story cards carousel
+- `cards-icon link-style` - Link-styled icon cards
+
+### Examples of Correct Reuse
+
+| Content Need | ✅ Correct Approach | ❌ Wrong Approach |
+|--------------|---------------------|-------------------|
+| Hero banner with different colors | Use `carousel hero` + CSS variables | Create new `hero-banner` block |
+| Product cards in grid | Use `cards-portfolio` or `cards-icon` | Create new `product-cards` block |
+| Expandable FAQ | Use `accordion` | Create new `faq` block |
+| Logo strip | Use `columns-logos` | Create new `logo-strip` block |
+| Full-width image section | Use `image-full-width` section style | Create new `full-image` block |
+
+---
+
+## Maintaining This Documentation
+
+**This file is the project's source of truth.** Keep it current to ensure consistency.
+
+### When to Update CLAUDE.md
+
+| Event | Required Updates |
+|-------|------------------|
+| **New block created** | Add to Block Reference table, add full documentation in Custom Blocks section |
+| **New variant added** | Update the block's variant table, document specifics |
+| **Block deleted** | Remove from Block Reference, remove documentation |
+| **Variant removed** | Update variant table, remove variant-specific docs |
+| **New section style** | Add to Section Styles table |
+| **New page template** | Add to Page Templates section |
+| **New design token** | Add to Design Tokens table |
+| **New icon added** | Add to Local Assets section |
+| **CSS pattern discovered** | Add to CSS Patterns to Maintain |
+| **Bug fix with learnings** | Add to Reminders section |
+
+### Documentation Checklist for New Blocks
+
+When creating a new block, document ALL of the following:
+
+```markdown
+### block-name
+
+**Location**: `/blocks/block-name/`
+
+| Variant | Class | Purpose |
+|---------|-------|---------|
+| Default | `.block-name` | Description |
+| Variant | `.block-name.variant` | Description |
+
+**Authoring:**
+\`\`\`
+| Block Name (variant) |
+| -------------------- |
+| Content structure... |
+\`\`\`
+
+**Features**:
+- Feature 1
+- Feature 2
+
+**Responsive behavior**:
+- Mobile: ...
+- Desktop: ...
+```
+
+### Documentation Checklist for New Variants
+
+When adding a variant to an existing block:
+
+1. Add row to block's variant table
+2. Add "**Variant-name specifics**" section with:
+   - Key visual differences
+   - Unique behaviors
+   - Responsive changes
+   - CSS class name
+
+### Periodic Review
+
+When working on this project, periodically verify:
+- [ ] All blocks in `/blocks/` are documented
+- [ ] All variants mentioned in CSS are documented
+- [ ] Design tokens match what's in `styles.css`
+- [ ] Reminders section captures recent learnings
 
 ---
 
@@ -250,7 +376,15 @@ Standard breakpoints used across the project:
 
 ---
 
-## Template: template-home
+## Page Templates
+
+Templates are applied via page metadata: `Template: template-name`
+
+| Template | Class Applied | Purpose |
+|----------|---------------|---------|
+| `template-home` | `body.template-home` | Homepage layout with centered default content |
+
+### template-home
 
 Centers default content (text, headings, buttons, images) on homepage.
 
@@ -265,9 +399,52 @@ body.template-home main > .section:not(:has(.carousel.stories)) .default-content
 
 ---
 
+## Section Styles
+
+Applied via `section-metadata` block with `Style: style-name`. Multiple styles can be combined.
+
+| Style | Class | Purpose |
+|-------|-------|---------|
+| `highlight` | `.section.highlight` | Light blue background (`--background-color-light`), brand-colored headings |
+| `light` | `.section.light` | Same as highlight (alias) |
+| `dark` | `.section.dark` | Dark background (`--background-color-dark`), white text |
+| `black` | `.section.black` | Pure black background (`--background-color-black`), white text |
+| `image-full-width` | `.section.image-full-width` | Images break out of container to full viewport width |
+| `homepage-portfolio` | `.section.homepage-portfolio` | Two-column accordion + cards-portfolio layout |
+
+**Example usage in content:**
+```html
+<div class="section-metadata">
+  <div><div>Style</div><div>dark</div></div>
+</div>
+```
+
+---
+
+## Block Reference
+
+Complete reference of all blocks and their variants.
+
+### Summary Table
+
+| Block | Variants | Description |
+|-------|----------|-------------|
+| **carousel** | `hero`, `stories`, `wide`, (default) | Horizontal slide carousels with multiple layouts |
+| **accordion** | (default), (homepage-portfolio context) | Expandable content sections |
+| **cards-portfolio** | — | Product cards controlled by accordion |
+| **cards-icon** | (default), `link-style` | Icon navigation cards |
+| **columns-logos** | — | Continuous scrolling logo marquee |
+| **header** | — | Site header with three responsive modes |
+| **footer** | — | Site footer with social links |
+| **fragment** | — | Utility for loading content fragments |
+
+---
+
 ## Custom Blocks
 
 ### carousel (Unified with Variants)
+
+**Location**: `/blocks/carousel/`
 
 | Variant | Class | Purpose |
 |---------|-------|---------|
@@ -276,37 +453,173 @@ body.template-home main > .section:not(:has(.carousel.stories)) .default-content
 | Wide | `.carousel.wide` | Large centered cards (920px), 50% opacity on inactive, infinite loop |
 | Default | `.carousel` | Simple horizontal scrolling cards (330px) |
 
+**Authoring:**
+```
+| Carousel (hero) |
+| --------------- |
+| ![image](...)   |
+| ## Heading      |
+| Description     |
+| [CTA Link](url) |
+```
+
+**Hero variant specifics**:
+- Auto-rotation: 10 seconds between slides
+- Pauses on hover/focus/touch (15 seconds)
+- Dark gradient overlay on images
+- White text, inverted CTA button
+- Navigation arrows on sides (hidden <600px)
+- Dot indicators at bottom center
+
+**Stories variant specifics**:
+- Intro panel pulls content from preceding default-content-wrapper
+- Two-column layout on desktop (intro left, cards right)
+- Cards extend to right edge
+- Card structure: image, title (bold), description, links (Learn more, video, download icons)
+
 **Wide variant specifics**:
 - Card aspect ratio: `920 / 560` (1.64:1)
 - No padding-top (`padding: 0 0 var(--spacing-xl)`)
 - Navigation below slides with double margin (`margin-bottom: calc(2 * var(--spacing-xl))`)
 - Centered active slide, edge-to-edge, cloned slides for seamless infinite scroll
 - Inactive slides at 50% opacity, active at 100%
+- Glass-effect footer overlay with blur
 
-### accordion + cards-portfolio
+**Default variant specifics**:
+- Fixed-width cards (330px)
+- Horizontal scroll with snap
+- Card structure: image (16:9), title, description, divider, links
 
-Used together in `homepage-portfolio` section. Accordion controls which cards-portfolio group is visible via `data-title`/`data-category` matching.
+### accordion
 
-**cards-portfolio image constraints**: Max 250x250px, centered with `margin: 0 auto`
+**Location**: `/blocks/accordion/`
 
-**Accordion responsive behavior** (homepage-portfolio section):
-- **Desktop (≥900px)**: Two-column layout - accordion left, image right (50%/50%)
-- **Mobile (<900px)**: Stacked layout with `flex-direction: column-reverse` (image on top)
-- **Accordion image constraint on mobile**: `max-width: 500px` and `margin: 0 auto` to prevent oversized images
+| Context | Behavior |
+|---------|----------|
+| Default | Simple single-column expandable sections |
+| In `homepage-portfolio` section | Two-column layout with dynamic image switching |
+
+**Authoring:**
+```
+| Accordion |
+| --------- |
+| ### Title |
+| **Subtitle** |
+| Description text |
+| [Link](url) |
+| ![image](...) |
+```
+
+**Features**:
+- First item expanded by default
+- Only one item open at a time
+- Chevron icon hides when item is expanded
+- Smooth transitions
+
+**In homepage-portfolio section**:
+- Two-column layout on desktop (accordion left, image right)
+- `column-reverse` on mobile (image on top)
+- Controls visibility of corresponding `cards-portfolio` blocks via `data-title`/`data-category` matching
+- Accordion image constraint on mobile: `max-width: 500px` and `margin: 0 auto`
+
+### cards-portfolio
+
+**Location**: `/blocks/cards-portfolio/`
+
+Product cards displayed below accordion. Visibility controlled by accordion selection.
+
+**Authoring:**
+```
+| Cards Portfolio |
+| --------------- |
+| ## Category Title |
+| --------------- |
+| ![image](...) |
+| Product Name |
+| [Learn more](url) |
+```
+
+**Features**:
+- Hidden by default, shown when `.active` class added
+- H2 used for category matching (hidden in display)
+- 2x2 grid on mobile, 4-column grid on desktop
+- Image constraints: Max 250x250px, centered
+- Entire card is clickable link
 
 ### cards-icon
 
-Icon cards using custom SVGs from `/icons/`. Dark background (#1a1a1a), cyan strokes (#00b8e6).
+**Location**: `/blocks/cards-icon/`
 
-**Sizing**: Flexible cards that scale between 120px-160px wide, 120px tall
-```css
-flex: 1 1 120px;
-min-width: 120px;
-max-width: 160px;
-height: 120px;
+| Variant | Class | Purpose |
+|---------|-------|---------|
+| Default | `.cards-icon` | Icon grid with centered icons and text |
+| Link Style | `.cards-icon.link-style` | Pill-button style without icons |
+
+**Authoring:**
+```
+| Cards Icon |
+| ---------- |
+| ![icon](...) |
+| [Label](url) |
 ```
 
-**Hover**: Custom shadow `0 8px 20px 0 rgb(35 35 35 / 25%)` (dark variant uses white)
+**Default variant**:
+- Flexible cards that scale between 100px-160px wide, 120px tall
+- Icon images: 48x48px (mobile), 64x64px (desktop)
+- Entire card is clickable
+- Hover shadow: `0 8px 20px 0 rgb(35 35 35 / 25%)`
+- In `.section.dark`: white shadow on hover
+
+**Link-style variant** (`.cards-icon.link-style`):
+- Icons hidden
+- Pill-button appearance with border
+- Uses `--button-border-radius-large`
+
+**Responsive grid**:
+- < 450px: 2 items per row
+- 450-700px: 3 items per row
+- ≥ 700px: flexible wrap, centered
+
+### columns-logos
+
+**Location**: `/blocks/columns-logos/`
+
+Continuous scrolling logo marquee (partner logos).
+
+**Authoring:**
+```
+| Columns Logos |
+| ------------- |
+| ![logo1](...) | ![logo2](...) | ![logo3](...) | ... |
+```
+
+**Features**:
+- Infinite horizontal scroll animation (30s cycle)
+- Logos duplicated for seamless loop
+- Full viewport width (breaks out of container)
+- Fade edges (gradient masks left/right)
+- Logo height: 100px, max-width: 280px
+
+**In `.section.dark`**: Fade gradients use dark background color
+
+---
+
+### fragment (Utility Module)
+
+**Location**: `/blocks/fragment/`
+
+**Note**: Not typically used as a block in content. Provides `loadFragment()` utility function used by `header.js` and `footer.js` to load nav and footer content.
+
+**If used as a block:**
+```
+| Fragment |
+| -------- |
+| /path/to/fragment |
+```
+
+Loads the referenced fragment HTML and inserts it into the page.
+
+---
 
 ### image-full-width (Section Style)
 
