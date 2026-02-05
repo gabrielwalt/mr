@@ -112,6 +112,20 @@
   /* ===== FOCUS ===== */
   --focus-outline: 2px solid var(--color-brand-primary);
   --focus-outline-offset: 2px;
+
+  /* ===== RESPONSIVE BREAKPOINTS ===== */
+
+  /* These are documented as reference values, actual media queries use literals */
+
+  /* --breakpoint-sm: 600px;   Small mobile / very small tablet - cards start growing */
+
+  /* --breakpoint-md: 768px;   Tablet - carousel, accordion adjustments */
+
+  /* --breakpoint-lg: 900px;   Desktop - header two-row, main navigation switch */
+
+  /* --breakpoint-xl: 1024px;  Large tablet / small desktop refinements */
+
+  /* --breakpoint-xxl: 1200px; Large desktop - footer 7 columns, content max-width */
 }
 
 /* Responsive adjustments */
@@ -138,7 +152,7 @@
 
 /* ===== BASE STYLES ===== */
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -151,7 +165,7 @@ body {
   line-height: var(--body-line-height);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body.appear {
@@ -160,7 +174,9 @@ body.appear {
 
 /* ===== HEADER ===== */
 header {
-  /* Height is determined by content - no fixed height needed with sticky positioning */
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 header .header,

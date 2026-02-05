@@ -412,22 +412,36 @@ function buildProductsMegaMenu(nav, container) {
       const columns = document.createElement('div');
       columns.className = 'mega-menu-columns';
 
+      // Separate main columns from sidebar columns (Product line/lines, Resources)
+      const mainColumns = document.createElement('div');
+      mainColumns.className = 'mega-menu-columns-main';
+
+      const sidebarColumns = document.createElement('div');
+      sidebarColumns.className = 'mega-menu-columns-sidebar';
+
       items.forEach((item) => {
         const column = document.createElement('div');
         column.className = 'mega-menu-column';
 
-        // Column title
-        const titleText = item.childNodes[0].textContent.trim();
+        // Column title - check for direct link child first
         const titleLink = item.querySelector(':scope > a');
         const h4 = document.createElement('h4');
+        let columnTitle = '';
 
-        if (titleLink && titleLink.parentElement === item) {
+        if (titleLink) {
+          // Use the link text as the title
           const a = document.createElement('a');
           a.href = titleLink.href;
           a.textContent = titleLink.textContent;
+          columnTitle = titleLink.textContent.trim().toLowerCase();
           h4.appendChild(a);
         } else {
-          h4.textContent = titleText;
+          // Get direct text content (excluding nested ul)
+          const clone = item.cloneNode(true);
+          const nestedUl = clone.querySelector('ul');
+          if (nestedUl) nestedUl.remove();
+          columnTitle = clone.textContent.trim().toLowerCase();
+          h4.textContent = clone.textContent.trim();
         }
         column.appendChild(h4);
 
@@ -451,8 +465,19 @@ function buildProductsMegaMenu(nav, container) {
           column.appendChild(newUl);
         }
 
-        columns.appendChild(column);
+        // Add to sidebar or main area based on column title
+        if (columnTitle === 'product line' || columnTitle === 'product lines' || columnTitle === 'resources') {
+          column.classList.add('sidebar-column');
+          sidebarColumns.appendChild(column);
+        } else {
+          mainColumns.appendChild(column);
+        }
       });
+
+      columns.appendChild(mainColumns);
+      if (sidebarColumns.children.length > 0) {
+        columns.appendChild(sidebarColumns);
+      }
 
       panel.appendChild(columns);
     }

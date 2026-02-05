@@ -8,10 +8,6 @@ header nav > div:not(.nav-hamburger, .nav-brand, .nav-primary-tools, .nav-sectio
 /* ===== HEADER WRAPPER - TWO ROW LAYOUT ===== */
 header .nav-wrapper {
   width: 100%;
-  z-index: 100;
-  position: sticky;
-  top: 0;
-  left: 0;
   box-shadow: 0 5px 10px 0 rgb(35 35 35 / 15%);
 }
 
@@ -713,9 +709,35 @@ header .mega-menu-panel-grid-item-text span {
 
 /* Radio / Software / Video security / Services - multi-column layout */
 header .mega-menu-columns {
+  display: flex;
+  gap: 0;
+}
+
+/* Main columns area */
+header .mega-menu-columns-main {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 24px 32px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  flex: 1;
+  padding-right: 32px;
+}
+
+/* Sidebar columns with grey background */
+header .mega-menu-columns-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background-color: rgb(250 250 250);
+  padding: 24px;
+  margin: -32px -32px -32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+header .mega-menu-columns-sidebar .mega-menu-column h4 {
+  color: var(--text-color-secondary);
+  font-size: 13px;
+  font-weight: 500;
 }
 
 header .mega-menu-column {

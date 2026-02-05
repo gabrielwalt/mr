@@ -173,6 +173,37 @@ Defined in `/styles/styles.css` - reference these variable names, don't hardcode
 
 ---
 
+## Responsive Breakpoints
+
+Standard breakpoints used across the project:
+
+| Breakpoint | Value | Usage |
+|------------|-------|-------|
+| **sm** | 600px | Small mobile / very small tablet - cards start growing |
+| **md** | 768px | Tablet - carousel, accordion adjustments |
+| **lg** | 900px | Desktop - header two-row layout, main nav switch |
+| **xl** | 1024px | Large tablet / small desktop refinements |
+| **xxl** | 1200px | Large desktop - footer 7 columns, content max-width |
+
+**Key layout changes:**
+- **< 900px**: Mobile header (hamburger menu, icons only in primary tools)
+- **≥ 900px**: Desktop header (two-row layout, search bar visible, mega menus)
+- **≥ 1200px**: Footer columns expand to 7-column grid
+
+**Media query syntax** (use modern CSS syntax):
+```css
+/* Mobile-first (min-width) */
+@media (width >= 900px) { }
+
+/* Desktop-first (max-width) */
+@media (width < 900px) { }
+
+/* Range */
+@media (width >= 768px) and (width < 1200px) { }
+```
+
+---
+
 ## EDS Authoring Patterns
 
 - **Link → Button**: Link alone in its own paragraph becomes a button

@@ -149,13 +149,25 @@ footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul >
   margin: 0;
 }
 
+/* Column title in paragraph (AEM wraps text in p elements) */
+footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > p {
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgb(255 255 255);
+  margin: 0 0 12px;
+}
+
 /* Column title links should also be white */
-footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > a {
+footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > a,
+footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > p > a {
   color: rgb(255 255 255);
   font-weight: 500;
 }
 
-footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > a:hover {
+footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > a:hover,
+footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > p > a:hover {
   color: rgb(255 255 255 / 80%);
 }
 
