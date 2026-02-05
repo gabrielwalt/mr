@@ -202,6 +202,42 @@ Standard breakpoints used across the project:
 @media (width >= 768px) and (width < 1200px) { }
 ```
 
+### Fluid Responsive Behavior
+
+**⚠️ IMPORTANT**: Avoid fixed-width "jumps" between breakpoints. Content should scale fluidly across all viewport sizes.
+
+**Principles:**
+1. **No max-width constraints on primary containers** - Header, footer, and main layout should scale to full viewport width
+2. **Use percentage-based or viewport-relative widths** - Prefer `%`, `vw`, `fr` units over fixed `px` widths for containers
+3. **Flexible grids with auto-fill** - Use `repeat(auto-fill, minmax(min, 1fr))` for responsive card layouts
+4. **Smooth transitions** - When switching layouts at breakpoints, ensure visual continuity
+
+**What to avoid:**
+```css
+/* ✗ BAD - Creates fixed-width display between 900-1023px */
+.container {
+  max-width: 900px;
+}
+@media (width >= 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* ✓ GOOD - Fluid scaling with optional max on large screens */
+.container {
+  width: 100%;
+  max-width: 1400px; /* Only kicks in at very large viewports */
+  margin: 0 auto;
+}
+```
+
+**Header behavior**: Header scales to full viewport width at all sizes. No max-width constraint.
+
+**Footer behavior**: Footer scales to full viewport width. Only link column content has max-width for readability.
+
+**Content containers**: Use padding for breathing room rather than max-width to constrain content.
+
 ---
 
 ## EDS Authoring Patterns
@@ -348,7 +384,7 @@ Dark footer (`#111`) with 60% white default text color.
 
 **Social Icons**: Use SVGs from `/icons/social-*.svg` (linkedin, facebook, x, instagram, youtube)
 
-**Horizontal Rules**: Added via CSS `border-bottom` on sections 1, 2, 3 (not on last section)
+**Horizontal Rules**: Added via CSS `border-bottom` on sections 1 and 2 only (Logo+Social, Link Columns). No rule between Trademark and Copyright sections.
 
 **CSS Grid** for link columns:
 - Mobile: 1 column

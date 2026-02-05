@@ -16,7 +16,6 @@ header nav {
   grid-template-columns: 1fr;
   grid-template-rows: auto auto;
   margin: 0 auto;
-  max-width: 1264px;
   font-family: var(--body-font-family);
 }
 

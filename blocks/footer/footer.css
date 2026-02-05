@@ -156,7 +156,7 @@ footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul >
   text-transform: uppercase;
   letter-spacing: 1px;
   color: rgb(255 255 255);
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
 /* Column title links should also be white */
@@ -174,7 +174,7 @@ footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul >
 /* Nested links within each column */
 footer .footer .footer > .section:nth-child(2) > .default-content-wrapper > ul > li > ul {
   list-style: none;
-  margin: 12px 0 0;
+  margin: 4px 0 0;
   padding: 0;
 }
 
@@ -201,7 +201,6 @@ footer .footer .footer > .section:nth-child(2) a:hover {
 footer .footer .footer > .section:nth-child(3) {
   padding: 16px 24px;
   text-align: center;
-  border-bottom: 1px solid rgb(255 255 255 / 15%);
 }
 
 footer .footer .footer > .section:nth-child(3) p {
@@ -241,7 +240,7 @@ footer .footer .footer > .section:last-child ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px 24px;
+  gap: 8px 16px;
   list-style: none;
   margin: 0;
   padding: 0;
