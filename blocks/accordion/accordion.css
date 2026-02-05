@@ -211,4 +211,10 @@
   .section.homepage-portfolio .accordion .accordion-image-column {
     margin-bottom: var(--spacing-l);
   }
+
+  /* Constrain and center the accordion image on smaller screens */
+  .section.homepage-portfolio .accordion .accordion-image {
+    max-width: 500px;
+    margin: 0 auto;
+  }
 }
