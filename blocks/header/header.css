@@ -926,7 +926,7 @@ header .mega-menu-products-nav {
 
 header .mega-menu-products-nav h3 {
   font-size: 19px;
-  font-weight: 400;
+  font-weight: 800;
   color: var(--text-color-secondary);
   margin: 0 0 8px;
 }
@@ -939,7 +939,7 @@ header .mega-menu-products-nav ul {
 
 header .mega-menu-products-nav li {
   padding: 10px 0 10px 12px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--text-color);
   cursor: pointer;
@@ -984,7 +984,7 @@ header .mega-menu-products-nav li.active::after {
 
 header .mega-menu-products-nav li a {
   font-weight: 400;
-  font-size: 12px;
+  font-size: 16px;
   color: var(--text-color);
 }
 
@@ -1014,9 +1014,9 @@ header .mega-menu-panel.ecosystem-panel.active {
 }
 
 header .mega-menu-panel-intro {
-  flex: 0 0 25%;
+  flex: 0 0 30%;
   min-width: 220px;
-  max-width: 350px;
+  max-width: 400px;
 }
 
 header .mega-menu-panel-intro h4 {
@@ -1130,8 +1130,8 @@ header .mega-menu-columns-sidebar {
 
 header .mega-menu-columns-sidebar .mega-menu-column h4 {
   color: var(--text-color-secondary);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 19px;
+  font-weight: 800;
 }
 
 header .mega-menu-column {
@@ -1174,8 +1174,8 @@ header .mega-menu-column li a:hover {
   color: var(--link-color);
 }
 
-/* External link indicator */
-header .mega-menu-column li a[href^="https://"]::after {
+/* External link indicator - only for non-Motorola domains */
+header .mega-menu-column li a[href^="https://"]:not([href*="motorolasolutions.com"])::after {
   content: ' ↗';
   font-size: 12px;
 }
