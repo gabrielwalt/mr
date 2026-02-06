@@ -59,6 +59,8 @@ main div.columns-wrapper:has(.columns.media) {
   display: block;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .columns.media .columns-media-col img {
@@ -101,21 +103,23 @@ main div.columns-wrapper:has(.columns.media) {
   line-height: 1.6;
 }
 
-/* CTA link */
+/* CTA button */
 .columns.media .columns-content-col p:has(a:only-child) {
   margin-top: var(--spacing-m);
 }
 
-.columns.media .columns-content-col p > a:only-child {
-  display: inline-block;
-  color: var(--link-color);
-  text-decoration: none;
-  font-size: var(--body-font-size-s);
-  font-weight: 500;
+/* Inverted buttons: white text on black background */
+.columns.media .columns-content-col a.button:any-link {
+  background-color: rgb(0 0 0 / 95%);
+  color: rgb(255 255 255 / 95%);
+  border-color: rgb(0 0 0 / 95%);
 }
 
-.columns.media .columns-content-col p > a:only-child:hover {
-  text-decoration: underline;
+.columns.media .columns-content-col a.button:hover {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+  text-decoration: none;
 }
 
 /* ===== DESKTOP LAYOUT - Checkerboard ===== */
@@ -179,7 +183,7 @@ main div.columns-wrapper:has(.columns.media) {
     font-size: var(--body-font-size-m);
   }
 
-  .columns.media .columns-content-col p > a:only-child {
+  .columns.media .columns-content-col a.button:any-link {
     font-size: var(--body-font-size-m);
   }
 }

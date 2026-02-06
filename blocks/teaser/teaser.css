@@ -200,7 +200,7 @@ main div.teaser-wrapper:has(.teaser.hero) {
 .teaser.hero .teaser-cta-container .teaser-video-link {
   display: inline-flex;
   align-items: center;
-  gap: var(--spacing-l);
+  gap: var(--spacing-m);
   padding: 0;
   background: transparent;
   border: none;

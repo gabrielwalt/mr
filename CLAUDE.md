@@ -209,13 +209,32 @@ When working on this project, periodically verify:
 
 ## Key Files
 
-- **Content**: `/content/en-us.html`
+- **Content (homepage)**: `/content/en-us.html`
+- **Content (assist-suites)**: `/content/en-us/ai/assist-suites.html`
 - **Global styles**: `/styles/styles.css`
 - **Blocks**: `/blocks/` (carousel, teaser, accordion, cards-portfolio, columns, tabs, header, footer, fragment)
 - **Icons**: `/icons/` (custom SVG icons)
 - **Images**: `/content/images/` (local assets)
 - **Navigation**: `/content/nav.html`, `/content/nav.plain.html` (fragment files)
 - **Footer**: `/content/footer.html`, `/content/footer.plain.html` (fragment files)
+
+---
+
+## Pages Inventory
+
+All content pages in this project and their source URLs.
+
+| Local Path | Origin URL | Description |
+|------------|-----------|-------------|
+| `/content/en-us.html` | https://www.motorolasolutions.com/en_us.html | Homepage |
+| `/content/en-us/ai/assist-suites.html` | https://www.motorolasolutions.com/en_us/ai/assist-suites.html | AI Assist Suites product page |
+| `/content/fragments/contact-form.html` | N/A (locally authored) | Contact form fragment |
+| `/content/nav.html` | Derived from https://www.motorolasolutions.com/en_us.html | Navigation fragment |
+| `/content/footer.html` | Derived from https://www.motorolasolutions.com/en_us.html | Footer fragment |
+
+**URL mapping convention**: Local paths follow the origin URL structure with `/content/` prefix. For example:
+- `motorolasolutions.com/en_us.html` → `/content/en-us.html`
+- `motorolasolutions.com/en_us/ai/assist-suites.html` → `/content/en-us/ai/assist-suites.html`
 
 ---
 
@@ -367,6 +386,28 @@ Defined in `/styles/styles.css` - reference these variable names, don't hardcode
 | `--spacing-xxxl` | 64px |
 
 **Why this matters:** Using non-existent variable names like `--spacing-md` will silently fail - the CSS rule will have no effect because the variable resolves to nothing. Always verify variable names exist in `styles.css` before using them.
+
+### ⚠️ CRITICAL: Always Verify CSS Variables Before Using
+
+**Before writing any CSS property with `var(--...)`, cross-check against this complete list.** If the variable isn't listed here or in `styles.css`, it does NOT exist and will silently fail.
+
+**Complete variable reference** (all defined in `:root` of `styles.css`):
+
+| Category | Available Variables |
+|----------|-------------------|
+| **Spacing** | `--spacing-xxs` (4px), `--spacing-xs` (8px), `--spacing-s` (12px), `--spacing-m` (16px), `--spacing-l` (24px), `--spacing-xl` (32px), `--spacing-xxl` (48px), `--spacing-xxxl` (64px) |
+| **Body font sizes** | `--body-font-size-xl` (20px), `--body-font-size-l` (18px), `--body-font-size-m` (16px), `--body-font-size-s` (14px), `--body-font-size-xs` (12px) |
+| **Heading font sizes** | `--heading-font-size-xxl` (48px), `--heading-font-size-xl` (40px), `--heading-font-size-l` (32px), `--heading-font-size-m` (24px), `--heading-font-size-s` (20px), `--heading-font-size-xs` (16px) |
+| **Colors** | `--color-brand-primary`, `--color-brand-primary-dark`, `--link-color`, `--link-hover-color` |
+| **Text** | `--text-color`, `--text-color-secondary`, `--text-color-inverse`, `--text-color-inverse-secondary` |
+| **Backgrounds** | `--background-color`, `--background-color-light`, `--background-color-dark`, `--background-color-black`, `--background-color-highlight` |
+| **Semantic** | `--color-border-light`, `--color-border-dark`, `--color-text-muted`, `--color-surface-white`, `--color-indicator-inactive`, `--color-indicator-hover`, `--color-hero-indicator-active` |
+| **Shadows** | `--shadow-card`, `--shadow-card-elevated` |
+| **Transitions** | `--transition-fast` (0.15s), `--transition-base` (0.2s), `--transition-slow` (0.3s) |
+| **Typography** | `--body-font-family`, `--heading-font-family`, `--heading-font-weight` (400), `--body-line-height`, `--heading-line-height` |
+| **Buttons** | `--button-padding`, `--button-padding-large`, `--button-border-radius`, `--button-border-radius-large`, `--button-font-size`, `--button-font-size-large`, `--button-font-weight` |
+| **Layout** | `--nav-height` (64px), `--content-max-width` (1200px), `--section-padding` |
+| **Focus** | `--focus-outline`, `--focus-outline-offset` |
 
 ---
 
@@ -581,8 +622,9 @@ Complete reference of all blocks and their variants.
 
 **Testimonials variant specifics**:
 - Large centered quote with decorative quote mark
-- Author name (bold) and title
+- Author name (bold) and title displayed on the same line with spacing between them, same font size (16px)
 - Optional CTA link
+- No padding on `.carousel-slides` (padding: 0)
 - Works in highlight and dark sections
 - Navigation below slides
 
@@ -598,6 +640,8 @@ Complete reference of all blocks and their variants.
 - Fixed-width cards (330px)
 - Horizontal scroll with snap
 - Card structure: image (16:9), title, description, divider, links
+- All card text is centered (text-align: center)
+- Full description text shown (no truncation)
 
 ### teaser
 
@@ -631,6 +675,7 @@ Complete reference of all blocks and their variants.
 - Background image with dark gradient overlay (left to right)
 - White text positioned on left side
 - Inverted CTA button (white background)
+- Secondary CTA (video link) has play button icon with `gap: var(--spacing-m)` (16px)
 - Min-height: 400px mobile, 600px tablet, 700px desktop
 - No navigation elements (dots, arrows) - single item only
 
@@ -727,10 +772,10 @@ Product cards displayed below accordion. Visibility controlled by accordion sele
 - **Auto-detects image position per row**: Put image in first column for image-left layout, or in second column for image-right layout
 - **Supports multiple rows**: Add multiple rows to a single block for alternating layouts
 - No need for separate `media-reversed` variant - just swap column order in authoring
-- Image/video poster on one side (45% width on desktop)
+- Image/video poster on one side (45% width on desktop), fills entire container (object-fit: cover)
 - Content on other side with heading, subheadings (h4), descriptions
+- **Inverted CTA buttons**: White text on black background (overrides global button styles)
 - Play button overlay appears when image alt contains "video" or src contains "poster"
-- Rounded corners and shadow on media
 - Responsive: stacks vertically on mobile
 
 **Single block with multiple rows (PREFERRED):**
@@ -1017,6 +1062,19 @@ Dark footer (`#111`) with 60% white default text color.
 9. columns (icons) - "Explore Motorola Solutions"
 10. Metadata
 
+## Page Structure (assist-suites.html)
+
+1. teaser hero (single hero with video poster)
+2. columns (stats) - 4 statistics (highlight section)
+3. "Operationalize your mission" default content + tabs (5 tabs)
+4. "Trusted by public safety agencies" + columns (logos)
+5. "Introducing role-based AI suites" default content
+6. columns (media) - Dispatcher & Responder Assist Suites (2 rows)
+7. "What public safety leaders are saying" + carousel (testimonials) - 2 quotes (highlight section)
+8. "Explore AI-enabled products" default content + carousel (default) - 9 product cards
+9. "Speak with an expert" default content + form
+10. Metadata (Template: template-home)
+
 ---
 
 ## Local Assets
@@ -1145,6 +1203,11 @@ Always include ARIA attributes on interactive elements:
 21. **Logos marquee direction** - The `.columns.logos .columns-logo-marquee-track` must have `flex-direction: row` explicitly set; otherwise inherited styles might cause vertical display.
 22. **Default content centering** - For `template-home` pages, centering is applied to `.default-content-wrapper`. If centering isn't working, check: (a) the body has the `template-home` class, (b) the selector specificity matches the HTML structure.
 23. **Text truncation in carousels** - Never use `-webkit-line-clamp` or text truncation on carousel descriptions unless explicitly requested. Show full text.
+24. **Template meta tag in HTML head** - The `decorateTemplateAndTheme()` function reads `<meta name="template" content="template-home">` from the `<head>`, NOT from the metadata block in the body. When creating new page HTML files, always add `<meta name="template" content="template-home"/>` to the `<head>` if the page uses a template. Without this, the body won't get the template class and template-specific CSS (like centering) won't apply.
+25. **CSS variables: always verify before using** - Before using ANY CSS variable in your code, verify it exists in `styles.css`. CSS variables that don't exist silently resolve to nothing, causing invisible styling failures. Common mistakes: `--spacing-sm` (correct: `--spacing-s`), `--spacing-md` (correct: `--spacing-m`), `--spacing-lg` (correct: `--spacing-l`). Also check the complete list of all variables in the Design Tokens section of this file.
+26. **Block CSS must not override global button styles with link styles** - In EDS, `a.button` gets global button styling (pill shape, dark bg on hover, etc.). Block CSS should NEVER set `color: var(--link-color)` on `a.button` or `p > a:only-child` elements, as this overrides the global button styling and makes buttons appear as plain blue links. Instead, either let global styles apply or add explicit block-scoped button overrides.
+27. **Variant-scoped carousel CSS** - When adding CSS to `.carousel .carousel-slide-content` or other base carousel selectors, always consider whether it should apply to ALL variants or only specific ones. Use `:not()` selectors like `.carousel:not(.hero):not(.stories):not(.wide):not(.testimonials)` to scope changes to the default variant only.
+28. **Picture elements need explicit height** - When using `img { width: 100%; height: 100%; object-fit: cover; }` to fill a container, the parent `<picture>` element also needs `width: 100%; height: 100%` for the image to actually fill the space. Without this, the picture element has no explicit dimensions and the image won't stretch.
 
 ---
 
