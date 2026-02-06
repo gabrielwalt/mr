@@ -251,6 +251,7 @@ All content pages in this project and their source URLs.
 | `/content/en-us.html` | https://www.motorolasolutions.com/en_us.html | Homepage |
 | `/content/en-us/ai/assist-suites.html` | https://www.motorolasolutions.com/en_us/ai/assist-suites.html | AI Assist Suites product page |
 | `/content/en-us/solutions/safety-ecosystem.html` | https://www.motorolasolutions.com/en_us/solutions/safety-ecosystem.html | Safety & Security Ecosystem product landing |
+| `/content/alta.html` | https://www.avigilon.com/alta | Avigilon Alta cloud security system product page |
 | `/content/fragments/contact-form.html` | N/A (locally authored) | Contact form fragment |
 | `/content/nav.html` | Derived from https://www.motorolasolutions.com/en_us.html | Navigation fragment |
 | `/content/footer.html` | Derived from https://www.motorolasolutions.com/en_us.html | Footer fragment |
@@ -1158,6 +1159,20 @@ Dark footer (`#111`) with 60% white default text color.
 7. "Innovation with intent" default content + cards (default) - 3 innovation cards
 8. "Awards & recognition" default content + cards (awards) - 4 award SVG icons + "See awards" link
 9. Metadata (Template: template-home)
+
+## Page Structure (alta.html)
+
+1. teaser hero (single hero with background image, "Alta cloud security system")
+2. "Trusted by 100,000+ organizations globally" default content (highlight section) - logos are inline SVGs on source, not migrated
+3. "Serverless by design. Secure by default." default content + columns (media) - image left, "Scale smarter with Alta" content right with 4 bullet points
+4. "Key features of Avigilon Alta" default content + tabs (4 tabs with images) (highlight section)
+5. "Choose your Alta cloud security systems" default content + cards (default) - 5 software product cards (Alta Video, Alta Access, Alta Protect, Alta Mailroom, Alta Visitor)
+6. "Optimizing cloud security for safer outcomes" default content + CTA button (dark section)
+7. "Robust hardware for Alta cloud security systems" default content + cards (default) - 5 hardware product cards (cameras, readers, hardware, cloud connectors, sensors)
+8. "Compliance and certifications" default content + bullet list of 4 certifications (highlight section) - certification icons are inline SVGs on source, not migrated
+9. "Avigilon Alta cloud security system FAQs" + accordion - 12 FAQ items with answers and CTA links
+10. "Have questions? We can help" default content + CTA button (highlight section) - original has contact form, migrated as CTA link
+11. Metadata (Template: template-home)
 
 ---
 

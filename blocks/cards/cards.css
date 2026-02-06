@@ -55,6 +55,23 @@
   font-size: var(--body-font-size-s);
   font-weight: 500;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.cards .cards-card-body a::after {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background: currentcolor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
 }
 
 .cards .cards-card-body a:hover {
@@ -123,4 +140,196 @@
 .cards.awards .cards-card-body p {
   font-size: var(--body-font-size-xs);
   color: var(--text-color-secondary);
+}
+
+/* ===== ICON-CARDS VARIANT ===== */
+/* Technology cards with SVG icons (centered, no aspect-ratio stretch) */
+.cards.icon-cards > ul {
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-xl);
+}
+
+.cards.icon-cards > ul > li {
+  box-shadow: none;
+  background: transparent;
+  border-radius: 0;
+}
+
+.cards.icon-cards > ul > li:hover {
+  box-shadow: none;
+}
+
+.cards.icon-cards .cards-card-image {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-l) 0 var(--spacing-m);
+}
+
+.cards.icon-cards > ul > li img {
+  width: 64px;
+  height: 64px;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
+.cards.icon-cards .cards-card-body {
+  padding: 0 var(--spacing-m) var(--spacing-m);
+  text-align: center;
+}
+
+.cards.icon-cards .cards-card-body strong {
+  font-size: var(--heading-font-size-xs);
+  font-weight: 500;
+}
+
+.cards.icon-cards .cards-card-body p {
+  font-size: var(--body-font-size-s);
+  line-height: 1.6;
+}
+
+/* ===== HORIZONTAL VARIANT ===== */
+/* Cards with image on left, text on right (use cases, industries) */
+.cards.horizontal > ul {
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-l);
+}
+
+.cards.horizontal > ul > li {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.cards.horizontal > ul > li:hover {
+  box-shadow: none;
+}
+
+.cards.horizontal .cards-card-image {
+  flex-shrink: 0;
+  width: 160px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.cards.horizontal > ul > li img {
+  width: 160px;
+  height: 200px;
+  aspect-ratio: auto;
+  object-fit: cover;
+}
+
+.cards.horizontal .cards-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: var(--spacing-xs) var(--spacing-m);
+  text-align: left;
+}
+
+.cards.horizontal .cards-card-body strong {
+  font-size: var(--body-font-size-m);
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.cards.horizontal .cards-card-body p {
+  font-size: var(--body-font-size-s);
+  line-height: 1.5;
+  margin: 0 0 var(--spacing-xs);
+}
+
+.cards.horizontal .cards-card-body a {
+  color: var(--link-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: auto;
+}
+
+.cards.horizontal .cards-card-body a::after {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: currentcolor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+}
+
+/* Horizontal cards - mobile: 1 column */
+@media (width < 600px) {
+  .cards.horizontal > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Horizontal cards - tablet: 2 columns */
+@media (width >= 600px) and (width < 900px) {
+  .cards.horizontal > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Horizontal cards - desktop: 3 columns */
+@media (width >= 900px) {
+  .cards.horizontal > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Icon cards - mobile: 1 column */
+@media (width < 600px) {
+  .cards.icon-cards > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Icon cards - tablet: 3 columns */
+@media (width >= 600px) {
+  .cards.icon-cards > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ===== SHOW MORE / SHOW LESS ===== */
+.cards > ul > li.cards-hidden {
+  display: none;
+}
+
+.cards-show-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin: var(--spacing-xl) auto 0;
+  padding: var(--spacing-xs) var(--spacing-l);
+  background: transparent;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--button-border-radius);
+  cursor: pointer;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  color: var(--text-color);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cards-show-more:hover {
+  background-color: var(--background-color-light);
+  border-color: var(--color-border-dark);
+}
+
+.cards-show-more svg {
+  flex-shrink: 0;
 }
