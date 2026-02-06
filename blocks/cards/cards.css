@@ -1,0 +1,126 @@
+/* stylelint-disable no-descending-specificity */
+
+/* ===== CARDS DEFAULT ===== */
+.cards > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  gap: var(--spacing-l);
+}
+
+.cards > ul > li {
+  background-color: var(--color-surface-white);
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: box-shadow var(--transition-base);
+}
+
+.cards > ul > li:hover {
+  box-shadow: var(--shadow-card-elevated);
+}
+
+.cards .cards-card-image {
+  line-height: 0;
+}
+
+.cards > ul > li img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.cards .cards-card-body {
+  padding: var(--spacing-m);
+  text-align: center;
+}
+
+.cards .cards-card-body strong {
+  display: block;
+  font-size: var(--body-font-size-l);
+  margin-bottom: var(--spacing-xs);
+}
+
+.cards .cards-card-body p {
+  color: var(--text-color-secondary);
+  font-size: var(--body-font-size-s);
+  line-height: 1.5;
+  margin: 0 0 var(--spacing-s);
+}
+
+.cards .cards-card-body a {
+  color: var(--link-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.cards .cards-card-body a:hover {
+  text-decoration: underline;
+}
+
+/* ===== DARK SECTION ===== */
+.section.dark .cards > ul > li {
+  background-color: var(--background-color-dark);
+  box-shadow: none;
+}
+
+.section.dark .cards .cards-card-body strong {
+  color: var(--text-color-inverse);
+}
+
+.section.dark .cards .cards-card-body p {
+  color: var(--text-color-inverse-secondary);
+}
+
+/* ===== HIGHLIGHT SECTION ===== */
+.section.highlight .cards > ul > li {
+  background-color: var(--color-surface-white);
+}
+
+/* ===== AWARDS VARIANT ===== */
+.cards.awards > ul {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--spacing-xl);
+  justify-items: center;
+}
+
+.cards.awards > ul > li {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  text-align: center;
+}
+
+.cards.awards > ul > li:hover {
+  box-shadow: none;
+}
+
+.cards.awards .cards-card-image {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-m);
+}
+
+.cards.awards > ul > li img {
+  width: 64px;
+  height: 64px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.cards.awards .cards-card-body {
+  padding: 0;
+}
+
+.cards.awards .cards-card-body strong {
+  font-size: var(--body-font-size-m);
+  font-weight: 500;
+}
+
+.cards.awards .cards-card-body p {
+  font-size: var(--body-font-size-xs);
+  color: var(--text-color-secondary);
+}

@@ -66,6 +66,8 @@ When creating new variants, use descriptive kebab-case names:
 | **Single hero item (no rotation)** | Use `teaser hero` | Use `carousel hero` with single slide |
 | Product cards in grid | Use `cards-portfolio` or `cards-icon` | Create new `product-cards` block |
 | Expandable FAQ | Use `accordion` | Create new `faq` block |
+| Card grid (use cases, industries) | Use `cards` (default) | Create new `use-case-cards` block |
+| Award/recognition badges | Use `cards (awards)` | Create new `awards` block |
 | Logo strip | Use `columns (logos)` | Create new `logo-strip` block |
 | Tabbed content | Use `tabs` | Create new `tabbed-content` block |
 | Full-width image section | Use `image-full-width` section style | Create new `full-image` block |
@@ -76,6 +78,26 @@ When creating new variants, use descriptive kebab-case names:
 ---
 
 ## Migration Rules
+
+### Wide Viewport for Content Extraction
+
+**⚠️ CRITICAL: Always set the browser viewport to wide desktop (≥1400px width) before extracting content from source pages.**
+
+When scraping pages with Playwright for migration, resize the browser **before** navigating:
+```javascript
+// Set wide desktop viewport BEFORE navigating
+await browser_resize({ width: 1440, height: 900 });
+await browser_navigate({ url: 'https://example.com/page' });
+```
+
+**Why this matters:**
+- Responsive images serve **higher resolution sources** at wider viewports (`srcset`, `<picture>` sources)
+- Background images and video posters may change based on viewport (desktop vs tablet vs mobile)
+- Some content (e.g., "Show More" sections, mega menus) is only visible at desktop widths
+- CSS `display: none` may hide content at smaller breakpoints, causing missing data during extraction
+- `<picture>` elements with `media` queries serve different image URLs per breakpoint — wide viewport ensures the highest-quality source is selected
+
+**Applies to:** All Playwright-based content extraction including `browser_evaluate`, `browser_snapshot`, `browser_take_screenshot`, and the `analyze-webpage.js` scraper script.
 
 ### Video Poster Extraction
 
@@ -228,6 +250,7 @@ All content pages in this project and their source URLs.
 |------------|-----------|-------------|
 | `/content/en-us.html` | https://www.motorolasolutions.com/en_us.html | Homepage |
 | `/content/en-us/ai/assist-suites.html` | https://www.motorolasolutions.com/en_us/ai/assist-suites.html | AI Assist Suites product page |
+| `/content/en-us/solutions/safety-ecosystem.html` | https://www.motorolasolutions.com/en_us/solutions/safety-ecosystem.html | Safety & Security Ecosystem product landing |
 | `/content/fragments/contact-form.html` | N/A (locally authored) | Contact form fragment |
 | `/content/nav.html` | Derived from https://www.motorolasolutions.com/en_us.html | Navigation fragment |
 | `/content/footer.html` | Derived from https://www.motorolasolutions.com/en_us.html | Footer fragment |
@@ -503,7 +526,7 @@ Standard breakpoints used across the project:
 - **Link → Button**: Link alone in its own paragraph becomes a button
 - **Link stays link**: Link inline with other text stays a link
 - **Section metadata**: Use `section-metadata` block to apply styles like `highlight`, `dark`, `image-full-width`
-- **Page templates**: Add `Template: template-home` to page metadata for centered default content
+- **Page templates**: Add `Template: template-home` to page metadata for homepage-specific styles
 - **HTML in table cells**: Markdown syntax (like `## Heading`) is NOT parsed inside table cells. Use HTML tags (`<h2>Heading</h2>`) when you need structured content in block tables.
 - **One row per item**: In block tables (carousel, accordion), each row becomes one item/slide. Combine all content for an item into a single row using HTML.
 
@@ -515,20 +538,24 @@ Templates are applied via page metadata: `Template: template-name`
 
 | Template | Class Applied | Purpose |
 |----------|---------------|---------|
-| `template-home` | `body.template-home` | Homepage layout with centered default content |
+| `template-home` | `body.template-home` | Homepage-specific styles |
 
-### template-home
+### Default Content Centering (Global)
 
-Centers default content (text, headings, buttons, images) on homepage.
+Default content (text, headings, buttons, images in `.default-content-wrapper`) is centered on **all pages** unconditionally.
 
 **Exception**: Sections containing `.carousel.stories` are NOT centered - they keep left-aligned text for the intro panel.
 
 CSS selector pattern:
 ```css
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper {
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper {
   text-align: center;
 }
 ```
+
+### template-home
+
+Homepage-specific styles. Currently used for the carousel stories exception (left-aligned intro text).
 
 ---
 
@@ -565,6 +592,7 @@ Complete reference of all blocks and their variants.
 | **carousel** | `hero`, `stories`, `wide`, `testimonials`, (default) | Horizontal slide carousels with multiple layouts |
 | **teaser** | `hero` | Single hero content with background image (use instead of single-item carousel) |
 | **accordion** | (default), (homepage-portfolio context) | Expandable content sections |
+| **cards** | (default), `awards` | Grid-based card layout with image, title, description, and CTA link |
 | **cards-portfolio** | — | Product cards controlled by accordion |
 | **columns** | (default), `media`, `stats`, `logos`, `logos-rotate`, `icons` | Multi-purpose layout block with variants for two-column, statistics, logos, and icon grids |
 | **tabs** | — | Horizontal tab navigation with content panels |
@@ -740,6 +768,51 @@ Product cards displayed below accordion. Visibility controlled by accordion sele
 - Image constraints: Max 250x250px, centered
 - Entire card is clickable link
 
+
+### cards
+
+**Location**: `/blocks/cards/`
+
+| Variant | Class | Purpose |
+|---------|-------|---------|
+| Default | `.cards` | Grid of cards with image, title, description, and CTA link |
+| Awards | `.cards.awards` | Compact award/recognition display with small icons and centered text |
+
+**Authoring (default):**
+```
+| Cards |  |
+| ----- | - |
+| ![image](url) | <strong>Title</strong> <p>Description</p> <a href="url">Learn more</a> |
+| ![image](url) | <strong>Title</strong> <p>Description</p> <a href="url">Learn more</a> |
+```
+
+**Authoring (awards):**
+```
+| Cards (awards) |  |
+| -------------- | - |
+| ![Award name](/icons/award-slug.svg) | <strong>Award Title</strong> <p>Source Year</p> |
+```
+
+**Default variant specifics**:
+- Grid layout: `repeat(auto-fill, minmax(257px, 1fr))`
+- Cards have shadow, rounded corners, hover elevation
+- Image aspect ratio: 4/3
+- Centered text in card body
+- Works in dark and highlight sections
+- Does NOT use `createOptimizedPicture` (images are external URLs during migration)
+- Sets `loading="eager"` on images after DOM restructuring to fix lazy loading
+
+**Awards variant specifics**:
+- Compact grid: `repeat(auto-fill, minmax(140px, 1fr))`
+- No shadow or background on cards
+- Icon images: 64x64px, `object-fit: contain`
+- Centered text layout
+- Title in medium weight, subtitle in small muted text
+
+**Responsive behavior**:
+- Mobile: 1-2 columns
+- Tablet: 2-3 columns
+- Desktop: 3-4+ columns (auto-fill)
 
 ### columns
 
@@ -1074,6 +1147,18 @@ Dark footer (`#111`) with 60% white default text color.
 8. "Speak with an expert" default content + form
 9. Metadata (Template: template-home)
 
+## Page Structure (safety-ecosystem.html)
+
+1. teaser hero (single hero with video poster background)
+2. "Technologies designed to work together..." default content + cards (default) - 3 tech cards (Critical Communications, Command Center, Video Security)
+3. Full-width ecosystem image (image-full-width section style)
+4. "Explore our ecosystem by use case" default content + cards (default) - 6 use case cards
+5. "Explore our ecosystem by industry" default content + cards (default) - 14 industry cards
+6. teaser hero - "Customer success stories" (dark section style)
+7. "Innovation with intent" default content + cards (default) - 3 innovation cards
+8. "Awards & recognition" default content + cards (awards) - 4 award SVG icons + "See awards" link
+9. Metadata (Template: template-home)
+
 ---
 
 ## Local Assets
@@ -1084,6 +1169,7 @@ Dark footer (`#111`) with 60% white default text color.
 - **Page icons**: icon-about.svg, icon-newsroom.svg, icon-investors.svg, icon-careers.svg, icon-shop.svg
 - **Header icons**: header-search.svg, header-support.svg, header-cart.svg, header-user.svg
 - **Social icons**: social-linkedin.svg, social-facebook.svg, social-x.svg, social-instagram.svg, social-youtube.svg
+- **Award icons**: award-time-best-companies.svg, award-newsweek-trustworthy.svg, award-red-dot.svg, award-fast-company.svg
 - **Logos**: logo.svg (dark, for light backgrounds), logo-inverted.svg (white, for dark backgrounds)
 
 ---
@@ -1200,7 +1286,7 @@ Always include ARIA attributes on interactive elements:
 19. **CSS variable naming** - NEVER use `--spacing-sm`, `--spacing-md`, `--spacing-lg`. The correct names are `--spacing-s`, `--spacing-m`, `--spacing-l`. Using incorrect names will silently fail.
 20. **Links vs Buttons** - In EDS, links that are alone in a paragraph (`<p><a>...</a></p>`) become buttons styled by global styles. If a block needs specific button styling (e.g., inverted colors), the block CSS must override the global button styles using block-scoped selectors.
 21. **Logos marquee direction** - The `.columns.logos .columns-logo-marquee-track` must have `flex-direction: row` explicitly set; otherwise inherited styles might cause vertical display.
-22. **Default content centering** - For `template-home` pages, centering is applied to `.default-content-wrapper`. If centering isn't working, check: (a) the body has the `template-home` class, (b) the selector specificity matches the HTML structure.
+22. **Default content centering is global** - Centering of `.default-content-wrapper` content applies to ALL pages unconditionally (not just template-home). The only exception is sections containing `.carousel.stories` which keep left-aligned text.
 23. **Text truncation in carousels** - Never use `-webkit-line-clamp` or text truncation on carousel descriptions unless explicitly requested. Show full text.
 24. **Template meta tag in HTML head** - The `decorateTemplateAndTheme()` function reads `<meta name="template" content="template-home">` from the `<head>`, NOT from the metadata block in the body. When creating new page HTML files, always add `<meta name="template" content="template-home"/>` to the `<head>` if the page uses a template. Without this, the body won't get the template class and template-specific CSS (like centering) won't apply.
 25. **CSS variables: always verify before using** - Before using ANY CSS variable in your code, verify it exists in `styles.css`. CSS variables that don't exist silently resolve to nothing, causing invisible styling failures. Common mistakes: `--spacing-sm` (correct: `--spacing-s`), `--spacing-md` (correct: `--spacing-m`), `--spacing-lg` (correct: `--spacing-l`). Also check the complete list of all variables in the Design Tokens section of this file.
@@ -1210,6 +1296,8 @@ Always include ARIA attributes on interactive elements:
 29. **Form inputs inherit global height** - The `.form .form-field input` rule sets `height: 49px` on ALL inputs. Checkbox and radio inputs need explicit `height: auto` override to prevent being forced to 49px tall.
 30. **Grid items stretch by default** - Elements inside `display: grid; grid-template-columns: 1fr` will stretch to fill the column width, even if they have `display: inline-block`. To center a button without full width, change the parent to `display: flex; justify-content: center` and add `width: auto` on the button.
 31. **Non-rotating logos centering** - The `.columns.logos:not(.rotate)` variant needs both `flex-wrap: wrap` and `justify-content: center` on `.columns-logo-set` (not just the parent track) to properly center logos that may wrap to multiple rows.
+32. **Lazy loading breaks after DOM restructuring** - When a block JS moves images from original DOM positions to new containers (e.g., `ul > li`), the browser's Intersection Observer for `loading="lazy"` loses track of them. Fix: after restructuring, set `img.loading = 'eager'` on all `img[loading="lazy"]` elements in the block.
+33. **Don't use `createOptimizedPicture` for external images** - During migration, images reference external URLs (e.g., motorolasolutions.com CDN). `createOptimizedPicture` strips the domain and appends optimization params (`?width=750&format=webply&optimize=medium`), creating broken local paths. Leave external images as-is.
 
 ---
 

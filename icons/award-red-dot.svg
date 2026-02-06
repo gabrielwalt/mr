@@ -1,0 +1,22 @@
+<svg id="a" data-name="Layer_1" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <g>
+    <polygon points="33.2 3.59 35.62 3.93 33.88 5.65 34.31 8.05 32.13 6.93 29.98 8.08 30.38 5.67 28.61 3.97 31.03 3.6 32.1 1.41 33.2 3.59" style="fill: #3694ed;"></polygon>
+    <polygon points="39.65 5.2 41.54 5.46 40.19 6.8 40.52 8.67 38.83 7.8 37.15 8.69 37.46 6.81 36.08 5.49 37.97 5.21 38.8 3.49 39.65 5.2" style="fill: #3694ed;"></polygon>
+    <polygon points="26.26 5.2 28.15 5.46 26.79 6.8 27.13 8.67 25.43 7.8 23.75 8.69 24.06 6.81 22.69 5.49 24.57 5.21 25.41 3.49 26.26 5.2" style="fill: #3694ed;"></polygon>
+  </g>
+  <path d="M45.46,6.59c9.23,4.82,15.54,14.48,15.54,25.62,0,15.95-12.93,28.88-28.88,28.88S3.24,48.16,3.24,32.21c0-10.97,6.11-20.5,15.11-25.4" style="fill: none; stroke: #3694ed; stroke-linecap: round; stroke-miterlimit: 10;"></path>
+  <path d="M44.55,10.3c8.61,4.49,14.48,13.5,14.48,23.88,0,14.86-12.05,26.92-26.92,26.92S5.2,49.04,5.2,34.18c0-10.22,5.7-19.11,14.09-23.67" style="fill: none; stroke: #3694ed; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 1px;"></path>
+  <g>
+    <path d="M32.33,16.53s0,0,0,0c0,0,0,0,0,0-.13.06-13.14,6.34-4.82,27.7l4.42.05h.19s4.42.05,4.42.05c8.79-21.17-4.08-27.73-4.21-27.8Z" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></path>
+    <path d="M25.36,37.68c-3.76,1.73-3.16,6.79-3.16,6.79,1.04-1.51,3.05-2.51,4.29-2.79" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></path>
+    <path d="M38.77,37.83c3.72,1.81,3.01,6.85,3.01,6.85-1.01-1.53-3-2.58-4.23-2.88" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></path>
+    <polyline points="29.22 44.26 29.21 45.52 34.81 45.58 34.82 44.32" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></polyline>
+    <g>
+      <line x1="31.98" y1="48.1" x2="31.92" y2="53.47" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></line>
+      <line x1="29.66" y1="47.53" x2="29.61" y2="52.28" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></line>
+      <line x1="34.31" y1="47.58" x2="34.26" y2="52.33" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></line>
+    </g>
+    <circle cx="32.22" cy="29.06" r="2.95" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></circle>
+    <path d="M37.05,21.19c-1.32,1.03-2.98,1.63-4.78,1.61s-3.32-.61-4.59-1.6" style="fill: none; stroke: #000; stroke-miterlimit: 10;"></path>
+  </g>
+</svg>

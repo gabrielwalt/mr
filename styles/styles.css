@@ -543,24 +543,26 @@ main .section.black li {
   color: var(--text-color-inverse-secondary);
 }
 
-/* ===== TEMPLATE: HOMEPAGE ===== */
+/* ===== DEFAULT CONTENT CENTERING ===== */
 
-/* Center default content (non-block content) on homepage */
-body.template-home main .default-content-wrapper {
+/* Center default content (non-block text, headings, buttons) in all sections */
+
+/* Exception: sections containing carousel.stories keep left-aligned text for intro panel */
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper {
   text-align: center;
 }
 
-body.template-home main .default-content-wrapper p,
-body.template-home main .default-content-wrapper h1,
-body.template-home main .default-content-wrapper h2,
-body.template-home main .default-content-wrapper h3,
-body.template-home main .default-content-wrapper h4,
-body.template-home main .default-content-wrapper h5,
-body.template-home main .default-content-wrapper h6 {
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper p,
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper h1,
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper h2,
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper h3,
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper h4,
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper h5,
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper h6 {
   text-align: center;
 }
 
-body.template-home main .default-content-wrapper img {
+main > .section:not(:has(.carousel.stories)) .default-content-wrapper img {
   margin-left: auto;
   margin-right: auto;
 }
@@ -617,6 +619,8 @@ body.template-home main .default-content-wrapper img {
 
 /* ===== SECTION: IMAGE FULL WIDTH ===== */
 
+/* stylelint-disable no-descending-specificity -- image-full-width overrides default-content centering rules above */
+
 /* Section where image spans full viewport width - text inherits template centering */
 main .section.image-full-width {
   margin: 0;
@@ -644,29 +648,7 @@ main .section.image-full-width .default-content-wrapper picture img {
   max-width: none;
 }
 
-/* ===== TEMPLATE: TEMPLATE-HOME ===== */
-
-/* Center default content (non-block content) on template-home pages */
-
-/* Exception: sections containing carousel.stories keep left-aligned text for intro panel */
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper {
-  text-align: center;
-}
-
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper p,
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper h1,
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper h2,
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper h3,
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper h4,
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper h5,
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper h6 {
-  text-align: center;
-}
-
-body.template-home main > .section:not(:has(.carousel.stories)) .default-content-wrapper img {
-  margin-left: auto;
-  margin-right: auto;
-}
+/* stylelint-enable no-descending-specificity */
 
 /* ===== DARK SECTION WITH FEATURED IMAGE ===== */
 

@@ -62,6 +62,36 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Motorola Solutions Product Landing",
+      "urls": ["https://www.motorolasolutions.com/en_us/solutions/safety-ecosystem.html"],
+      "description": "Product landing pages with hero teaser, technology/use-case/industry card grids, customer stories CTA, innovation cards, and awards",
+      "blocks": [
+        {
+          "name": "teaser-hero",
+          "instances": [
+            ".header-full-width-image-or-video.section",
+            ".hero2020.section"
+          ]
+        },
+        {
+          "name": "cards-grid",
+          "instances": [
+            ".dnaIconsDescriptions.section",
+            ".dnaResourcesWithFilters.section",
+            ".featurecontentblock.section",
+            ".headline-with-cta"
+          ]
+        },
+        {
+          "name": "cards-awards",
+          "instances": [
+            ".software-statsiconblock.section",
+            ".dnaCtaButtonBlock.section"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -1,0 +1,10 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <path d="m28.63,47.5h6.74m11.08-14.5h-2.89m-1.34-10.25l-2.04,2.05m-8.18-6.3v2.9m-10.22,1.35l2.04,2.05m-6.28,8.2h2.89m19.75,0c0-4.54-3.67-8.22-8.19-8.22s-8.19,3.68-8.19,8.22c0,3.33,1.98,6.19,4.82,7.48v4.12h6.74v-4.12c2.84-1.29,4.82-4.15,4.82-7.48Z" style="fill: none; stroke: #111; stroke-linecap: square; stroke-miterlimit: 10; stroke-width: 1.04px;"></path>
+  <g>
+    <polygon points="33.2 3.59 35.62 3.93 33.88 5.65 34.31 8.05 32.13 6.93 29.98 8.08 30.38 5.67 28.61 3.97 31.03 3.6 32.1 1.41 33.2 3.59" style="fill: #3694ed; stroke-width: 0px;"></polygon>
+    <polygon points="39.65 5.2 41.54 5.46 40.19 6.8 40.52 8.67 38.83 7.8 37.15 8.69 37.46 6.81 36.08 5.49 37.97 5.21 38.8 3.49 39.65 5.2" style="fill: #3694ed; stroke-width: 0px;"></polygon>
+    <polygon points="26.26 5.2 28.15 5.46 26.79 6.8 27.13 8.67 25.43 7.8 23.75 8.69 24.06 6.81 22.69 5.49 24.57 5.21 25.41 3.49 26.26 5.2" style="fill: #3694ed; stroke-width: 0px;"></polygon>
+  </g>
+  <path d="m45.46,6.59c9.23,4.82,15.54,14.48,15.54,25.62,0,15.95-12.93,28.88-28.88,28.88S3.24,48.16,3.24,32.21c0-10.97,6.11-20.5,15.11-25.4" style="fill: none; stroke: #3694ed; stroke-linecap: round; stroke-miterlimit: 10;"></path>
+  <path d="m44.55,10.3c8.61,4.49,14.48,13.5,14.48,23.88,0,14.86-12.05,26.92-26.92,26.92S5.2,49.04,5.2,34.18c0-10.22,5.7-19.11,14.09-23.67" style="fill: none; stroke: #3694ed; stroke-linecap: round; stroke-miterlimit: 10; stroke-width: 1px;"></path>
+</svg>
