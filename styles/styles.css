@@ -470,7 +470,7 @@ main > .section:first-of-type {
 /* Light/Highlight Section */
 main .section.light,
 main .section.highlight {
-  background-color: rgb(250 250 248);
+  background-color: rgb(242 242 242);
   margin: 0;
   padding: var(--section-padding);
 }
@@ -667,3 +667,32 @@ body.template-home main > .section:not(:has(.carousel.stories)) .default-content
   margin-left: auto;
   margin-right: auto;
 }
+
+/* ===== DARK SECTION WITH FEATURED IMAGE ===== */
+
+/* stylelint-disable no-descending-specificity -- .dark and .image-full-width are mutually exclusive section types */
+
+/* Make images in dark sections more prominent - full viewport width */
+main .section.dark .default-content-wrapper p:has(picture) {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  max-width: none;
+  margin-bottom: var(--spacing-xl);
+}
+
+main .section.dark .default-content-wrapper picture {
+  display: block;
+}
+
+main .section.dark .default-content-wrapper picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+/* stylelint-enable no-descending-specificity */

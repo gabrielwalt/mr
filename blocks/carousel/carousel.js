@@ -4,6 +4,8 @@
  * Variants:
  * - carousel hero - Full-width hero with auto-rotation
  * - carousel stories - Customer stories with intro panel on left
+ * - carousel testimonials - Quote carousel with author info
+ * - carousel wide - Large centered cards with glass footer
  * - carousel - Simple card carousel (default)
  */
 
@@ -20,14 +22,16 @@ const placeholders = {
 let isProgrammaticScroll = false;
 let programmaticScrollTimeout = null;
 
-// Auto-rotation settings (hero variant only)
-const AUTO_ROTATE_INTERVAL = 10000; // 10 seconds between slides
+// Auto-rotation settings
+const AUTO_ROTATE_INTERVAL_HERO = 10000; // 10 seconds between slides for hero
+const AUTO_ROTATE_INTERVAL_TESTIMONIALS = 5000; // 5 seconds between slides for testimonials
 const PAUSE_ON_INTERACTION = 15000; // Pause for 15 seconds after user interaction
 const SLIDE_TRANSITION_DELAY = 800; // Debounce delay for hero variant
 let slideUpdateTimeout = null;
 
 function showSlide(block, slideIndex = 0) {
   const isWideVariant = block.classList.contains('wide');
+  const isTestimonialsVariant = block.classList.contains('testimonials');
   const slides = block.querySelectorAll('.carousel-slide:not(.clone)');
   const allSlides = block.querySelectorAll('.carousel-slide');
   let realSlideIndex = slideIndex < 0 ? slides.length - 1 : slideIndex;
@@ -62,7 +66,7 @@ function showSlide(block, slideIndex = 0) {
     });
   });
 
-  // For wide variant, update active class on real slides only (not clones)
+  // For wide and testimonials variants, update active class on slides
   if (isWideVariant) {
     allSlides.forEach((aSlide) => {
       const slideDataIndex = parseInt(aSlide.dataset.slideIndex, 10);
@@ -73,6 +77,22 @@ function showSlide(block, slideIndex = 0) {
         aSlide.classList.remove('active');
       }
     });
+  }
+
+  // For testimonials, update active class (CSS handles visibility)
+  if (isTestimonialsVariant) {
+    slides.forEach((aSlide, idx) => {
+      if (idx === realSlideIndex) {
+        aSlide.classList.add('active');
+      } else {
+        aSlide.classList.remove('active');
+      }
+    });
+    // Clear programmatic scroll flag and return early - no scrolling needed
+    setTimeout(() => {
+      isProgrammaticScroll = false;
+    }, 50);
+    return;
   }
 
   // Find the target slide to scroll to
@@ -121,7 +141,7 @@ function showSlide(block, slideIndex = 0) {
 }
 
 /**
- * Start auto-rotation for the carousel (hero variant only)
+ * Start auto-rotation for the carousel (hero and testimonials variants)
  */
 function startAutoRotation(block) {
   // Check for reduced motion preference
@@ -132,10 +152,16 @@ function startAutoRotation(block) {
   const slides = block.querySelectorAll('.carousel-slide');
   if (slides.length < 2) return null;
 
+  // Use different intervals for different variants
+  const isTestimonialsVariant = block.classList.contains('testimonials');
+  const interval = isTestimonialsVariant
+    ? AUTO_ROTATE_INTERVAL_TESTIMONIALS
+    : AUTO_ROTATE_INTERVAL_HERO;
+
   const intervalId = setInterval(() => {
     const currentSlide = parseInt(block.dataset.activeSlide || 0, 10);
     showSlide(block, currentSlide + 1);
-  }, AUTO_ROTATE_INTERVAL);
+  }, interval);
 
   block.dataset.autoRotateId = intervalId;
   return intervalId;
@@ -337,27 +363,30 @@ function bindEvents(block, isHeroVariant = false) {
   const slideIndicators = block.querySelector('.carousel-slide-indicators');
   if (!slideIndicators) return;
 
+  const isTestimonialsVariant = block.classList.contains('testimonials');
+  const hasAutoRotation = isHeroVariant || isTestimonialsVariant;
+
   // Dot indicator clicks
   slideIndicators.querySelectorAll('button').forEach((button) => {
     button.addEventListener('click', (e) => {
       const slideIndicator = e.currentTarget.parentElement;
       showSlide(block, parseInt(slideIndicator.dataset.targetSlide, 10));
-      if (isHeroVariant) pauseAutoRotation(block);
+      if (hasAutoRotation) pauseAutoRotation(block);
     });
   });
 
   // Previous/Next button clicks
   block.querySelector('.slide-prev').addEventListener('click', () => {
     showSlide(block, parseInt(block.dataset.activeSlide, 10) - 1);
-    if (isHeroVariant) pauseAutoRotation(block);
+    if (hasAutoRotation) pauseAutoRotation(block);
   });
   block.querySelector('.slide-next').addEventListener('click', () => {
     showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
-    if (isHeroVariant) pauseAutoRotation(block);
+    if (hasAutoRotation) pauseAutoRotation(block);
   });
 
-  // Hero variant: pause on hover/focus
-  if (isHeroVariant) {
+  // Hero and testimonials: pause on hover/focus
+  if (hasAutoRotation) {
     block.addEventListener('mouseenter', () => {
       stopAutoRotation(block);
     });
@@ -385,7 +414,7 @@ function bindEvents(block, isHeroVariant = false) {
   let touchStartX = 0;
   block.addEventListener('touchstart', (e) => {
     touchStartX = e.touches[0].clientX;
-    if (isHeroVariant) stopAutoRotation(block);
+    if (hasAutoRotation) stopAutoRotation(block);
   }, { passive: true });
 
   block.addEventListener('touchend', (e) => {
@@ -398,8 +427,8 @@ function bindEvents(block, isHeroVariant = false) {
       } else {
         showSlide(block, parseInt(block.dataset.activeSlide, 10) - 1);
       }
-      if (isHeroVariant) pauseAutoRotation(block);
-    } else if (isHeroVariant) {
+      if (hasAutoRotation) pauseAutoRotation(block);
+    } else if (hasAutoRotation) {
       // No significant swipe, restart rotation
       startAutoRotation(block);
     }
@@ -572,6 +601,110 @@ function createWideSlide(row, slideIndex, carouselId) {
 }
 
 /**
+ * Create a testimonial slide - quote with author info
+ */
+function createTestimonialSlide(row, slideIndex, carouselId) {
+  const slide = document.createElement('li');
+  slide.dataset.slideIndex = slideIndex;
+  slide.setAttribute('id', `carousel-${carouselId}-slide-${slideIndex}`);
+  slide.classList.add('carousel-slide');
+
+  const cols = [...row.children];
+
+  // Create testimonial card
+  const card = document.createElement('div');
+  card.classList.add('testimonial-card');
+
+  // First column might have an image (author photo)
+  if (cols[0]) {
+    const picture = cols[0].querySelector('picture');
+    if (picture) {
+      const photoWrapper = document.createElement('div');
+      photoWrapper.classList.add('testimonial-photo');
+      photoWrapper.append(picture.cloneNode(true));
+      card.append(photoWrapper);
+    }
+  }
+
+  // Content wrapper
+  const contentWrapper = document.createElement('div');
+  contentWrapper.classList.add('testimonial-content');
+
+  // Find the quote - look for blockquote or paragraph with quotes
+  const contentCol = cols.length > 1 ? cols[1] : cols[0];
+  if (contentCol) {
+    const blockquote = contentCol.querySelector('blockquote');
+    const paragraphs = contentCol.querySelectorAll('p');
+
+    // Quote
+    if (blockquote) {
+      const quote = document.createElement('blockquote');
+      quote.classList.add('testimonial-quote');
+      quote.textContent = blockquote.textContent.replace(/[""\u201C\u201D"]/g, '').trim();
+      contentWrapper.append(quote);
+    } else {
+      // Look for paragraph with quote marks
+      paragraphs.forEach((p) => {
+        const text = p.textContent.trim();
+        if (text.startsWith('"') || text.startsWith('"') || text.startsWith('"')) {
+          const quote = document.createElement('blockquote');
+          quote.classList.add('testimonial-quote');
+          quote.textContent = text.replace(/[""\u201C\u201D"]/g, '').trim();
+          contentWrapper.append(quote);
+        }
+      });
+    }
+
+    // Author info
+    const authorWrapper = document.createElement('div');
+    authorWrapper.classList.add('testimonial-author');
+
+    // Find strong text for author name
+    const strong = contentCol.querySelector('strong');
+    if (strong) {
+      const authorName = document.createElement('span');
+      authorName.classList.add('testimonial-author-name');
+      authorName.textContent = strong.textContent.trim();
+      authorWrapper.append(authorName);
+
+      // Get the rest of the paragraph for title
+      const authorParagraph = strong.closest('p');
+      if (authorParagraph) {
+        const titleText = authorParagraph.textContent
+          .replace(strong.textContent, '')
+          .replace(/^[,\s]+/, '')
+          .trim();
+        if (titleText) {
+          const authorTitle = document.createElement('span');
+          authorTitle.classList.add('testimonial-author-title');
+          authorTitle.textContent = titleText;
+          authorWrapper.append(authorTitle);
+        }
+      }
+    }
+
+    if (authorWrapper.children.length > 0) {
+      contentWrapper.append(authorWrapper);
+    }
+
+    // CTA link
+    const link = contentCol.querySelector('a');
+    if (link) {
+      const cta = document.createElement('a');
+      cta.classList.add('testimonial-cta');
+      cta.href = link.href;
+      cta.textContent = link.textContent.trim();
+      contentWrapper.append(cta);
+    }
+  }
+
+  card.append(contentWrapper);
+  slide.append(card);
+
+  return slide;
+}
+
+/**
  * Create a card slide - structured with image, title, description, links
  */
 function createSlide(row, slideIndex, carouselId) {
@@ -627,24 +760,28 @@ function createSlide(row, slideIndex, carouselId) {
       }
     }
 
-    // Find description paragraph (first p without a link or strong)
-    const paragraphs = cols[1].querySelectorAll('p');
-    paragraphs.forEach((p) => {
+    // Find description paragraph (first p that is pure description text)
+    // Skip paragraphs that contain title (strong), links only, or are empty
+    const paragraphs = [...cols[1].querySelectorAll('p')];
+    const descriptionParagraph = paragraphs.find((p) => {
       const text = p.textContent.trim();
-      // Skip if it's just a link wrapper or empty
-      if (text && !p.querySelector('a:only-child') && !p.querySelector('strong:only-child')) {
-        // Check if this paragraph doesn't already have a strong tag that we used as title
-        if (!p.querySelector('strong') || p.childNodes.length > 1) {
-          const desc = document.createElement('p');
-          desc.classList.add('carousel-description');
-          // Get text content excluding strong tags
-          desc.textContent = text.replace(/^[^a-zA-Z]*/, '');
-          if (desc.textContent.trim()) {
-            contentWrapper.append(desc);
-          }
-        }
-      }
+      // Skip if empty
+      if (!text) return false;
+      // Skip if it's just a link wrapper
+      if (p.querySelector('a:only-child')) return false;
+      // Skip if it contains strong (title) - we want pure description paragraphs
+      if (p.querySelector('strong')) return false;
+      // Skip if it contains any links (likely a mixed content paragraph)
+      if (p.querySelector('a')) return false;
+      return true;
     });
+
+    if (descriptionParagraph) {
+      const desc = document.createElement('p');
+      desc.classList.add('carousel-description');
+      desc.textContent = descriptionParagraph.textContent.trim();
+      contentWrapper.append(desc);
+    }
 
     // Create horizontal divider
     const divider = document.createElement('hr');
@@ -769,6 +906,7 @@ export default async function decorate(block) {
   const isHeroVariant = block.classList.contains('hero');
   const isStoriesVariant = block.classList.contains('stories');
   const isWideVariant = block.classList.contains('wide');
+  const isTestimonialsVariant = block.classList.contains('testimonials');
 
   // Filter out title row (contains only H2) - not needed for hero
   const allRows = [...block.querySelectorAll(':scope > div')];
@@ -914,9 +1052,14 @@ export default async function decorate(block) {
 
   let slideIdx = 0;
   rows.forEach((row) => {
-    const slide = isWideVariant
-      ? createWideSlide(row, slideIdx, carouselId)
-      : createSlide(row, slideIdx, carouselId);
+    let slide;
+    if (isWideVariant) {
+      slide = createWideSlide(row, slideIdx, carouselId);
+    } else if (isTestimonialsVariant) {
+      slide = createTestimonialSlide(row, slideIdx, carouselId);
+    } else {
+      slide = createSlide(row, slideIdx, carouselId);
+    }
     slidesWrapper.append(slide);
 
     if (slideIndicators) {
@@ -954,6 +1097,29 @@ export default async function decorate(block) {
     // For wide variant, set up infinite loop with cloned slides
     if (isWideVariant) {
       setupWideCarouselInfiniteLoop(block, slidesWrapper);
+    }
+
+    // For testimonials variant, set first slide active and start auto-rotation
+    if (isTestimonialsVariant) {
+      const firstSlide = block.querySelector('.carousel-slide');
+      if (firstSlide) {
+        firstSlide.classList.add('active');
+      }
+
+      // Start auto-rotation with IntersectionObserver for visibility
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              startAutoRotation(block);
+            } else {
+              stopAutoRotation(block);
+            }
+          });
+        },
+        { threshold: 0.3 },
+      );
+      observer.observe(block);
     }
   }
 }

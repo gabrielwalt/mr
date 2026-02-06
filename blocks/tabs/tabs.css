@@ -1,0 +1,228 @@
+/**
+ * Tabs Block - Horizontal tab navigation
+ * Motorola Solutions style with pill-style tab buttons
+ */
+
+/* stylelint-disable no-descending-specificity */
+
+.tabs {
+  padding: var(--spacing-l) 0;
+}
+
+/* ===== TAB NAVIGATION ===== */
+
+.tabs .tabs-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.tabs .tabs-list {
+  display: flex;
+  gap: var(--spacing-m);
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: var(--spacing-xs) 0;
+}
+
+.tabs .tabs-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tab buttons - button style (Motorola style) */
+.tabs .tabs-tab {
+  flex-shrink: 0;
+  min-height: 52px;
+  padding: 8px 15px;
+  border: 1px solid var(--color-border-light);
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.tabs .tabs-tab:hover {
+  background: var(--background-color-light);
+  border-color: rgb(0 0 0 / 30%);
+}
+
+.tabs .tabs-tab.active {
+  background: rgb(0 0 0 / 95%);
+  border-color: transparent;
+  color: rgb(255 255 255 / 95%);
+}
+
+/* Scroll buttons */
+.tabs .tabs-scroll {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border-light);
+  border-radius: 8px;
+  background: var(--background-color);
+  color: var(--text-color);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+
+.tabs .tabs-scroll:hover {
+  background: var(--background-color-light);
+  border-color: rgb(0 0 0 / 30%);
+}
+
+.tabs .tabs-scroll-left {
+  margin-right: var(--spacing-s);
+}
+
+.tabs .tabs-scroll-right {
+  margin-left: var(--spacing-s);
+}
+
+.tabs .tabs-scroll-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* ===== TAB PANELS ===== */
+
+.tabs .tabs-panels {
+  position: relative;
+}
+
+.tabs .tabs-panel {
+  display: none;
+  gap: var(--spacing-xxl);
+}
+
+.tabs .tabs-panel.active {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: flex-start;
+}
+
+.tabs .tabs-panel-content h4 {
+  margin: var(--spacing-l) 0 var(--spacing-s);
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.tabs .tabs-panel-content h4:first-child {
+  margin-top: 0;
+}
+
+.tabs .tabs-panel-content p {
+  margin: var(--spacing-s) 0;
+  color: var(--text-color-secondary);
+  font-size: var(--body-font-size-s);
+  line-height: 1.6;
+}
+
+.tabs .tabs-panel-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Panel image */
+.tabs .tabs-panel-image {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.tabs .tabs-panel-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet and up - two column layout */
+@media (width >= 768px) {
+  .tabs .tabs-panel.active {
+    grid-template-columns: 1fr 1fr;
+    align-items: flex-start;
+    gap: var(--spacing-xxxl);
+  }
+
+  .tabs .tabs-panel-content {
+    padding-right: var(--spacing-l);
+  }
+
+  .tabs .tabs-panel-image img {
+    max-width: 500px;
+  }
+}
+
+/* Desktop - larger panels */
+@media (width >= 1024px) {
+  .tabs .tabs-list {
+    justify-content: center;
+  }
+
+  .tabs .tabs-tab {
+    min-height: 60px;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+
+  .tabs .tabs-panel-content h4 {
+    font-size: var(--body-font-size-l);
+  }
+
+  .tabs .tabs-panel-content p {
+    font-size: var(--body-font-size-m);
+  }
+
+  .tabs .tabs-panel-image img {
+    max-width: 600px;
+  }
+}
+
+/* ===== DARK SECTION VARIANT ===== */
+
+.section.dark .tabs .tabs-tab {
+  background: transparent;
+  border-color: rgb(255 255 255 / 30%);
+  color: #fff;
+}
+
+.section.dark .tabs .tabs-tab:hover {
+  background: rgb(255 255 255 / 10%);
+  border-color: rgb(255 255 255 / 50%);
+}
+
+.section.dark .tabs .tabs-tab.active {
+  background: rgb(255 255 255 / 95%);
+  border-color: transparent;
+  color: rgb(0 0 0 / 95%);
+}
+
+.section.dark .tabs .tabs-scroll {
+  background: transparent;
+  border-color: rgb(255 255 255 / 30%);
+  color: #fff;
+}
+
+.section.dark .tabs .tabs-scroll:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+.section.dark .tabs .tabs-panel-content h4 {
+  color: #fff;
+}
+
+.section.dark .tabs .tabs-panel-content p {
+  color: rgb(255 255 255 / 80%);
+}

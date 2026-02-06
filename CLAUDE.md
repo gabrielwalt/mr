@@ -11,6 +11,8 @@ Migrating Motorola Solutions homepage (https://www.motorolasolutions.com/en_us.h
 3. **Use `box-sizing: border-box`** - When setting explicit width/height on elements with padding.
 4. **REUSE existing blocks** - Always use existing blocks and variants before creating new ones. See "Block Reuse Guidelines" section.
 5. **Keep CLAUDE.md up-to-date** - Update this file when creating/modifying/deleting blocks, variants, or patterns. See "Maintaining This Documentation" section.
+6. **Extract video poster images** - When importing pages with videos, find the `poster` attribute on `<video>` elements and use that image URL instead of the video. Videos are not supported in static migration; use poster images as placeholders.
+7. **Create variants, not new blocks** - When a content pattern is similar to an existing block but needs different styling, create a VARIANT of that block (not a new block). This maintains consistency and reduces code duplication.
 
 ---
 
@@ -61,10 +63,77 @@ When creating new variants, use descriptive kebab-case names:
 | Content Need | ✅ Correct Approach | ❌ Wrong Approach |
 |--------------|---------------------|-------------------|
 | Hero banner with different colors | Use `carousel hero` + CSS variables | Create new `hero-banner` block |
+| **Single hero item (no rotation)** | Use `teaser hero` | Use `carousel hero` with single slide |
 | Product cards in grid | Use `cards-portfolio` or `cards-icon` | Create new `product-cards` block |
 | Expandable FAQ | Use `accordion` | Create new `faq` block |
-| Logo strip | Use `columns-logos` | Create new `logo-strip` block |
+| Logo strip | Use `columns (logos)` | Create new `logo-strip` block |
+| Tabbed content | Use `tabs` | Create new `tabbed-content` block |
 | Full-width image section | Use `image-full-width` section style | Create new `full-image` block |
+| Two-column with video/image | Use `columns (media)` variant | Create new `video-text` block |
+| **Multiple two-column rows** | Single `columns (media)` with multiple rows | Separate blocks for each row |
+| Quote carousel | Use `carousel testimonials` variant | Create new `testimonials` block |
+
+---
+
+## Migration Rules
+
+### Video Poster Extraction
+
+When importing pages that contain videos (Brightcove, HTML5 video, etc.), **extract the poster image** instead of the video itself:
+
+**⚠️ CRITICAL: Always scrape at desktop resolution (≥1200px width)**
+
+Many sites serve **different video posters based on viewport size**:
+- **Desktop (≥1200px)**: Landscape posters (16:9 or similar)
+- **Tablet (768-1199px)**: Often vertical/portrait posters
+- **Mobile (<768px)**: Various aspect ratios
+
+The poster URL dynamically changes when viewport changes. **Scraping at tablet resolution will give you vertical aspect ratio images** that look wrong on desktop.
+
+**Extraction steps:**
+1. **Set viewport to desktop size** (≥1200px width) using Playwright `browser_resize` or browser DevTools
+2. **Reload the page** after resizing (posters load on page init)
+3. **Find the `poster` attribute** on `<video>` tags
+4. **Verify aspect ratio** - desktop posters should be landscape (wider than tall)
+
+**Example JavaScript to extract posters:**
+```javascript
+// In browser console or Playwright evaluate
+const videos = document.querySelectorAll('video');
+videos.forEach((v, i) => {
+  const title = v.getAttribute('data-video-title') || `Video ${i}`;
+  console.log(`${title}: ${v.poster}`);
+});
+```
+
+**Common poster URL patterns**:
+- Brightcove: `https://cf-images.us-east-1.prod.boltdns.net/v1/jit/{account}/{uuid}/main/1280x720/...`
+- DAM thumbnails: `https://www.motorolasolutions.com/content/dam/...thumbnail.jpg`
+
+**Debug checklist for wrong aspect ratio posters:**
+1. What viewport size were you at when scraping? (Must be ≥1200px)
+2. Did you reload after resizing? (Posters load on page init)
+3. Check `data-poster-source-desktop` attribute if present - this shows the DAM path for desktop
+
+**Why this matters**: Videos require special embed handling and backends. Static migration uses poster images as visual placeholders, maintaining layout while simplifying content.
+
+### Variant-First Approach
+
+When encountering a content pattern that's similar to an existing block:
+
+1. **Identify the closest existing block** (e.g., carousel, columns, cards)
+2. **Analyze what's different** (layout direction, styling, content structure)
+3. **Create a variant** by adding a class modifier (e.g., `carousel testimonials`, `columns-media`)
+4. **Add variant CSS** in the same block's CSS file
+5. **Update JS if needed** to handle variant-specific decoration
+
+**Variant naming**: Use space-separated names in authoring: `| Carousel (testimonials) |`
+- This creates class: `.carousel.testimonials`
+
+**When to create a NEW block instead of variant**:
+- Content structure is fundamentally different (>50% different markup)
+- JavaScript logic is completely different
+- No shared styling or behavior with existing blocks
 
 ---
 
@@ -142,7 +211,7 @@ When working on this project, periodically verify:
 
 - **Content**: `/content/en-us.html`
 - **Global styles**: `/styles/styles.css`
-- **Blocks**: `/blocks/` (carousel, accordion, cards-portfolio, cards-icon, columns-logos, header, footer, fragment)
+- **Blocks**: `/blocks/` (carousel, teaser, accordion, cards-portfolio, columns, tabs, header, footer, fragment)
 - **Icons**: `/icons/` (custom SVG icons)
 - **Images**: `/content/images/` (local assets)
 - **Navigation**: `/content/nav.html`, `/content/nav.plain.html` (fragment files)
@@ -278,6 +347,27 @@ Defined in `/styles/styles.css` - reference these variable names, don't hardcode
 | **Shadows** | `--shadow-card`, `--shadow-card-elevated` |
 | **Transitions** | `--transition-fast`, `--transition-base`, `--transition-slow` |
 
+### ⚠️ CRITICAL: CSS Variable Naming Convention
+
+**NEVER use these incorrect variable names:**
+- ~~`--spacing-sm`~~ → Use `--spacing-s`
+- ~~`--spacing-md`~~ → Use `--spacing-m`
+- ~~`--spacing-lg`~~ → Use `--spacing-l`
+
+**Correct spacing variable names:**
+| Variable | Value |
+|----------|-------|
+| `--spacing-xxs` | 4px |
+| `--spacing-xs` | 8px |
+| `--spacing-s` | 12px |
+| `--spacing-m` | 16px |
+| `--spacing-l` | 24px |
+| `--spacing-xl` | 32px |
+| `--spacing-xxl` | 48px |
+| `--spacing-xxxl` | 64px |
+
+**Why this matters:** Using non-existent variable names like `--spacing-md` will silently fail - the CSS rule will have no effect because the variable resolves to nothing. Always verify variable names exist in `styles.css` before using them.
+
 ---
 
 ## CSS Guidelines
@@ -373,6 +463,8 @@ Standard breakpoints used across the project:
 - **Link stays link**: Link inline with other text stays a link
 - **Section metadata**: Use `section-metadata` block to apply styles like `highlight`, `dark`, `image-full-width`
 - **Page templates**: Add `Template: template-home` to page metadata for centered default content
+- **HTML in table cells**: Markdown syntax (like `## Heading`) is NOT parsed inside table cells. Use HTML tags (`<h2>Heading</h2>`) when you need structured content in block tables.
+- **One row per item**: In block tables (carousel, accordion), each row becomes one item/slide. Combine all content for an item into a single row using HTML.
 
 ---
 
@@ -429,11 +521,12 @@ Complete reference of all blocks and their variants.
 
 | Block | Variants | Description |
 |-------|----------|-------------|
-| **carousel** | `hero`, `stories`, `wide`, (default) | Horizontal slide carousels with multiple layouts |
+| **carousel** | `hero`, `stories`, `wide`, `testimonials`, (default) | Horizontal slide carousels with multiple layouts |
+| **teaser** | `hero` | Single hero content with background image (use instead of single-item carousel) |
 | **accordion** | (default), (homepage-portfolio context) | Expandable content sections |
 | **cards-portfolio** | — | Product cards controlled by accordion |
-| **cards-icon** | (default), `link-style` | Icon navigation cards |
-| **columns-logos** | — | Continuous scrolling logo marquee |
+| **columns** | (default), `media`, `stats`, `logos`, `logos-rotate`, `icons` | Multi-purpose layout block with variants for two-column, statistics, logos, and icon grids |
+| **tabs** | — | Horizontal tab navigation with content panels |
 | **header** | — | Site header with three responsive modes |
 | **footer** | — | Site footer with social links |
 | **fragment** | — | Utility for loading content fragments |
@@ -451,6 +544,7 @@ Complete reference of all blocks and their variants.
 | Hero | `.carousel.hero` | Full-width hero with auto-rotation (10s), dark overlay, white text |
 | Stories | `.carousel.stories` | Cards with optional intro panel from preceding content |
 | Wide | `.carousel.wide` | Large centered cards (920px), 50% opacity on inactive, infinite loop |
+| Testimonials | `.carousel.testimonials` | Quote carousel with author info and optional CTA |
 | Default | `.carousel` | Simple horizontal scrolling cards (330px) |
 
 **Authoring:**
@@ -485,10 +579,65 @@ Complete reference of all blocks and their variants.
 - Inactive slides at 50% opacity, active at 100%
 - Glass-effect footer overlay with blur
 
+**Testimonials variant specifics**:
+- Large centered quote with decorative quote mark
+- Author name (bold) and title
+- Optional CTA link
+- Works in highlight and dark sections
+- Navigation below slides
+
+**Authoring (testimonials):**
+```
+| Carousel (testimonials) |
+| ----------------------- |
+| <blockquote>"Quote text"</blockquote> <p><strong>Author Name</strong>, Title</p> <a href="url">CTA</a> |
+| <blockquote>"Second quote"</blockquote> <p><strong>Author 2</strong>, Title</p> <a href="url">CTA</a> |
+```
+
 **Default variant specifics**:
 - Fixed-width cards (330px)
 - Horizontal scroll with snap
 - Card structure: image (16:9), title, description, divider, links
+
+### teaser
+
+**Location**: `/blocks/teaser/`
+
+| Variant | Class | Purpose |
+|---------|-------|---------|
+| Hero | `.teaser.hero` | Full-width hero with background image, dark overlay, white text |
+
+**When to use teaser vs carousel hero**:
+- Use `teaser (hero)` for **single hero content** (no rotation, no navigation)
+- Use `carousel (hero)` for **multiple slides** with auto-rotation and navigation
+
+**Authoring (two-column format, matching carousel hero):**
+```
+| Teaser (hero) |  |
+| --- | --- |
+| ![background image](url) | <h2>Heading Line 1</h2><h2>Heading Line 2</h2> |
+|  | Description text |
+|  | [CTA Button](url) |
+|  | [Secondary link](url) |
+```
+
+- Column 1: Background image (first row only)
+- Column 2: All content (headings, description, CTAs across rows)
+- Use `<h2>` tags for headings within table cells
+
+**Hero variant specifics**:
+- Identical styling to `carousel (hero)` slides
+- Full-width, edge-to-edge layout
+- Background image with dark gradient overlay (left to right)
+- White text positioned on left side
+- Inverted CTA button (white background)
+- Min-height: 400px mobile, 600px tablet, 700px desktop
+- No navigation elements (dots, arrows) - single item only
+
+**Responsive behavior**:
+- Mobile: Content takes 90% width, smaller text
+- Tablet: Content max 500px, larger margins
+- Desktop: Content max 60%, positioned at left with generous margins
 
 ### accordion
 
@@ -546,63 +695,149 @@ Product cards displayed below accordion. Visibility controlled by accordion sele
 - Image constraints: Max 250x250px, centered
 - Entire card is clickable link
 
-### cards-icon
 
-**Location**: `/blocks/cards-icon/`
+### columns
+
+**Location**: `/blocks/columns/`
 
 | Variant | Class | Purpose |
 |---------|-------|---------|
-| Default | `.cards-icon` | Icon grid with centered icons and text |
-| Link Style | `.cards-icon.link-style` | Pill-button style without icons |
+| Default | `.columns` | Two equal columns side-by-side |
+| Media | `.columns.media` | Auto-detects image position for layout |
+| Stats | `.columns.stats` | Statistics display with large numbers and descriptions |
+| Logos | `.columns.logos` | Static centered logo display |
+| Logos Rotate | `.columns.logos-rotate` | Continuous scrolling logo marquee |
+| Icons | `.columns.icons` | Icon navigation cards in grid |
 
-**Authoring:**
+**Authoring (media):**
 ```
-| Cards Icon |
-| ---------- |
+| Columns (media) |  |
+| --------------- | - |
+| ![image](url) | <h2>Heading</h2><h4>Subheading</h4><p>Description text</p><p><a href="url">CTA Link</a></p> |
+
+<!-- OR for reversed layout (image on right): -->
+| Columns (media) |  |
+| --------------- | - |
+| <h2>Heading</h2><p>Content...</p> | ![image](url) |
+```
+
+**Note**: Content in table cells must use HTML tags (not markdown syntax) for proper rendering. Markdown like `## Heading` stays as raw text in tables.
+
+**Media variant specifics**:
+- **Auto-detects image position per row**: Put image in first column for image-left layout, or in second column for image-right layout
+- **Supports multiple rows**: Add multiple rows to a single block for alternating layouts
+- No need for separate `media-reversed` variant - just swap column order in authoring
+- Image/video poster on one side (45% width on desktop)
+- Content on other side with heading, subheadings (h4), descriptions
+- Play button overlay appears when image alt contains "video" or src contains "poster"
+- Rounded corners and shadow on media
+- Responsive: stacks vertically on mobile
+
+**Single block with multiple rows (PREFERRED):**
+```
+| Columns (media) |  |
+| --------------- | - |
+| ![Dispatcher](poster.jpg) | <h2>Dispatcher Suite</h2><p>Description...</p><p><a href="url">Learn more</a></p> |
+| <h2>Responder Suite</h2><p>Description...</p><p><a href="url">Learn more</a></p> | ![Responder](poster.jpg) |
+```
+
+This creates two rows in one block, with alternating image positions (auto-detected per row).
+
+**⚠️ DO NOT create separate blocks for each row** - merge related content into single multi-row block.
+
+**Authoring (stats):**
+```
+| Columns (stats) |  |
+| --------------- | - |
+| 30% | of 9-1-1 calls include excessive amounts of information. |
+| 40% | of an officer's shift is spent on administrative tasks. |
+| 10% | staffing deficits force agencies to do more with less. |
+| 50% | of officers frequently arrive at a scene that isn't as described. |
+```
+
+**Stats variant specifics**:
+- Large, bold numbers (48-64px depending on viewport)
+- Centered text layout
+- Responsive grid: 2 columns on mobile, 4 columns on tablet/desktop
+- In `.section.dark`: Numbers and descriptions adapt to white/light colors
+
+**Authoring (logos):**
+```
+| Columns (logos) |
+| --------------- |
+| ![logo1](...) | ![logo2](...) | ![logo3](...) | ... |
+```
+
+For rotating marquee:
+```
+| Columns (logos rotate) |
+| ---------------------- |
+| ![logo1](...) | ![logo2](...) | ![logo3](...) | ... |
+```
+
+**Logos variant specifics**:
+- Static centered logo display (default)
+- Full viewport width (breaks out of container)
+- Logo height: 100px, max-width: 280px
+
+**Logos-rotate variant specifics**:
+- Infinite horizontal scroll animation (30s cycle)
+- Logos duplicated for seamless loop
+- Fade edges (gradient masks left/right)
+- In `.section.dark`: Fade gradients use dark background color
+
+**Authoring (icons):**
+```
+| Columns (icons) |
+| --------------- |
 | ![icon](...) |
 | [Label](url) |
 ```
 
-**Default variant**:
+**Icons variant specifics**:
 - Flexible cards that scale between 100px-160px wide, 120px tall
 - Icon images: 48x48px (mobile), 64x64px (desktop)
 - Entire card is clickable
 - Hover shadow: `0 8px 20px 0 rgb(35 35 35 / 25%)`
 - In `.section.dark`: white shadow on hover
 
-**Link-style variant** (`.cards-icon.link-style`):
-- Icons hidden
-- Pill-button appearance with border
-- Uses `--button-border-radius-large`
 
-**Responsive grid**:
-- < 450px: 2 items per row
-- 450-700px: 3 items per row
-- ≥ 700px: flexible wrap, centered
+### tabs
 
-### columns-logos
+**Location**: `/blocks/tabs/`
 
-**Location**: `/blocks/columns-logos/`
-
-Continuous scrolling logo marquee (partner logos).
+Horizontal tab navigation with content panels. Each tab displays different content when clicked.
 
 **Authoring:**
 ```
-| Columns Logos |
-| ------------- |
-| ![logo1](...) | ![logo2](...) | ![logo3](...) | ... |
+| Tabs |  |
+| ---- | - |
+| <h3>Tab 1 Title</h3><h4>Heading</h4><p>Content...</p> | ![image](...) |
+| <h3>Tab 2 Title</h3><h4>Heading</h4><p>Content...</p> | ![image](...) |
+| <h3>Tab 3 Title</h3><h4>Heading</h4><p>Content...</p> | ![image](...) |
 ```
 
-**Features**:
-- Infinite horizontal scroll animation (30s cycle)
-- Logos duplicated for seamless loop
-- Full viewport width (breaks out of container)
-- Fade edges (gradient masks left/right)
-- Logo height: 100px, max-width: 280px
+**Structure per row:**
+- First cell: Tab content (h3 becomes tab label, rest becomes panel content)
+- Second cell: Optional image displayed on right side of panel
 
-**In `.section.dark`**: Fade gradients use dark background color
+**Features**:
+- Pill-style tab buttons
+- First tab selected by default
+- Smooth tab switching
+- Scroll buttons appear on mobile when tabs overflow
+- Two-column layout on desktop (content left, image right)
+- Full accessibility with ARIA roles
+
+**Responsive behavior**:
+- Mobile: Tabs scroll horizontally, single column layout
+- Tablet+: Centered tabs, two-column panel layout
+- Desktop: Larger tab buttons and panel text
+
+**In `.section.dark`**: Tab buttons and content adapt to dark backgrounds
 
 ---
+
 
 ### fragment (Utility Module)
 
@@ -775,11 +1010,11 @@ Dark footer (`#111`) with 60% white default text color.
 2. "Solving for safer" default content
 3. Highlight section
 4. Accordion + cards-portfolio (homepage-portfolio section)
-5. Partner logos (columns-logos)
+5. Partner logos - columns (logos rotate)
 6. carousel stories - "A shared vision..."
 7. image-full-width section - "See what safer can do..."
 8. carousel wide - "Featured news"
-9. cards-icon - "Explore Motorola Solutions"
+9. columns (icons) - "Explore Motorola Solutions"
 10. Metadata
 
 ---
@@ -901,6 +1136,15 @@ Always include ARIA attributes on interactive elements:
 12. **Tablet menu goes to TOP of screen** (`inset: 0`) - NOT below the nav bar like mobile
 13. **Support dropdown is desktop-only** (≥1200px) - on tablet/mobile, Support is in the hamburger menu
 14. **Accordion images on mobile** need `max-width: 500px` constraint when stacked above accordion
+15. **Video posters: scrape at desktop resolution** (≥1200px) - tablet resolution gives vertical aspect ratio posters
+16. **Merge similar blocks into single multi-row blocks** - don't create separate blocks for each row of similar content
+17. **Use teaser (hero) for single hero items** - don't use carousel (hero) for non-rotating single items
+18. **Page-specific styles stay page-specific** - When importing styles from one page to match another, NEVER modify shared block CSS in ways that affect other pages. Instead: (a) Use page-specific or template-specific selectors like `body.template-name .block`, (b) Create a new variant if the styling is fundamentally different, (c) Check how changes affect all pages using the block before committing
+19. **CSS variable naming** - NEVER use `--spacing-sm`, `--spacing-md`, `--spacing-lg`. The correct names are `--spacing-s`, `--spacing-m`, `--spacing-l`. Using incorrect names will silently fail.
+20. **Links vs Buttons** - In EDS, links that are alone in a paragraph (`<p><a>...</a></p>`) become buttons styled by global styles. If a block needs specific button styling (e.g., inverted colors), the block CSS must override the global button styles using block-scoped selectors.
+21. **Logos marquee direction** - The `.columns.logos .columns-logo-marquee-track` must have `flex-direction: row` explicitly set; otherwise inherited styles might cause vertical display.
+22. **Default content centering** - For `template-home` pages, centering is applied to `.default-content-wrapper`. If centering isn't working, check: (a) the body has the `template-home` class, (b) the selector specificity matches the HTML structure.
+23. **Text truncation in carousels** - Never use `-webkit-line-clamp` or text truncation on carousel descriptions unless explicitly requested. Show full text.
 
 ---
 

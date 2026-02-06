@@ -1,0 +1,249 @@
+/* stylelint-disable no-descending-specificity */
+
+/**
+ * Teaser Block - Single hero/promotional content
+ * Variants:
+ * - .teaser.hero - Full-width hero with background image, dark overlay, white text
+ *                  Identical styling to carousel (hero) for single items
+ */
+
+/* ===== EDGE-TO-EDGE WRAPPER ===== */
+main > div:has(.teaser.hero),
+main > .section:has(.teaser.hero),
+main div.teaser-wrapper:has(.teaser.hero) {
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== HERO VARIANT ===== */
+.teaser.hero {
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 400px;
+}
+
+@media (width < 600px) {
+  .teaser.hero {
+    min-height: 450px;
+  }
+}
+
+@media (width >= 768px) {
+  .teaser.hero {
+    min-height: 600px;
+  }
+}
+
+@media (width >= 1024px) {
+  .teaser.hero {
+    min-height: 700px;
+  }
+}
+
+/* Background Image Container */
+.teaser.hero .teaser-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.teaser.hero .teaser-image picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.teaser.hero .teaser-image picture > img,
+.teaser.hero .teaser-image > img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Dark Gradient Overlay */
+.teaser.hero .teaser-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgb(0 0 0 / 70%) 0%,
+    rgb(0 0 0 / 40%) 50%,
+    rgb(0 0 0 / 10%) 100%
+  );
+}
+
+/* Content Container */
+.teaser.hero .teaser-content {
+  z-index: 1;
+  position: relative;
+  max-width: 90%;
+  margin: var(--spacing-l) var(--spacing-m);
+  padding: var(--spacing-m);
+  color: var(--text-color-inverse);
+  background-color: transparent;
+}
+
+@media (width >= 600px) {
+  .teaser.hero .teaser-content {
+    max-width: 500px;
+    margin: var(--spacing-l);
+    margin-left: 60px;
+    margin-right: 60px;
+  }
+}
+
+@media (width >= 768px) {
+  .teaser.hero .teaser-content {
+    margin: var(--spacing-xl) var(--spacing-xxl);
+    margin-left: 120px;
+    margin-right: 120px;
+    max-width: 55%;
+    padding: var(--spacing-l);
+  }
+}
+
+@media (width >= 1024px) {
+  .teaser.hero .teaser-content {
+    margin: var(--spacing-xxl) var(--spacing-xxxl);
+    margin-left: 140px;
+    margin-right: 140px;
+    max-width: 60%;
+  }
+}
+
+/* Typography */
+.teaser.hero .teaser-content h1,
+.teaser.hero .teaser-content h2 {
+  font-family: var(--body-font-family);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--text-color-inverse);
+  margin: 0 0 var(--spacing-s);
+  letter-spacing: -0.01em;
+}
+
+@media (width >= 768px) {
+  .teaser.hero .teaser-content h1,
+  .teaser.hero .teaser-content h2 {
+    font-size: 42px;
+  }
+}
+
+@media (width >= 1024px) {
+  .teaser.hero .teaser-content h1,
+  .teaser.hero .teaser-content h2 {
+    font-size: 56px;
+  }
+}
+
+.teaser.hero .teaser-content p {
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-color-inverse);
+  margin: 0 0 var(--spacing-m);
+  max-width: 450px;
+}
+
+@media (width >= 768px) {
+  .teaser.hero .teaser-content p {
+    font-size: 19px;
+  }
+}
+
+/* CTA container - horizontal layout */
+.teaser.hero .teaser-cta-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-l);
+}
+
+/* CTA Button - Inverted (white on dark) */
+.teaser.hero .teaser-cta-container a.button,
+.teaser.hero .teaser-cta-container > a:first-child {
+  display: inline-block;
+  padding: 12px 28px;
+  background-color: rgb(255 255 255 / 95%);
+  color: var(--color-border-dark);
+  border: 2px solid rgb(255 255 255 / 95%);
+  border-radius: var(--button-border-radius);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.teaser.hero .teaser-cta-container a.button:hover,
+.teaser.hero .teaser-cta-container > a:first-child:hover {
+  background-color: hsl(0deg 0% 74.1% / 96.25%);
+  border-color: hsl(0deg 0% 74.1% / 96.25%);
+  color: #000;
+  text-decoration: none;
+}
+
+/* Secondary CTA - Watch video with play button */
+.teaser.hero .teaser-cta-container .teaser-video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-l);
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-color-inverse);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  height: 48px;
+}
+
+.teaser.hero .teaser-cta-container .teaser-video-link:hover {
+  text-decoration: underline;
+}
+
+/* Play button icon */
+.teaser.hero .teaser-play-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: rgb(255 255 255 / 95%);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.teaser.hero .teaser-play-button::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 0 8px 14px;
+  border-color: transparent transparent transparent var(--color-border-dark);
+  margin-left: 3px;
+}
+
+/* Legacy p > a fallback support */
+.teaser.hero .teaser-content p:has(a.button),
+.teaser.hero .teaser-content p:has(> a:only-child) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-s);
+  margin-top: var(--spacing-m);
+}

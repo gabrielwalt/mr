@@ -900,7 +900,7 @@ main div.carousel-wrapper:has(.carousel.wide) {
   color: var(--color-border-dark);
   border: 2px solid rgb(255 255 255 / 95%);
   border-radius: var(--button-border-radius);
-  font-size: var(--body-font-size-s);
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -1029,4 +1029,219 @@ main div.carousel-wrapper:has(.carousel.wide) {
     width: 28px;
     border-width: 2px;
   }
+}
+
+/* ===== TESTIMONIALS VARIANT STYLES ===== */
+
+.carousel.testimonials {
+  padding: var(--spacing-xxl) 0;
+}
+
+/* Testimonials slides - centered layout, single visible slide */
+.carousel.testimonials .carousel-slides {
+  display: flex;
+  justify-content: center;
+  padding: 60px var(--spacing-xl) 20px;
+  overflow: hidden visible;
+  position: relative;
+}
+
+@media (width >= 768px) {
+  .carousel.testimonials .carousel-slides {
+    padding: 60px 80px 20px;
+  }
+}
+
+/* Testimonial card - larger, centered */
+.carousel.testimonials .carousel-slide {
+  flex: 0 0 min(600px, 90vw);
+  max-width: 600px;
+  min-width: 280px;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+  overflow: visible;
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+}
+
+/* Only the active slide is visible */
+.carousel.testimonials .carousel-slide.active {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+}
+
+@media (width >= 900px) {
+  .carousel.testimonials .carousel-slide {
+    flex: 0 0 700px;
+    max-width: 700px;
+  }
+}
+
+/* Testimonial card structure */
+.carousel.testimonials .testimonial-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-l);
+  padding: var(--spacing-l);
+}
+
+/* Author photo (optional) */
+.carousel.testimonials .testimonial-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.carousel.testimonials .testimonial-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Quote block */
+.carousel.testimonials .testimonial-quote {
+  position: relative;
+  font-family: var(--body-font-family);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-color);
+  margin: 0;
+  padding: 0 var(--spacing-m);
+  max-width: 100%;
+}
+
+@media (width >= 768px) {
+  .carousel.testimonials .testimonial-quote {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+}
+
+/* Opening quote mark */
+.carousel.testimonials .testimonial-quote::before {
+  content: '"';
+  font-family: Georgia, serif;
+  font-size: 60px;
+  font-weight: 700;
+  color: var(--color-brand-primary);
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  line-height: 1;
+}
+
+@media (width >= 768px) {
+  .carousel.testimonials .testimonial-quote::before {
+    font-size: 80px;
+    top: -30px;
+    left: -20px;
+  }
+}
+
+/* Author info */
+.carousel.testimonials .testimonial-author {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-m);
+}
+
+.carousel.testimonials .testimonial-author-name {
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.carousel.testimonials .testimonial-author-title {
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-color-secondary);
+  margin: 0;
+}
+
+/* CTA link */
+.carousel.testimonials .testimonial-cta {
+  display: inline-block;
+  margin-top: var(--spacing-m);
+  color: var(--link-color);
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.carousel.testimonials .testimonial-cta:hover {
+  text-decoration: underline;
+}
+
+/* Navigation for testimonials - centered below */
+.carousel.testimonials .carousel-navigation-wrapper {
+  margin-top: var(--spacing-xl);
+}
+
+/* Hide default card content structure for testimonials */
+.carousel.testimonials .carousel-slide-image,
+.carousel.testimonials .carousel-slide-content {
+  display: none;
+}
+
+/* ===== TESTIMONIALS IN HIGHLIGHT SECTION ===== */
+
+.section.highlight .carousel.testimonials .testimonial-quote {
+  color: var(--text-color);
+}
+
+.section.highlight .carousel.testimonials .testimonial-author-name {
+  color: var(--text-color);
+}
+
+/* ===== TESTIMONIALS IN DARK SECTION ===== */
+
+.section.dark .carousel.testimonials .testimonial-quote {
+  color: var(--text-color-inverse);
+}
+
+.section.dark .carousel.testimonials .testimonial-quote::before {
+  color: rgb(255 255 255 / 70%);
+}
+
+.section.dark .carousel.testimonials .testimonial-author-name {
+  color: var(--text-color-inverse);
+}
+
+.section.dark .carousel.testimonials .testimonial-author-title {
+  color: rgb(255 255 255 / 70%);
+}
+
+.section.dark .carousel.testimonials .testimonial-cta {
+  color: var(--text-color-inverse);
+}
+
+.section.dark .carousel.testimonials .carousel-slide-indicator button {
+  background-color: rgb(255 255 255 / 40%);
+}
+
+.section.dark .carousel.testimonials .carousel-slide-indicator button:hover,
+.section.dark .carousel.testimonials .carousel-slide-indicator button:focus-visible {
+  background-color: rgb(255 255 255 / 70%);
+}
+
+.section.dark .carousel.testimonials .carousel-slide-indicator button:disabled {
+  background-color: var(--color-surface-white);
+}
+
+.section.dark .carousel.testimonials .slide-prev::after,
+.section.dark .carousel.testimonials .slide-next::after {
+  border-color: rgb(255 255 255 / 85%);
 }
