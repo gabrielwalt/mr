@@ -173,14 +173,14 @@ main div.teaser-wrapper:has(.teaser.hero) {
   margin-top: var(--spacing-l);
 }
 
-/* CTA Button - Inverted (white on dark) */
+/* CTA Button - Red on dark hero */
 .teaser.hero .teaser-cta-container a.button,
 .teaser.hero .teaser-cta-container > a:first-child {
   display: inline-block;
   padding: 12px 28px;
-  background-color: rgb(255 255 255 / 95%);
-  color: var(--color-border-dark);
-  border: 2px solid rgb(255 255 255 / 95%);
+  background-color: #d32f2f;
+  color: rgb(255 255 255 / 95%);
+  border: 2px solid #d32f2f;
   border-radius: var(--button-border-radius);
   font-size: 14px;
   font-weight: 600;
@@ -190,9 +190,9 @@ main div.teaser-wrapper:has(.teaser.hero) {
 
 .teaser.hero .teaser-cta-container a.button:hover,
 .teaser.hero .teaser-cta-container > a:first-child:hover {
-  background-color: hsl(0deg 0% 74.1% / 96.25%);
-  border-color: hsl(0deg 0% 74.1% / 96.25%);
-  color: #000;
+  background-color: #b71c1c;
+  border-color: #b71c1c;
+  color: #fff;
   text-decoration: none;
 }
 
