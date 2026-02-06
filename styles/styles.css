@@ -87,17 +87,17 @@
   --button-font-weight: 500;
   --button-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
-  /* Button Primary - Matching Motorola Solutions */
-  --button-primary-bg: rgb(0 0 0 / 95%);
+  /* Button Primary */
+  --button-primary-bg: #d32f2f;
   --button-primary-color: rgb(255 255 255 / 95%);
-  --button-primary-bg-hover: #000;
+  --button-primary-bg-hover: #b71c1c;
   --button-primary-border: 1px solid transparent;
 
   /* Button Secondary */
   --button-secondary-bg: transparent;
-  --button-secondary-color: rgb(0 0 0 / 95%);
-  --button-secondary-border: 1px solid rgb(0 0 0 / 40%);
-  --button-secondary-bg-hover: rgb(0 0 0 / 5%);
+  --button-secondary-color: #d32f2f;
+  --button-secondary-border: 1px solid #d32f2f;
+  --button-secondary-bg-hover: rgb(211 47 47 / 8%);
 
   /* ===== LAYOUT ===== */
   --nav-height: 64px;
@@ -372,13 +372,13 @@ button.secondary:hover {
 /* Button on dark backgrounds */
 .section.dark a.button:any-link,
 .section.dark button {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: #d32f2f;
+  color: rgb(255 255 255 / 95%);
 }
 
 .section.dark a.button:hover,
 .section.dark button:hover {
-  background-color: var(--light-color);
+  background-color: #b71c1c;
 }
 
 .section.dark a.button.secondary,
@@ -388,15 +388,15 @@ button.secondary:hover {
   color: var(--text-color-inverse);
 }
 
-/* Button Inverted - White button for dark backgrounds */
+/* Button Inverted - for dark backgrounds */
 a.button.inverted,
 button.inverted,
 .button-inverted {
   display: inline-block;
   padding: 12px 28px;
-  background-color: rgb(255 255 255 / 95%);
-  color: #1a1a1a;
-  border: 2px solid rgb(255 255 255 / 95%);
+  background-color: #d32f2f;
+  color: rgb(255 255 255 / 95%);
+  border: 2px solid #d32f2f;
   border-radius: var(--button-border-radius);
   font-size: var(--body-font-size-s);
   font-weight: 600;
@@ -407,9 +407,9 @@ button.inverted,
 a.button.inverted:hover,
 button.inverted:hover,
 .button-inverted:hover {
-  background-color: hsl(0deg 0% 74.1% / 96.25%);
-  border-color: hsl(0deg 0% 74.1% / 96.25%);
-  color: #000;
+  background-color: #b71c1c;
+  border-color: #b71c1c;
+  color: #fff;
   text-decoration: none;
 }
 

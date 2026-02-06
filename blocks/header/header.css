@@ -389,7 +389,7 @@ header .nav-tools li {
   margin: 0;
 }
 
-/* Contact Sales button - black pill, 16px tall, 12px font */
+/* Contact Sales button - red pill, 16px tall, 12px font */
 header .nav-tools a,
 header .nav-tools a:any-link {
   display: inline-flex;
@@ -397,7 +397,7 @@ header .nav-tools a:any-link {
   justify-content: center;
   height: 32px;
   padding: 0 16px;
-  background-color: rgb(0 0 0 / 95%);
+  background-color: #d32f2f;
   color: var(--text-color-inverse);
   border-radius: 16px;
   font-size: 12px;
@@ -408,7 +408,7 @@ header .nav-tools a:any-link {
 
 header .nav-tools a:hover,
 header .nav-tools a:any-link:hover {
-  background-color: rgb(0 0 0 / 70%);
+  background-color: #b71c1c;
   color: var(--text-color-inverse);
   text-decoration: none;
 }
@@ -527,7 +527,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     justify-content: center;
     height: 32px;
     padding: 0 16px;
-    background-color: rgb(0 0 0 / 95%);
+    background-color: #d32f2f;
     color: var(--text-color-inverse);
     border-radius: 16px;
     font-size: 12px;
@@ -537,7 +537,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 
   header nav .nav-primary-tools .contact-sales-mobile a:hover {
-    background-color: rgb(0 0 0 / 80%);
+    background-color: #b71c1c;
     color: var(--text-color-inverse);
   }
 
@@ -1005,7 +1005,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
     justify-content: center;
     height: 32px;
     padding: 0 16px;
-    background-color: rgb(0 0 0 / 95%);
+    background-color: #d32f2f;
     color: var(--text-color-inverse);
     border-radius: 16px;
     font-size: 12px;
@@ -1015,7 +1015,7 @@ header nav[aria-expanded='true'] .nav-hamburger-icon::after {
   }
 
   header nav .nav-primary-tools .contact-sales-mobile a:hover {
-    background-color: rgb(0 0 0 / 80%);
+    background-color: #b71c1c;
     color: var(--text-color-inverse);
   }
 

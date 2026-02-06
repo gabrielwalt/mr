@@ -98,16 +98,16 @@
   margin-top: var(--spacing-m);
 }
 
-/* Inverted buttons: white text on black background */
+/* Inverted buttons: red background */
 .columns.media .columns-content-col a.button:any-link {
-  background-color: rgb(0 0 0 / 95%);
+  background-color: #d32f2f;
   color: rgb(255 255 255 / 95%);
-  border-color: rgb(0 0 0 / 95%);
+  border-color: #d32f2f;
 }
 
 .columns.media .columns-content-col a.button:hover {
-  background-color: #000;
-  border-color: #000;
+  background-color: #b71c1c;
+  border-color: #b71c1c;
   color: #fff;
   text-decoration: none;
 }
