@@ -1068,12 +1068,11 @@ Dark footer (`#111`) with 60% white default text color.
 2. columns (stats) - 4 statistics (highlight section)
 3. "Operationalize your mission" default content + tabs (5 tabs)
 4. "Trusted by public safety agencies" + columns (logos)
-5. "Introducing role-based AI suites" default content
-6. columns (media) - Dispatcher & Responder Assist Suites (2 rows)
-7. "What public safety leaders are saying" + carousel (testimonials) - 2 quotes (highlight section)
-8. "Explore AI-enabled products" default content + carousel (default) - 9 product cards
-9. "Speak with an expert" default content + form
-10. Metadata (Template: template-home)
+5. "Introducing role-based AI suites" default content + columns (media) - Dispatcher & Responder Assist Suites (2 rows) (highlight section)
+6. "What public safety leaders are saying" + carousel (testimonials) - 2 quotes
+7. "Explore AI-enabled products" default content + carousel (default) - 9 product cards (highlight section)
+8. "Speak with an expert" default content + form
+9. Metadata (Template: template-home)
 
 ---
 
@@ -1208,6 +1207,9 @@ Always include ARIA attributes on interactive elements:
 26. **Block CSS must not override global button styles with link styles** - In EDS, `a.button` gets global button styling (pill shape, dark bg on hover, etc.). Block CSS should NEVER set `color: var(--link-color)` on `a.button` or `p > a:only-child` elements, as this overrides the global button styling and makes buttons appear as plain blue links. Instead, either let global styles apply or add explicit block-scoped button overrides.
 27. **Variant-scoped carousel CSS** - When adding CSS to `.carousel .carousel-slide-content` or other base carousel selectors, always consider whether it should apply to ALL variants or only specific ones. Use `:not()` selectors like `.carousel:not(.hero):not(.stories):not(.wide):not(.testimonials)` to scope changes to the default variant only.
 28. **Picture elements need explicit height** - When using `img { width: 100%; height: 100%; object-fit: cover; }` to fill a container, the parent `<picture>` element also needs `width: 100%; height: 100%` for the image to actually fill the space. Without this, the picture element has no explicit dimensions and the image won't stretch.
+29. **Form inputs inherit global height** - The `.form .form-field input` rule sets `height: 49px` on ALL inputs. Checkbox and radio inputs need explicit `height: auto` override to prevent being forced to 49px tall.
+30. **Grid items stretch by default** - Elements inside `display: grid; grid-template-columns: 1fr` will stretch to fill the column width, even if they have `display: inline-block`. To center a button without full width, change the parent to `display: flex; justify-content: center` and add `width: auto` on the button.
+31. **Non-rotating logos centering** - The `.columns.logos:not(.rotate)` variant needs both `flex-wrap: wrap` and `justify-content: center` on `.columns-logo-set` (not just the parent track) to properly center logos that may wrap to multiple rows.
 
 ---
 

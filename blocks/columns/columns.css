@@ -26,20 +26,10 @@
 
 /* ===== COLUMNS MEDIA VARIANT ===== */
 
-/* Edge-to-edge checkerboard layout */
-
-/* Wrapper - full viewport width */
-main > div:has(.columns.media),
-main > .section:has(.columns.media),
-main div.columns-wrapper:has(.columns.media) {
-  max-width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
 .columns.media {
   padding: 0;
   gap: 0;
+  margin-top: var(--spacing-xl);
 }
 
 .columns.media > div {
@@ -277,6 +267,11 @@ main div.columns-wrapper:has(.columns.media) {
 /* Static variant: center logos */
 .columns.logos:not(.rotate) .columns-logo-marquee-track {
   width: 100%;
+  justify-content: center;
+}
+
+.columns.logos:not(.rotate) .columns-logo-set {
+  flex-wrap: wrap;
   justify-content: center;
 }
 

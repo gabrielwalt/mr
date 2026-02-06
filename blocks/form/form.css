@@ -3,9 +3,17 @@
 /* Form Block Styles */
 
 .form {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: var(--spacing-l) 0;
+  max-width: 860px;
+  margin: var(--spacing-xl) auto 120px;
+  padding: 30px 80px;
+  box-sizing: border-box;
+  box-shadow: 0 30px 60px rgb(35 35 35 / 15%);
+}
+
+@media (width < 600px) {
+  .form {
+    padding: 24px var(--spacing-l);
+  }
 }
 
 .form .contact-form {
@@ -39,9 +47,9 @@
 }
 
 .form .form-field label {
-  font-size: 12px;
-  font-weight: 400;
-  color: rgb(0 0 0 / 60%);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(0 0 0 / 80%);
 }
 
 .form .form-field input,
@@ -102,8 +110,9 @@
 
 .form .form-field-checkbox input[type="checkbox"] {
   width: auto;
+  height: auto;
   flex-shrink: 0;
-  margin-top: 4px;
+  margin-top: 2px;
   cursor: pointer;
 }
 
@@ -122,11 +131,13 @@
 /* Submit button */
 .form .form-row-submit {
   margin-top: var(--spacing-m);
-  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 .form .form-row-submit .button {
   display: inline-block;
+  width: auto;
   padding: 7px 20px;
   font-family: var(--body-font-family);
   font-size: 16px;
