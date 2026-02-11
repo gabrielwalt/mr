@@ -239,6 +239,9 @@ When working on this project, periodically verify:
 - **Images**: `/content/images/` (local assets)
 - **Navigation**: `/content/nav.html`, `/content/nav.plain.html` (fragment files)
 - **Footer**: `/content/footer.html`, `/content/footer.plain.html` (fragment files)
+- **Sitemap & inventory**: `/sitemap.md` (~600+ en_us pages classified by template)
+- **Template definitions**: `/page-templates.md` (6 templates with structural patterns and block requirements)
+- **Migration strategy**: `/migration-priority.md` (phased import plan with quick wins)
 
 ---
 
