@@ -8,7 +8,7 @@
 ## Template 1: `template-home` (Marketing Landing Pages)
 
 **Used by**: Homepage, product story pages, industry/solution pages, AI pages
-**Page count**: ~50 pages
+**Page count**: 158 pages
 **Block coverage**: ~90% with existing blocks
 **Status**: Fully implemented, 4 pages migrated
 
@@ -161,7 +161,7 @@
 ## Template 3: `template-product-detail` (Individual Product Pages)
 
 **Used by**: Individual radios, cameras, software products, accessories
-**Page count**: ~245 pages (largest category)
+**Page count**: 716 pages (largest category)
 **Block coverage**: ~50%
 **Status**: Not yet implemented — needs template development
 
@@ -200,8 +200,8 @@
 
 ## Template 4: `template-about` (Corporate / About Pages)
 
-**Used by**: About pages, legal pages, ESG reports, history, careers
-**Page count**: ~92 pages
+**Used by**: About pages, legal pages, ESG reports, history, careers, case studies, investors
+**Page count**: 141 pages (+ 9 investors pages)
 **Block coverage**: ~60%
 **Status**: Not yet implemented
 
@@ -247,7 +247,7 @@ Police Week officer profiles, customer stories, history pages.
 ## Template 5: `template-application-catalog` (App Catalog Entries)
 
 **Used by**: Partner/app listing pages in /en_us/application-catalog/
-**Page count**: ~74 pages
+**Page count**: 112 pages
 **Block coverage**: ~40%
 **Status**: Not yet implemented — suitable for bulk import
 
@@ -276,7 +276,7 @@ Police Week officer profiles, customer stories, history pages.
 ## Template 6: `template-engage` (Gated Content / Lead Gen)
 
 **Used by**: /en_us/engage/webapp/* pages
-**Page count**: ~21 pages
+**Page count**: 29 pages
 **Block coverage**: ~50%
 **Status**: Not yet implemented
 

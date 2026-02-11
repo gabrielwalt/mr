@@ -16,7 +16,7 @@
 
 ## Phase 1: Marketing Landing Pages (`template-home`)
 
-**Status**: 4 of ~50 pages migrated
+**Status**: 4 of 158 pages migrated
 **New blocks needed**: 0
 **Block coverage**: ~90% (all blocks already exist)
 
@@ -81,7 +81,7 @@ All 15 industry pages follow the same structural pattern. Once one is migrated s
 
 ## Phase 2: Product Detail Pages (`template-product-detail`)
 
-**Status**: 0 of ~245 pages migrated
+**Status**: 0 of 716 pages migrated
 **New blocks needed**: 3-4
 **Block coverage**: ~50% — requires template development
 
@@ -98,14 +98,16 @@ Before bulk import, develop these new blocks:
 
 | Phase | Section | Count | Notes |
 |-------|---------|-------|-------|
-| 2A | P25 radios (portable + mobile) | ~23 | Highest traffic products |
-| 2B | MOTOTRBO radios | ~18 | Second highest |
-| 2C | Command center software | ~50 | Software product pages |
-| 2D | Video security products | ~40 | Cameras, LPR, drones |
-| 2E | Body cameras & in-car video | ~25 | Law enforcement products |
-| 2F | Consumer radios & accessories | ~20 | Consumer products |
-| 2G | Broadband / WAVE products | ~10 | PTT solutions |
-| 2H | Remaining products | ~59 | Everything else |
+| 2A | P25 products (radios, systems, security) | ~46 | Highest traffic products |
+| 2B | MOTOTRBO radios & systems | ~30 | Second highest |
+| 2C | Command center software | ~78 | Software product pages (largest sub-group) |
+| 2D | Video security & access control | ~105 | Cameras, LPR, drones, body-worn, in-car |
+| 2E | Two-way radio accessories | ~118 | Batteries, chargers, audio, antennas |
+| 2F | Commercial/consumer radios | ~55 | Analog, on-site, consumer radios |
+| 2G | Dispatch & logging | ~38 | Consoles, fire station alerting, recorders |
+| 2H | Broadband / LTE / SCADA | ~40 | PTT, IoT, SCADA, LTE devices |
+| 2I | Vertex Standard radios | ~16 | Legacy Vertex product line |
+| 2J | Other products (impres, pagers, etc.) | ~90 | Everything else |
 
 ### Bulk Import Strategy
 
@@ -120,7 +122,7 @@ Product detail pages within the same category are structurally identical. Recomm
 
 ## Phase 3: Corporate & About Pages (`template-about`)
 
-**Status**: 0 of ~92 pages migrated
+**Status**: 0 of 141 pages migrated (+ 9 investors pages)
 **New blocks needed**: 1-2
 **Block coverage**: ~60%
 
@@ -139,15 +141,15 @@ Product detail pages within the same category are structurally identical. Recomm
 
 ## Phase 4: Application Catalog (`template-application-catalog`)
 
-**Status**: 0 of ~74 pages migrated
+**Status**: 0 of 112 pages migrated
 **New blocks needed**: 2-3
 **Block coverage**: ~40%
 
-All 74 pages follow the same standardized format. Ideal for bulk import once the template is developed.
+All 112 pages follow the same standardized format. Ideal for bulk import once the template is developed.
 
 1. Develop template from **one pilot page**
 2. Build import script
-3. Bulk import all 74 pages
+3. Bulk import all 112 pages
 4. QA
 
 ---
@@ -156,9 +158,11 @@ All 74 pages follow the same standardized format. Ideal for bulk import once the
 
 | Phase | Section | Count | Template | Notes |
 |-------|---------|-------|----------|-------|
-| 5A | Engage / gated content | ~21 | `template-engage` | Form-based lead gen |
+| 5A | Engage / gated content | 29 | `template-engage` | Form-based lead gen |
 | 5B | Product catalog hub | 1 | `template-product-catalog` | Unique interactive layout |
-| 5C | Specialized pages | ~22 | Various | Low priority utilities |
+| 5C | Specialized pages | 42 | Various | Low priority utilities |
+| 5D | Newsroom / press releases | 2,009 | newsroom | Separate CMS, likely last |
+| 5E | Investors pages | 9 | `template-about` | Corporate IR pages |
 
 ---
 
@@ -168,11 +172,12 @@ All 74 pages follow the same standardized format. Ideal for bulk import once the
 |-------|-------|-----------|--------|-------|
 | **1A**: Product pillar landings | 10 | 0 | Low | High |
 | **1B**: Industry vertical pages | 15 | 0 | Low-Medium | High |
-| **1C**: Secondary marketing pages | ~40 | 0 | Medium | Medium |
-| **2**: Product detail pages | ~245 | 3-4 | High | High |
-| **3**: Corporate / About pages | ~92 | 1-2 | Medium | Medium |
-| **4**: Application catalog | ~74 | 2-3 | Medium | Low |
-| **5**: Remaining pages | ~44 | 1-2 | Medium | Low |
+| **1C**: Secondary marketing pages | ~133 | 0 | Medium | Medium |
+| **2**: Product detail pages | 716 | 3-4 | High | High |
+| **3**: Corporate / About pages | 150 | 1-2 | Medium | Medium |
+| **4**: Application catalog | 112 | 2-3 | Medium | Low |
+| **5A**: Engage pages | 29 | 0-1 | Low | Low |
+| **5B-E**: Remaining + Newsroom | 2,052 | 1-2 | Medium-High | Low |
 
 ### Quick Wins (immediate, no new development)
 
@@ -180,7 +185,9 @@ All 74 pages follow the same standardized format. Ideal for bulk import once the
 2. Import **Law Enforcement** industry page (/en_us/solutions/law-enforcement.html) — validates industry page template
 3. Import **Command Center Software** landing (/en_us/products/command-center-software.html)
 
-These three pages combined cover the two main page structures (product pillar + industry vertical) and unlock bulk import of ~55 more pages using the same approach.
+These three pages combined cover the two main page structures (product pillar + industry vertical) and unlock bulk import of ~150+ more `template-home` pages using the same approach.
+
+> **Full site scope**: The complete Motorola Solutions sitemap contains **3,217 pages** (1,199 en_us + 9 investors + 2,009 newsroom). See `sitemap.md` for the complete URL listing.
 
 ---
 
